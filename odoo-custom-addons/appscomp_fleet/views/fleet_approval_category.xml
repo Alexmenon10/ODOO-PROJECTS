@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record id="approval_category_form_inherit" model="ir.ui.view">
+        <field name="name">approval.category.form.inherited</field>
+        <field name="model">approval.category</field>
+        <field name="inherit_id" ref="approvals.approval_category_view_form"/>
+        <field name="arch" type="xml">
+           <xpath expr="//field[@name='sequence_code']" position="after">
+               <field name="vehicle_related_approval"/>
+           </xpath>
+           <xpath expr="//field[@name='has_location']" position="before">
+               <field name="source_location" string="Travel" widget="radio" options="{'horizontal': true}"/>
+               <field name="fleet_control" string="Fleet" widget="radio" options="{'horizontal': true}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

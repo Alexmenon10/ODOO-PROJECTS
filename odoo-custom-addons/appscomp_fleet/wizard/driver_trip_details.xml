@@ -1,0 +1,155 @@
+<odoo>
+    <record id="driver_trip_details_form" model="ir.ui.view">
+        <field name="name">driver.trip.details.form</field>
+        <field name="model">driver.trip.details</field>
+        <field name="arch" type="xml">
+            <form>
+                <group class="oe_title">
+                    <field name="remarks" readonly="1" attrs="{
+                            'invisible': [('driver_state','==','un_reserved')]}"/>
+                    <field name="remark_reason" readonly="1" attrs="{
+                            'invisible': [('vehicle_state','==','un_reserved')]}"/>
+                    <field name="reference" readonly="1" invisible="0"/>
+                    <field name="name" readonly="1" invisible="1"/>
+                    <field name="vehicle_driver" readonly="1" invisible="0"/>
+                    <field name="vechicle_list" readonly="1" invisible="0"/>
+                    <field name="total_duration" readonly="1" invisible="0"/>
+                    <field name="driver_state" readonly="1" invisible="0"/>
+                    <field name="vehicle_state" readonly="1" invisible="0"/>
+                    <field name="driver_vechile_update" widget="radio" options="{'horizontal': true}"/>
+                </group>
+                <notebook>
+                    <page string="Shedule Trip Infromation">
+                        <field name="driver_trip_list_ids">
+                            <tree editable="bottom" create="0" delete="0">
+                                <field name="start_date"/>
+                                <field name="end_date"/>
+                                <field name="source"/>
+                                <field name="distination"/>
+                                <field name="duration"/>
+                            </tree>
+                        </field>
+                        <seperator string="Driver Available Duration"/>
+                        <field name="driver_trip_available_ids">
+                            <tree editable="bottom" create="0" delete="0">
+                                <field name="date"/>
+                                <field name="available_hour"/>
+                                <field name="trip_status" readonly="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+                <footer>
+                    <button string="Shedule The Trip" name="driver_trip_update" type="object" class="btn-primary"/>
+                    <!--                    <button string="Submit" name="vehicle_trip_update" type="object" class="btn-primary"/>-->
+                    <!--                    <button string="11Submit" name="both_trip_update" type="object" class="btn-primary"/>-->
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="driver_trip_details_action" model="ir.actions.act_window">
+        <field name="name">Driver Trip Details</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">driver.trip.details</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="driver_trip_details_form"/>
+        <field name="target">new</field>
+    </record>
+
+    <record id="driver_vehicle_update_action" model="ir.actions.act_window">
+        <field name="name">Driver Vehicle Update</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">update.vehicle.driver</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="update_vehicle_driver_wizard"/>
+        <field name="target">new</field>
+    </record>
+
+
+    <record id="update_vehicle_driver_wizard" model="ir.ui.view">
+        <field name="name">update.vehicle.driver.view</field>
+        <field name="model">update.vehicle.driver</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h3>
+                            <field name="name" readonly="1"/>
+                        </h3>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="driver_select" class="oe_inline"/>
+                        </group>
+                        <group>
+                            <field name="vehicle_select" class="oe_inline"/>
+                        </group>
+                        <group>
+                            <field name="driver_list"
+                                   attrs="{'invisible':[('driver_select', '=', False )], 'required': [('driver_select','=',True)]}"/>
+                            <field name="driver_remark"
+                                   attrs="{'invisible':[('driver_list', '=', False )], 'required': [('driver_list','=',True)]}"/>
+                        </group>
+                        <group>
+                            <field name="vechicle_list"
+                                   attrs="{'invisible':[('vehicle_select', '=', False )], 'required': [('vehicle_select','=',True)]}"/>
+                            <field name="vehicle_remark"
+                                   attrs="{'invisible':[('vechicle_list', '=', False )], 'required': [('driver_list','=',True)]}"/>
+                        </group>
+                    </group>
+                </sheet>
+                <!--                <div class="oe_chatter">-->
+                <!--                    <field name="message_follower_ids" widget="mail_followers"/>-->
+                <!--                    <field name="message_ids" widget="mail_thread"/>-->
+                <!--                </div>-->
+                <footer>
+                    <button name='get_driver_vehicle_update' type="object" string="Apply Reason" class="oe_highlight"
+                            icon="fa-check-circle"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+<!--    <record id="set_contract_employee_wizard_action" model="ir.actions.act_window">-->
+<!--        <field name="name">Contract Employee</field>-->
+<!--        <field name="type">ir.actions.act_window</field>-->
+<!--        <field name="res_model">set.contract.employee</field>-->
+<!--        <field name="view_mode">form</field>-->
+<!--        <field name="view_id" ref="set_contract_employee_wizard"/>-->
+<!--        <field name="target">new</field>-->
+<!--    </record>-->
+
+<!--    <record id="set_contract_employee_wizard" model="ir.ui.view">-->
+<!--        <field name="name">set.contract.employee.view</field>-->
+<!--        <field name="model">set.contract.employee</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <form>-->
+<!--                <sheet>-->
+<!--                    <div class="oe_title">-->
+<!--                        <h2>-->
+<!--                            <field name="name" invisible="1"/>-->
+<!--                            <field name="contract_employee_remark" readonly="1"/>-->
+<!--                        </h2>-->
+<!--                    </div>-->
+<!--                    <group>-->
+<!--                        <group>-->
+<!--                        </group>-->
+<!--                        <group></group>-->
+<!--                        <group>-->
+<!--                            <field name="contract_employee"/>-->
+<!--                        </group>-->
+<!--                    </group>-->
+<!--                </sheet>-->
+<!--                <footer>-->
+<!--                    <button name='set_contract_employee' type="object" string="Apply Reason" class="oe_highlight"-->
+<!--                            icon="fa-check-circle"/>-->
+<!--                    <button string="Cancel" class="btn-secondary" special="cancel"/>-->
+<!--                </footer>-->
+<!--            </form>-->
+<!--        </field>-->
+<!--    </record>-->
+
+</odoo>

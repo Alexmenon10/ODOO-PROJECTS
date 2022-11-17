@@ -1,0 +1,63 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <record id="four_wheeler_usage_report_wizard_form" model="ir.ui.view">
+            <field name="name">four.wheeler.usage.report.wizard.form</field>
+            <field name="model">four.wheeler.usage.report.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Fleet Vehicle Usage Report">
+                    <group attrs="{'invisible':[('report_printed','=',True)]}">
+                        <group>
+                            <field name="start_date" required="1"/>
+                            <field name="vechicle_list" readonly="0" widget="many2many_tags"
+                                   options="{'no_create_edit': True,'no_open':True}"/>
+                        </group>
+                        <group>
+                            <field name="end_date" required="1"/>
+                            <field name="driver_name" widget="many2many_tags"
+                                   options="{'no_create_edit': True,'no_open':True}"/>
+                        </group>
+                        <group>
+                            <field name="type_of_vehicle"/>
+                            <field name="user_id" readonly="1" invisible="1"/>
+                            <field name="requested" readonly="1" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="vehicle_category"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="report_printed" invisible="1"/>
+                        <group attrs="{'invisible':[('report_printed','=',False)]}">
+                            <field name="file_name" invisible="1"/>
+                            <field name="summary_file" readonly="1" filename="file_name"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string='EXCEL Report' name="action_get_four_wheeler_usage_report"
+                                type="object" class="oe_highlight" icon="fa-download"
+                                attrs="{'invisible':[('report_printed','=',True)]}"/>
+                        <button name="get_four_wheeler_usage_report_pdf"
+                                icon="fa-download" string="PDF Report" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_four_wheeler_usage_report">
+            <field name="name">Fleet Vehicle Usage Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">four.wheeler.usage.report.wizard</field>
+            <!--            <field name="view_type">form</field>-->
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="four_wheeler_usage_report_wizard_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_four_wheeler_usage_report" id="menu_action_four_wheeler_usage_report"
+                  name="Fleet Vehicle Usage Report"
+                  parent="menu_vehicle_details" sequence="2"/>
+    </data>
+</odoo>

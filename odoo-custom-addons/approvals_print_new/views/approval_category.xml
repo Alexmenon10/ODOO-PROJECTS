@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record id="approval_category_inherit" model="ir.ui.view">
+        <field name="name">approval.category.inherited</field>
+        <field name="model">approval.category</field>
+        <field name="inherit_id" ref="approvals.approval_category_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button [@name='%(approvals.approval_request_action_to_review_category)d']" position="after">
+                <button type="action"
+                        class="btn btn-sm btn-secondary float-right"
+                        name="%(approval_request_action_to_refuse_partial)d">Partial Refused:
+                    <field name="request_to_partial_refused_validate_count"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="approval_category_form_inherit" model="ir.ui.view">
+        <field name="name">approval.category.form.inherited</field>
+        <field name="model">approval.category</field>
+        <field name="inherit_id" ref="approvals.approval_category_view_form"/>
+        <field name="arch" type="xml">
+           <xpath expr="//field[@name='has_location']" position="before">
+               <field name="source_location" string="Travel" widget="radio" options="{'horizontal': true}"/>
+               <field name="has_vechicle" string="Vechile Type" widget="radio" options="{'horizontal': true}"/>
+               <field name="has_vechicle_specification" string="Vechile Specification" widget="radio" options="{'horizontal': true}"/>
+               <field name="has_estimate_amount" string="Estimate Amount" widget="radio" options="{'horizontal': true}"/>
+               <field name="has_borrow_approval" string="Borrow" widget="radio" options="{'horizontal': true}"/>
+               <field name="has_priority" string="Priority" widget="radio" options="{'horizontal': true}"/>
+               <field name="has_payment" string="Payment Request" widget="radio" options="{'horizontal': true}"/>
+               <field name="has_procurment" string="Procurment" widget="radio" options="{'horizontal': true}"/>
+               <field name="has_trip" string="Trip" widget="radio" options="{'horizontal': true}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

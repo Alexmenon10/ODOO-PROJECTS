@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_terms_delivery_user,terms_delivery.group_user,model_terms_delivery,base.group_user,1,1,1,1
+access_order_type_user,order.type.group_user,model_order_type,base.group_user,1,1,1,1
+access_mrp_bom_line_wizard_user,make_name_group.group_user,model_make_name_group,base.group_user,1,1,1,1

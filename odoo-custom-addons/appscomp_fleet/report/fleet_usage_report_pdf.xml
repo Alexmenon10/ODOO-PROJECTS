@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <record model="report.paperformat" id="paperformat_fleet_usage_report">
+        <field name="name">paperformat.fleet.report</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_width">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">40</field>
+        <field name="margin_right">5</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">5</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">30</field>
+        <field name="dpi">90</field>
+    </record>
+
+
+    <record id="action_fleet_usage_report_qweb" model="ir.actions.report">
+        <field name="name">Fleet Usage Report</field>
+        <field name="model">four.wheeler.usage.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">appscomp_fleet.fleet_usage_report</field>
+        <field name="report_file">appscomp_fleet.fleet_usage_report</field>
+        <field name="binding_model_id" ref="model_four_wheeler_usage_report_wizard"/>
+        <field name="binding_type">report</field>
+    </record>
+    <template id="fleet_usage_report">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <style>
+                        .report_header{
+                        margin-top:25px;
+                        }
+                        .table_header{
+                        text-align:left;
+                        color:black;
+                        font-size:15px;
+                        }
+                        .table_value{
+                        font-size:14px;
+                        }
+                        .footer{
+                        margin-top: 10px;
+                        }
+                    </style>
+                    <h2 class="report_header text-center">FLEET USAGE REPORT</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="table_header">Sl.No</th>
+                                <th class="table_header">VEH-NO</th>
+                                <th class="table_header">VEHICLE</th>
+                                <th class="table_header">OP-KM</th>
+                                <th class="table_header">TIME OUT</th>
+                                <th class="table_header">TIME IN</th>
+                                <th class="table_header">CS-KM</th>
+                                <th class="table_header">OUT SECURITY</th>
+                                <th class="table_header">IN SECURITY</th>
+                                <th class="table_header">DURATION</th>
+                                <th class="table_header">TOTAL KM</th>
+                                <th class="table_header">DRIVER</th>
+                                <th class="table_header">REF</th>
+                                <!--                            <th style="text-align:left;color:black!important;font-size:10px;">PLACE and PURPOSE</th>-->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="values_2" t-as="res_2">
+                                <tr>
+                                    <td>
+                                        <span class="table_value" t-esc="res_2['vehicle_no']"/>
+                                    </td>
+                                    <td>
+                                        <span class="table_value" t-esc="res_2['vehicle_no']"/>
+                                    </td>
+                                    <td>
+                                        <span class="table_value" t-esc="res_2['vehicle_name']"/>
+                                    </td>
+                                    <td>
+                                        <span class="table_value" t-esc="res_2['opening_km']"/>
+                                    </td>
+                                    <td>
+                                        <span class="table_value" t-esc="res_2['out_time']"/>
+                                    </td>
+                                    <td>
+                                        <span class="table_value" t-esc="res_2['in_time']"/>
+                                    </td>
+                                    <td>
+                                        <span class="table_value" t-esc="res_2['closing_km']"/>
+                                    </td>
+                                    <td>
+                                        <span class="table_value" t-esc="res_2['out_verified_by']"/>
+                                    </td>
+                                    <td>
+                                        <span class="table_value" t-esc="res_2['in_verified_by']"/>
+                                    </td>
+                                    <td>
+                                        <span class="table_value" t-esc="res_2['duration']"/>
+                                    </td>
+                                    <td>
+                                        <span class="table_value" t-esc="res_2['total_kilometer']"/>
+                                    </td>
+                                    <td>
+                                        <span class="table_value" t-esc="res_2['driver_name']"/>
+                                    </td>
+                                    <td>
+                                        <span class="table_value" t-esc="res_2['reference']"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <table class="table table-condensed">
+                        <div class="footer" align="right">
+                            <div class="col-xs-6 text-center" align="center">
+                                Page
+                                <span class="page"/>
+                                of
+                                <span class="topage"/>
+                                <span>&amp;nbsp;</span>
+                                <span>&amp;nbsp;</span>
+                                Print Date
+                                &amp;nbsp;
+                                <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/>
+                                <span>&amp;nbsp;</span>
+                                Print Time
+                                &amp;nbsp;
+                                <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%H:%M:%S')"/>
+                            </div>
+                        </div>
+                    </table>
+
+
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>

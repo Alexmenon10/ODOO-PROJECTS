@@ -1,0 +1,58 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <record id="wizard_purchase_order_excel_report" model="ir.ui.view">
+            <field name="name">purchase.order.excel.report.wizard.form</field>
+            <field name="model">purchase.order.excel.report.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Purchase order Report">
+                    <group attrs="{'invisible':[('report_printed','=',True)]}">
+                        <group>
+                            <field name="start_date" required="1"/>
+<!--                            <field name="material_request_raised_by" readonly="0"-->
+<!--                                   options="{'no_create_edit': True,'no_open':True}"/>-->
+                        </group>
+                        <group>
+                            <field name="end_date" required="1"/>
+<!--                            <field name="material_request_raised_for" widget="many2many_tags"-->
+<!--                                   options="{'no_create_edit': True,'no_open':True}"/>-->
+                        </group>
+                        <group>
+                            <field name="user_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="report_printed" invisible="1"/>
+                        <group attrs="{'invisible':[('report_printed','=',False)]}">
+                            <field name="file_name" invisible="1"/>
+                            <field name="summary_file" readonly="1" filename="file_name"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string='Download' name="action_get_purchase_order_excel_report"
+                                type="object" class="oe_highlight" icon="fa-download"
+                                attrs="{'invisible':[('report_printed','=',True)]}"/>
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_get_purchase_order_excel_report">
+            <field name="name">Purchase Order Excel Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order.excel.report.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="wizard_purchase_order_excel_report"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem action="action_get_purchase_order_excel_report"
+                  id="menu_apurchase_order_excel_report"
+                  parent="purchase.purchase_report_main"
+                  sequence="11"/>
+
+    </data>
+</odoo>

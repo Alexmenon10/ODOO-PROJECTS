@@ -1,0 +1,58 @@
+<odoo>
+
+<!--    <record id="one_way_trip_wizard_action" model="ir.actions.act_window">-->
+<!--        <field name="name">One Way Trip Wizard</field>-->
+<!--        <field name="type">ir.actions.act_window</field>-->
+<!--        <field name="res_model">one.way.trip</field>-->
+<!--        <field name="view_mode">form</field>-->
+<!--        <field name="view_id" ref="one_way_trip_wizard"/>-->
+<!--        <field name="target">new</field>-->
+<!--    </record>-->
+
+    <record id="one_way_trip_wizard" model="ir.ui.view">
+        <field name="name">one.way.trip.view</field>
+        <field name="model">one.way.trip</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                            <field name="remarks"/>
+                            <field name="odometer_value"/>
+                            <field name="one_way_attachment" filename="one_way_attachment_detail"/>
+                            <field name="one_way_attachment_detail" invisible="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name='one_way_trip_remark' type="object" string="Submit" class="oe_highlight"
+                            icon="fa-check-circle"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="expense_beta_sheet_wizard_form" model="ir.ui.view">
+        <field name="name">expense.beta.sheet.wizard</field>
+        <field name="model">expense.beta.sheet</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                        </group>
+                        <group>
+                            <field name="subproduct_id"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name='set_expense_beta_sheet' type="object" string="Submit" class="oe_highlight"
+                            icon="fa-check-circle"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+
+    <record id="purchase_summary_view_report_tree" model="ir.ui.view">
+      <field name="name">purchase.summary.view_report.form</field>
+      <field name="model">account.move.line</field>
+
+      <!-- <field name="inherit_id" ref="mrp.mrp_production_form_view"/> -->
+      <field name="arch" type="xml">
+
+      <tree string="Purchase Register" editable="bottom" decoration-info="quantity == 0" create="false" edit="false" delete="false">
+                <!-- <field name="id"/> -->
+                <field name="product_id"/>
+                <field name="product_ref" optional="1"/>
+                <field name="move_id" invisible="1"/>
+                <field name="move_name" />
+                <field name="date" string='Accounting Date' optional="1"/>
+                <field name="move_invoice_date"  />
+                <field name="ref" optional="1" string='Bill Reference'/>
+                <field name="company_id" invisible="1"/>
+                
+                <field name="journal_id" optional="1"/>
+                <field name="account_id" optional="1"/>
+                <field name="account_group_id" optional="1"/>
+                <field name="account_user_type_id" string="Account Type" optional="1"/>
+                <!-- <field name="hsn_code_name"/> -->
+                <field name="product_category" optional="1"/>
+                <field name="item_group" optional="1" invisible='1'/>
+                <field name="product_group_1" optional="1" invisible='1'/>
+                <field name="product_group_2" optional="1" invisible='1'/>
+                <field name="product_group_3" optional="1" invisible='1'/>
+                <field name="name" optional="1"/>
+                <field name="partner_name" string='Partenr'/>
+                <field name="partner_ref" optional="1"/>
+                <field name="gst_treatment" optional="1"/>
+                <field name="partner_category_name" optional="1"/>
+                <field name="partner_state_name" optional="1"/>
+                <field name="partner_country_name" optional="1"/>
+                <field name="analytic_account_id" optional="1"/>
+                <field name="gst_name" optional="1"/>
+                <field name="quantity"/>
+                <field name="price_unit"/>
+                <!-- <field name="account_tax_name"/> -->
+                <field name="tax_ids" widget="many2many_tags" optional="1"/>
+                <field name="cgst_rate" optional="1"/>
+                <field name="cgst_amount" optional="1" sum='cgst_amount'/>
+                <field name="sgst_rate" optional="1"/>
+                <field name="sgst_amount" optional="1" sum='sgst_amount'/>
+                <field name="igst_rate" optional="1" />
+                <field name="igst_amount" optional="1" sum='igst_amount'/>
+                <field name="tds_rate" optional="1"/>
+                <field name="tds_amount" optional="1" sum='tds_amount'/>
+                <!-- <field name="ocean_rate"/> -->
+                <!-- <field name="ocean_amount"/> -->
+                
+                <!-- <field name="parent_amount_tax" widget="many2many_tags"/> -->
+                <!-- <field name="amount_by_group_line" widget="tax-group-custom-field" nolabel="1" colspan="2" /> -->
+         
+                <field name="price_subtotal" sum='price_subtotal'/>
+                <field name="amount_inclusive_tax" sum='amount_inclusive_tax'/>
+                <field name="currency_id"/>
+                <field name="move_type_name" optional="1"/>
+                <field name="warehouse_id" optional="1"/>
+                <!-- <field name="parent_state"/> -->
+                <!-- <field name="price_subtotal" invisible="1"/> -->
+                <!-- <field name="partner_id" invisible="1"/> -->
+            </tree>
+        </field>
+      </record>
+
+      <record id="purchase_register_report_search" model="ir.ui.view">
+            <field name="name">purchase.register.report.search</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <search string="date">
+                    <field name="product_id"/>
+                    <field name="move_id"/>
+                    <field name="move_name"/>
+                    <field name="ref"/>
+                    <field name="journal_id"/>
+                    <field name="account_id"/>
+                    <field name="name"/>
+                    <field name="partner_name"/>
+                    <field name="analytic_account_id"/>
+                    <!-- <field name="transaction_types"/> -->
+
+                <group expand="0" string="Group By">
+                    <filter string="Product" name="product_id" domain="" context="{'group_by':'product_id'}"/>
+                    <filter string="Date" name="date" domain="" context="{'group_by':'date'}"/>
+                    <!-- <filter string="Transaction Type" name="transaction_types" domain="" context="{'group_by':'transaction_types'}"/> -->
+                </group>
+                
+                </search>
+            </field>
+        </record>
+
+    <record id="view_pivot_purchase_register" model="ir.ui.view">
+      <field name="name">purchase.register.pivot</field>
+      <field name="model">account.move.line</field>
+      <field name="arch" type="xml">
+        <pivot string="Pivot View">
+           <field name="product_id" type="row"/>
+           <!-- <field name="value" type="measure"/> -->
+        </pivot>
+      </field>
+    </record>
+
+        <record model="ir.ui.view" id="ageing_report_graph">
+            <field name="name">purchase.register.graph</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <graph string="Purchase Register Report">
+                <field name="product_id"/>
+            
+                <field name="move_name"/>
+                <field name="date" type="row"/>
+                <field name="ref" type="measure"/>
+                <field name="company_id" invisible="1"/>
+                
+                <field name="journal_id" type="measure"/>
+                <field name="account_id" type="measure"/>
+                <!-- <field name="hsn_code_name"/> -->
+                <field name="name" type="measure"/>
+                <field name="partner_name" type="measure"/>
+                <field name="partner_category_name" type="measure"/>
+                <field name="partner_state_name" type="measure"/>
+                <field name="partner_country_name" type="measure"/>
+                <field name="analytic_account_id" type="measure"/>
+                <field name="gst_name" type="measure"/>
+                <field name="quantity" type="row"/>
+                <field name="price_unit" type="row"/>
+
+                <field name="price_subtotal" type="row"/>
+                <field name="amount_inclusive_tax" type="row"/>
+                </graph>
+            </field>
+    </record>
+
+
+
+
+
+
+    <record id="action_view_purchase_register_views" model="ir.actions.act_window">
+      <field name="name">Purchase Register Report</field>
+      <field name="res_model">account.move.line</field>
+       <field name="domain">[('move_type_name','in',[("in_invoice"),("in_refund")]),('tax_repartition_line_id','=',None)
+        ,('account_user_type_id','!=','Payable')]</field>
+         <field name="context">{'search_move_id': True,}</field>
+      <field name="view_mode">tree,pivot,graph</field>
+      <field name ="view_id" ref="purchase_summary_view_report_tree"/>    
+      <field name ="search_view_id" ref="purchase_register_report_search"/>    
+      <!-- <field name = "target">current</field> -->
+    </record>
+
+      <menuitem 
+          action="action_view_purchase_register_views" 
+          id="menu_new_purchase_register_action"
+          parent="purchase.purchase_report"
+
+      />
+    </data>
+
+</odoo>
+
+
+ 

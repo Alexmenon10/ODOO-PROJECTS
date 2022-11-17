@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="hr_expense_view_form_inherit" model="ir.ui.view">
+        <field name="name">expense.inherited</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="subproduct_id"
+                       options="{ 'no_create':True, 'no_create_edit':True }"/>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="replace">
+                <field name="name"/>
+            </xpath>
+            <xpath expr="//field[@name='total_amount']" position="attributes">
+                <attribute name="string">Bill Amount</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount_residual']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='reference']" position="attributes">
+                <attribute name="string">Bill Reference/Bill Date</attribute>
+            </xpath>
+            <xpath expr="//field[@name='product_id']" position="attributes">
+                <attribute name="string">Expense Category</attribute>
+            </xpath>
+            <xpath expr="//field[@name='tax_ids']" position="after">
+                <field name="department"/>
+                <field name="units" options='{"no_create": True}'/>
+                <field name="expense_payment" options='{"no_create": True}'/>
+                <label for="neft_percent" string="Neft and Cash"
+                       attrs="{'invisible': [('neft_cash_hide', '=', False)]}"/>
+                <div class="o_row no-gutters d-flex" attrs="{'invisible': [('neft_cash_hide', '=', False)]}">
+                    <field name="neft_percent" class="oe_inline"
+                           placeholder="Neft(%)"
+                           attrs="{'invisible': [('neft_cash_hide', '=', False)]}"/>(%%)
+                    <field name="neft_cash_hide" class="oe_inline" invisible="1"/>
+                    <label for="neft_cash" string="Cash" attrs="{'invisible': [('neft_cash_hide', '=', False)]}"/>
+                    <field name="neft_cash" class="oe_inline"
+                           placeholder="Cash"
+                           attrs="{'invisible': [('neft_cash_hide', '=', False)]}"/>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="expensed_by"/>
+                <field name="partner_id" widget="res_partner_many2one"
+                       context="{'res_partner_search_mode': 'supplier', 'show_vat': True}"
+                       placeholder="Name, TIN, Email, or Reference"/>
+                <field name="non_vendor"/>
+            </xpath>
+        </field>
+    </record>
+    <!--  Action Start  -->
+    <record id="approval_expense_action" model="ir.actions.act_window">
+        <field name="name">Approval Expense</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.expense</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Invite Your Players,Who Make Your Club Famous....!!!</p>
+        </field>
+    </record>
+
+
+    <!--  Expense Units  -->
+
+    <record id="expense_unit_view_form" model="ir.ui.view">
+        <field name="name">expense.unit.form</field>
+        <field name="model">expense.unit</field>
+        <field name="arch" type="xml">
+            <form string="Warehouse">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                            attrs="{'invisible': [('active', '=', True)]}"/>
+                    <label for="name"/>
+                    <h1>
+                        <field name="name" placeholder="e.g. Central Units"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="code" placeholder="e.g. CU"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="partner_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--  Expense payment  -->
+
+    <record id="expense_payment_view_form" model="ir.ui.view">
+        <field name="name">expense.payment.form</field>
+        <field name="model">expense.payment</field>
+        <field name="arch" type="xml">
+            <form string="Payment">
+                <sheet>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="expense_unit_action" model="ir.actions.act_window">
+        <field name="name">Expense Unit</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">expense.unit</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Invite Your Unit....!!!</p>
+        </field>
+    </record>
+
+    <record id="expense_payment_action" model="ir.actions.act_window">
+        <field name="name">Expense Payment</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">expense.payment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Invite Your payment Mode....!!!</p>
+        </field>
+    </record>
+
+
+    <menuitem id="menu_units_config" name="Unit/Section" parent="hr_expense.menu_hr_expense_configuration" sequence="1"
+              action="expense_unit_action"/>
+    <menuitem id="menu_payment_list" name="Payment" parent="hr_expense.menu_hr_expense_configuration" sequence="1"
+              action="expense_payment_action"/>
+
+
+    <record id="hr_expense_sheet_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.expense.sheet.inherited</field>
+        <field name="model">hr.expense.sheet</field>
+        <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='expenses']/field[@name='expense_line_ids']/tree/field[@name='account_id']"
+                   position="after">
+                <field name="expensed_by" optional="show"/>
+                <field name="department" optional="show"/>
+                <field name="units" optional="show"/>
+                <field name="partner_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,64 @@
+<odoo>
+  <data>
+    <record id="inventory_balance_summmary_tree_view" model="ir.ui.view">
+      <field name="name">inventory balance summmary tree view</field>
+      <field name="model">inv.bal.sum</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="default_code" optional="hide"/>
+          <field name="product_id"/>
+          <field name="categ_id" optional="hide"/>
+          <field name="item_group" optional="hide" invisible='1'/>
+          <field name="product_group_1" optional="hide" invisible='1'/>
+          <field name="product_group_2" optional="hide" invisible='1'/>
+          <field name="product_group_3" optional="hide" invisible='1'/>
+          <field name="uom_id" optional="hide"/>
+          <field name="opening_stock" optional="hide"/>
+          <field name="opening_value" sum="Total Value" optional="hide"/>
+          <field name="stock_increase" class="alert-success" optional="hide"/>
+          <field name="value_increase" sum="Total Value" class="alert-success" optional="hide"/>
+          <field name="stock_decrease" class="alert-danger" optional="hide"/>
+          <field name="value_decrease" sum="Total Value" class="alert-danger" optional="hide"/>
+          <field name="closing_stock" optional="hide"/>
+          <field name="closing_value" sum="Total Value" optional="hide"/>
+          <field name="warehouses" optional="hide"/>
+          <field name="locations" optional="hide"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="inv_bal_summary_wiz_view_form" model="ir.ui.view">
+      <field name="name">inv.bal.sum.wiz.view.form</field>
+      <field name="model">inv.bal.sum.wiz</field>
+      <field name="arch" type="xml">
+        <form string="Inventory Balance Summary">
+          <sheet>
+            <group>
+              <group>
+                <field name="open_date" required="1"/>
+                <field name="close_date" required="1"/>
+                <field name="location_ids" domain="[('usage','=','internal')]">
+                  <tree>
+                    <field name="complete_name" string="Warehouse/Location"/>
+                  </tree>
+                </field>
+              </group>
+            </group>
+            <footer>
+              <button name="action_open_report" type="object" class="oe_highlight" string="View Summary"/>
+            </footer>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="inv_bal_sum_wiz_action" model="ir.actions.act_window">
+      <field name="name">Inventory Summary</field>
+      <field name="res_model">inv.bal.sum.wiz</field>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
+    </record>
+
+    <menuitem id="inv_bal_sum_menu_act" name="Inventory Summary" parent="stock.menu_warehouse_report" action="inv_bal_sum_wiz_action"/>
+  </data>
+</odoo>

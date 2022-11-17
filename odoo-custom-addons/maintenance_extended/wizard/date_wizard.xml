@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="equipment_date_wizard_form" model="ir.ui.view">
+            <field name="name">date.wizard.form</field>
+            <field name="model">date.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group string="Date">
+                            <field name="assign_date"/>
+                            <field name="date_end"/>
+                        </group>
+
+                    </group>
+                    <footer>
+                        <button name="get_report" string="Print" type="object" icon="fa-print"
+                                class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" icon="fa-close" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="equipment_date_wizard_form_action" model="ir.actions.act_window">
+            <field name="name">Date</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">date.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

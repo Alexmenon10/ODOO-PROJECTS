@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+    <!-- <template inherit_id="report.minimal_layout" id="minimal_layout_inherit">
+      <xpath expr="//head" position="inside">
+             <link rel='stylesheet' href="/purchase_order_mas/static/src/css/fonts.css"/>
+      </xpath>
+    </template> -->
+
+     <!--<template id="assets_frontend" inherit_id="web.assets_frontend" name="login Page stylesheet">
+             <xpath expr="." position="inside">
+                <link rel="stylesheet" type="text/css" href="/purchase_order_mas/static/src/css/fonts.css"/>
+            </xpath>
+            
+        </template>-->
+    </data>
+</odoo>

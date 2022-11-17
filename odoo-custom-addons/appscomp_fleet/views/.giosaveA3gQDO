@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <data>
+
+        <record id="vehicle_gate_pass_sequence" model="ir.sequence">
+            <field name="name">Vehicle Gate Out Pass</field>
+            <field name="code">vehicle.gate.pass</field>
+            <field name="prefix">ATLAS/VP/OUT/</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="implementation">standard</field>
+        </record>
+
+        <record id="view_vehicle_gate_pass_form" model="ir.ui.view">
+            <field name="name">vehicle Gate Pass Form</field>
+            <field name="model">vehicle.gate.pass</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="vehicle_pass_out_verify" type="object" string="Verified out" class="oe_highlight"
+                                attrs="{'invisible': [('pass_state', '!=', 'draft')]}"
+                        />
+                        <button name="vehicle_pass_in_verify" type="object" string="Verified in" class="oe_highlight"
+                                attrs="{'invisible': ['|',('pass_state', '!=', 'out'), ('pass_check', '==', False)]}"
+                        />
+                        <button name="get_one_way_trip_wizard"
+                                type="object"
+                                class="oe_highlight"
+                                string="Drop the Trip"
+                                attrs="{'invisible':[('approval_trip_type','!=','one_way')]}"
+                        />
+                        <field name="pass_state" widget="statusbar"
+                               statusbar_colors='{"reject":"red"}'/>
+                    </header>
+                    <sheet>
+                        <widget name="web_ribbon" title="Trip Closed" bg_color="bg-warning"
+                                attrs="{'invisible': [('widget_check', '!=', True)]}"/>
+                        <widget name="web_ribbon" title="Trip Open" bg_color="bg-info"
+                                attrs="{'invisible': ['|',('widget_check', '==', True), ('vehicle_pass_state', '!=', 'in')]}"/>
+                        <div class="oe_title">
+                            <h1>
+                                <!--                                <label for="name" string="Reference"/>-->
+                                <field name="name" class="oe_inline" readonly="1"/>
+                            </h1>
+                            <h1>
+                                <field name="pass_type" class="oe_inline" widget="radio"
+                                       attrs="{'invisible': [('vehicle_pass_state', '==', 'in')],
+                                       'readonly': [('pass_state', '==', 'out')]}"
+                                       options="{'horizontal': true}"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="vehicle_out_id" options='{"no_create": True}'
+                                       attrs="{'invisible': [('vehicle_pass_state', '==', 'out')],
+                                                'required': [('vehicle_pass_state', '==', 'in')],
+                                                'readonly': [('pass_state', '==', 'in')]}"/>
+                                <field name="multiple_approval_id" options='{"no_create": True}'
+                                       attrs="{'invisible': [('pass_type', '==', 'single')],
+                                                'required': [('pass_type', '==', 'multiple')],
+                                                'readonly': [('pass_state', '==', 'out')]}"/>
+                                <field name="approval_id" options='{"no_create": True}'
+                                       attrs="{'invisible': ['|', ('pass_type', '==', 'multiple'),
+                                                ('vehicle_pass_state', '==', 'in')],
+                                               'readonly': [('pass_state', '==', 'out')],
+                                               'required': [('vehicle_pass_state', '==', 'out'),('pass_type', '==', 'single')]}"/>
+                                <field name="request_owner_id" readonly="1" force_save="1"
+                                       attrs="{'invisible': [('request_owner_id', '=', False)]}"/>
+                                <field name="persons_list" widget="many2many_tags" readonly="1" force_save="1"
+                                       attrs="{'invisible': [('persons_list', '=', False)]}"/>
+                                <field name="person_count" readonly="1" force_save="1"
+                                       attrs="{'invisible': [('person_count', '=', False)]}"/>
+                                <field name="vehicle_category" readonly="1" force_save="1"
+                                       attrs="{'invisible': [('vehicle_category', '=', False)]}"/>
+                                <label for="emp_own_vechicle" string="Vehicle Name"
+                                       attrs="{'invisible': [('emp_own_vechicle', '=', False)]}"/>
+                                <div class="o_row no-gutters d-flex">
+                                    <field name="emp_own_vechicle" readonly="1" force_save="1" class="oe_inline"
+                                           attrs="{'invisible': [('emp_own_vechicle', '==', False)]}"/>
+                                    <button name="vehicle_trip_complete" type="object" string="Close Trip"
+                                            class="oe_highlight"
+                                            attrs="{'invisible': ['|', ('widget_check', '!=', False), ('pass_state', '!=', 'in')]}"/>
+                                    <button name="vehicle_trip_complete_remark" type="object" string="Trip Closed"
+                                            class="oe_highlight"
+                                            attrs="{'invisible': ['|',('emp_own_vechicle', '!=', True), ('widget_check', '!=', True)]}"/>
+                                </div>
+                                <label for="emp_vechicle" string="Vehicle Name"
+                                       attrs="{'invisible': [('emp_vechicle', '=', False)]}"/>
+                                <div class="o_row no-gutters d-flex">
+                                    <field name="emp_vechicle" readonly="1" force_save="1" class="oe_inline"
+                                           attrs="{'invisible': [('emp_vechicle', '=', False)]}"/>
+                                    <button name="vehicle_trip_complete" type="object" string="Close Trip"
+                                            class="oe_highlight"
+                                            attrs="{'invisible': ['|', '|', ('emp_vechicle', '!=', True), ('widget_check', '!=', False), ('pass_state', '!=', 'in')]}"/>
+                                    <button name="vehicle_trip_complete_remark" type="object" string="Trip Closed"
+                                            class="oe_highlight"
+                                            attrs="{'invisible': [('emp_vechicle', '!=', True), ('widget_check', '!=', True)]}"/>
+                                </div>
+                                <field name="vehicle_driver" readonly="1" force_save="1"
+                                       attrs="{'invisible': [('vehicle_driver', '=', False)]}"/>
+                                <field name="vehicle_travel_id" invisible="1" force_save="1"
+                                       attrs="{'invisible': [('vehicle_travel_id', '=', False)]}"/>
+                                <field name="type_of_vehicle" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="widget_check" invisible="1"/>
+                                <field name="username" invisible="1"/>
+                                <field name="out_pass_check" invisible="1"/>
+                                <field name="unit_from"
+                                       attrs="{'readonly': [('unit_from', '!=', False)],'required': [('vehicle_pass_state', '==', 'out')]}"
+                                       force_save="1"/>
+                                <field name="unit_to" attrs="{'invisible': [('vehicle_pass_state', '==', 'out')],
+                                                              'readonly': [('pass_state', '==', 'in')],
+                                                              'required': [('vehicle_pass_state', '==', 'in')]}"/>
+                                <field name="pass_check" invisible="1"/>
+                                <field name="duration_update" invisible="1"/>
+                                <field name="time_out" readonly="1" force_save="1" invisible="1"
+                                       attrs="{'invisible': ['|', ('pass_state', '!=', 'out'), ('pass_check', '==', True)]}"/>
+                                <field name="time_in" readonly="1" force_save="1" invisible="1"
+                                       attrs="{'invisible': [('pass_state', '!=', 'in')]}"/>
+                                <label for="opening_km" string="Opening KM"
+                                       attrs="{'invisible': [('vehicle_pass_state', '==', 'in')]}"/>
+                                <div class="o_row no-gutters d-flex"
+                                     attrs="{'invisible': [('vehicle_pass_state', '==', 'in')]}">
+                                    <field name="opening_km" readonly="1" force_save="1" class="oe_inline"
+                                           attrs="{'invisible': [('vehicle_pass_state', '==', 'in')]}"/>
+                                    <span class="oe_inline">/KM</span>
+                                </div>
+                                <label for="in_opening_km" string="Opening KM"
+                                       attrs="{'invisible': [('vehicle_pass_state', '==', 'out')]}"/>
+                                <div class="o_row no-gutters d-flex"
+                                     attrs="{'invisible': [('vehicle_pass_state', '==', 'out')]}">
+                                    <field name="in_opening_km" class="oe_inline" readonly="1" force_save="1"
+                                           attrs="{'invisible': [('vehicle_pass_state', '==', 'out')]}"/>
+                                    <span class="oe_inline">/KM</span>
+                                </div>
+                                <label for="closing_km" string="Closing KM"
+                                       attrs="{'invisible': [('vehicle_pass_state', '==', 'out')]}"/>
+                                <div class="o_row no-gutters d-flex"
+                                     attrs="{'invisible': [('vehicle_pass_state', '==', 'out')]}">
+                                    <field name="closing_km" class="oe_inline"
+                                           attrs="{'invisible': [('vehicle_pass_state', '==', 'out')],
+                                                    'required': [('vehicle_pass_state', '==', 'in')],
+                                                    'readonly': [('pass_state', '==', 'in')]}"/>
+                                    <span class="oe_inline">/KM</span>
+                                </div>
+
+
+                                <field name="net_km" invisible="1"/>
+                                <field name="beta_duration" invisible="1"/>
+                                <field name="total_kilometer" readonly="1"
+                                       attrs="{'invisible': [('pass_state', '!=', 'in')]}"/>
+                                <field name="out_time_verified" invisible="1"/>
+                                <field name="verified_time_out" readonly="1" force_save="1"
+                                       attrs="{'invisible': ['|',('pass_state', '!=', 'out'),('pass_check', '==', True)]}"/>
+                                <field name="verified_time_in" readonly="0" force_save="0"
+                                       attrs="{'invisible': [('pass_state', '!=', 'in')], 'readonly': [('pass_state', '==', 'in')]}"/>
+                                <field name="out_verified_by" readonly="1" force_save="1" invisible="1"
+                                       attrs="{'invisible': ['|', ('pass_state', '!=', 'out'), ('pass_check', '==', True)]}"/>
+                                <field name="security_name"
+                                       attrs="{'readonly': [('pass_state', '==', 'out')]}"/>
+                                <field name="in_verified_by" readonly="1" force_save="1" invisible="1"
+                                       attrs="{'invisible': [('pass_state', '!=', 'in')]}"/>
+                                <field name="vehicle_pass_state" widget="statusbar"
+                                       statusbar_colors='{"reject":"red"}'/>
+                                <field name="approval_trip_type" widget="radio" options="{'horizontal': true}"
+                                       attrs="{'invisible': [('vehicle_pass_state', '==', 'in')]}"/>
+                                <field name="employee_sign" widget="signature" options="{'verticle':True}"
+                                       invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="place" invisible="1"/>
+                                <field name="approved" invisible="1"/>
+                                <field name="security_sign" widget="signature" options="{'verticle':True}"
+                                       invisible="1"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Approval Travel">
+                                <field name="approval_detail_ids" nolabel="0" widget="section_and_note_one2many"
+                                       mode="tree,kanban" >
+                                    <tree editable="bottom" create="0" delete="1">
+                                        <control>
+                                            <create name="add_line_control" string="Add a line"/>
+                                            <create name="add_section_control" string="Add a section"
+                                                    context="{'default_display_type': 'line_section'}"/>
+                                            <create name="add_note_control" string="Add a note"
+                                                    context="{'default_display_type': 'line_note'}"/>
+                                        </control>
+                                        <field name="display_type" invisible="1" readonly="1"/>
+                                        <field name="name" widget="section_and_note_text" readonly="1" force_save="1"/>
+                                        <field name="start_date"/>
+                                        <field name="end_date"/>
+                                        <field name="source"/>
+                                        <field name="distination"/>
+                                        <field name="duration"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Other">
+                                <group>
+                                    <group>
+                                        <field name="gate_pass_remark"/>
+                                    </group>
+                                    <group>
+                                        <field name="attachment" filename="attachment_detail"/>
+                                        <field name="attachment_detail" invisible="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Travel" invisible="1">
+                                <field name="travel_detail_ids">
+                                    <tree editable="bottom">
+                                        <field name="time_out"/>
+                                        <field name="time_in"/>
+                                        <field name="opening_km"/>
+                                        <field name="closing_km"/>
+                                        <field name="total_km"/>
+                                        <field name="total_amount"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="view_vehicle_gate_pass_tree" model="ir.ui.view">
+            <field name="name">vehicle.gate.pass.tree</field>
+            <field name="model">vehicle.gate.pass</field>
+            <field name="arch" type="xml">
+                <tree default_order='name desc'>
+                    <field name="vehicle_pass_state" invisible="1"/>
+                    <field name="name"/>
+                    <field name="approval_id"/>
+                    <field name="vehicle_out_id"/>
+                    <field name="vehicle_driver"/>
+                    <field name="emp_vechicle"/>
+                    <field name="time_out"
+                           attrs="{'invisible': [('time_out', '==',  False)]}"/>
+                    <field name="time_in"
+                           attrs="{'invisible': [('time_in', '==',  False)]}"/>
+                    <field name="opening_km"/>
+                    <field name="closing_km"/>
+                    <field name="total_kilometer"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id='action_vehicle_gate_pass_out' model='ir.actions.act_window'>
+            <field name="name">Vehicle Gate Pass Out</field>
+            <field name="res_model">vehicle.gate.pass</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'default_vehicle_pass_state': 'out'}</field>
+            <field name="domain">[('pass_state','=','out'),('vehicle_pass_state','=','out')]</field>
+        </record>
+
+        <record id='action_vehicle_gate_pass_in' model='ir.actions.act_window'>
+            <field name="name">Vehicle Gate Pass IN</field>
+            <field name="res_model">vehicle.gate.pass</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'default_vehicle_pass_state': 'in', 'default_pass_state': 'out',
+                'default_pass_check': True}
+            </field>
+            <field name="domain">[('pass_state','=','in')]</field>
+        </record>
+
+    <!--        <record id='action_vehicle_gate_pass_in' model='ir.actions.act_window'>-->
+    <!--            <field name="name">Vehicle Gate Pass IN </field>-->
+    <!--            <field name="res_model">vehicle.gate.pass</field>-->
+    <!--            <field name="view_mode">tree,form</field>-->
+    <!--            <field name="context">{'default_vehicle_pass_state': 'in', 'default_pass_state': 'out',-->
+    <!--                'default_pass_check': True}-->
+    <!--            </field>-->
+    <!--            <field name="domain">[('pass_state','=','in')]</field>-->
+    <!--        </record>-->
+
+
+        <menuitem id="menu_vehicle_gate_pass" name="Vehicle Gate Pass" parent="gate_entry.menu_root" sequence="4"/>
+        <menuitem name="Vehicle Out" id="menu_vehicle_out" action="action_vehicle_gate_pass_out"
+                  parent="menu_vehicle_gate_pass" sequence="1"/>
+        <menuitem name="Vehicle In" id="menu_vehicle_in" action="action_vehicle_gate_pass_in"
+                  parent="menu_vehicle_gate_pass" sequence="2"/>
+
+<!--        <menuitem id="menu_vehicle_gate_pass2" name="Vehicle Gate Pass" parent="gate_entry.menu_forpyurchase_root" sequence="4"/>-->
+<!--        <menuitem name="Vehicle Out" id="menu_vehicle_out2" action="action_vehicle_gate_pass_out"-->
+<!--                  parent="menu_vehicle_gate_pass2" sequence="1"/>-->
+<!--        <menuitem name="Vehicle In" id="menu_vehicle_in2" action="action_vehicle_gate_pass_in"-->
+<!--                  parent="menu_vehicle_gate_pass2" sequence="2"/>-->
+
+
+        <record id="fleet_odometer_inherit" model="ir.ui.view">
+            <field name="name">fleet.odoometer.inherited</field>
+            <field name="model">fleet.vehicle.odometer</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_odometer_view_tree"/>
+            <field name="arch" type="xml">
+                <!--                <xpath expr="//field[@name='driver_id']" position="attributes">-->
+                <!--                    <attribute name="invisible">1</attribute>-->
+                <!--                </xpath>-->
+                <xpath expr="//field[@name='driver_id']" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+                <xpath expr="//field[@name='driver_employee_id']" position="replace">
+                    <field name="driver_name"/>
+                    <field name="total_km"/>
+                    <field name="start_km"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

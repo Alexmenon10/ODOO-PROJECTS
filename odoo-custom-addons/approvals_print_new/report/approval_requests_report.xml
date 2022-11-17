@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- <openerp> -->
+<odoo>
+    <data>
+<!--        <record-->
+<!--            id="custom_approval_request_report"-->
+<!--            model="approval.request"-->
+<!--            menu="True"-->
+<!--            report_type="qweb-pdf"-->
+<!--            string="Print Approval Request"-->
+<!--            name="approvals_print_pdf_ent.report_custom_approval"-->
+<!--            file="approvals_print_pdf_ent.report_custom_approval"-->
+<!--           />-->
+
+        <record id="custom_approval_request_report" model="ir.actions.report">
+            <field name="name">Print Approval Request</field>
+            <field name="model">approval.request</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">approvals_print_new.report_custom_approval</field>
+            <field name="report_file">approvals_print_new.report_custom_approval</field>
+            <field name="binding_model_id" ref="approvals.model_approval_request"/>
+            <field name="binding_type">report</field>
+        </record>
+
+
+<!--        <record id="custom_approval_requests_report_id" model="report.paperformat">-->
+<!--            <field name="name">French Bank Check</field>-->
+<!--            <field name="default" eval="True"/>-->
+<!--            <field name="format">custom</field>-->
+<!--            <field name="page_height">80</field>-->
+<!--            <field name="page_width">175</field>-->
+<!--            <field name="orientation">Portrait</field>-->
+<!--            <field name="margin_top">3</field>-->
+<!--            <field name="margin_bottom">3</field>-->
+<!--            <field name="margin_left">3</field>-->
+<!--            <field name="margin_right">3</field>-->
+<!--            <field name="header_line" eval="False"/>-->
+<!--            <field name="header_spacing">3</field>-->
+<!--            <field name="dpi">80</field>-->
+<!--        </record>-->
+<!--      -->
+        
+        <template id="custom_approval_requests_report_id">
+            <t t-call="web.internal_layout">
+                <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
+                        <div class="page" style="border:2px solid red;margin-top:-20px">
+                            <div class="text-center">
+                                <h3 style="font-weight:bold">
+                                    Approvals
+                                </h3>
+                            </div><br></br>
+                            <div class="text-left">
+                                <h3>
+                                    <span t-field="doc.name"/> - <span style="text-right" t-field="doc.request_status"/>
+                                </h3>
+                            </div>
+                            <table class="table table-condensed">
+                                <tr style="border: 2px solid black;">
+
+                                    <td><strong>Request Owner</strong> </td><td> <span t-field="doc.request_owner_id.name"/></td>
+
+                                    <!-- <t t-if="doc.category_id.has_item == 'required' or doc.category_id.has_item == 'optional'">-->
+                                    <td>
+                                        <!--<strong>Items</strong>-->
+                                    </td>
+                                    <td> 
+                                        <!--<span t-field="doc.items"/>-->
+                                    </td>
+                                    <!--</t> -->
+
+                                </tr>
+
+                                <tr style="border: 2px solid black;">
+
+                                    
+                                        <td>
+<!--                                            <t t-if="doc.category_id.has_quantity == 'required' or doc.category_id.has_quantity == 'optional'"><strong>Quantity</strong></t>-->
+                                        </td>
+                                        <td>
+<!--                                            <t t-if="doc.category_id.has_quantity == 'required' or doc.category_id.has_quantity == 'optional'"><span t-field="doc.quantity"/></t>-->
+                                        </td>
+
+                                    <td><strong>Date Confirmed</strong> </td><td> <span t-field="doc.date_confirmed"/></td>
+
+                                </tr>
+
+                                <tr style="border: 2px solid black;">
+                                    
+                                    
+                                        <td>
+                                            <t t-if="doc.category_id.has_amount == 'required' or doc.category_id.has_amount == 'optional'">
+                                                <strong>Amount</strong>
+                                            </t>
+                                        </td>
+                                        <td> 
+                                            <t t-if="doc.category_id.has_amount == 'required' or doc.category_id.has_amount == 'optional'"><span t-field="doc.amount"/>
+                                            </t>
+                                        </td>
+
+                                    
+                                        <td><t t-if="doc.category_id.has_date == 'required' or doc.category_id.has_date == 'optional'"><strong>Date</strong></t></td><td> <t t-if="doc.category_id.has_date == 'required' or doc.category_id.has_date == 'optional'"><span t-field="doc.date"/></t></td>
+                                    
+
+                                </tr>
+
+                                <tr style="border: 2px solid black;">
+
+                                    
+                                        <td>
+                                            <t t-if="doc.category_id.has_reference == 'required' or doc.category_id.has_reference == 'optional'"><strong>Reference</strong></t>
+                                        </td><td><t t-if="doc.category_id.has_reference == 'required' or doc.category_id.has_reference == 'optional'"> <span t-field="doc.reference"/></t></td>
+                                    
+
+                                    
+                                        <td>
+                                            <t t-if="doc.category_id.has_period == 'required' or doc.category_id.has_period == 'optional'"><strong>Period</strong> </t>
+                                        </td>
+                                        <td> 
+                                            <t t-if="doc.category_id.has_period == 'required' or doc.category_id.has_period == 'optional'"><span t-field="doc.date_start"/> - <span t-field="doc.date_end"/>
+                                            </t>
+                                        </td>
+
+                                </tr>
+
+                                <tr style="border: 2px solid black;">
+
+                                    
+                                        <td>
+                                            <t t-if="doc.category_id.has_location == 'required' or doc.category_id.has_location == 'optional'"><strong>Location</strong></t>
+                                        </td>
+                                        <td> 
+                                        <t t-if="doc.category_id.has_location == 'required' or doc.category_id.has_location == 'optional'"><span t-field="doc.location"/></t>
+                                        </td>
+
+
+                                        <td>                                    <t t-if="doc.category_id.has_partner == 'required' or doc.category_id.has_partner == 'optional'"><strong>Contact</strong></t></td><td>                                     <t t-if="doc.category_id.has_partner == 'required' or doc.category_id.has_partner == 'optional'"><span t-field="doc.partner_id.name"/></t></td>
+
+                                </tr>
+                            </table>
+                        </div>
+
+                        <table class="table col-md-12" name='desc'>
+                            <tr style="border: 2px solid black;">
+                                <td><strong>Description</strong> </td><br/><td> <span t-field="doc.reason"/></td> 
+                            </tr>
+                        </table>
+
+                <t t-set="product" t-value="doc.product_line_ids"/>
+                                <tr>
+                                    <td style="text-align: left;" colspan="4">
+                                        <strong><h3>Product(s)</h3></strong>
+                                    </td>
+                                </tr>
+                 <table class="table table-bordered">
+                            <thead style="border: 2px solid black;">
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody style="border: 2px solid black;">
+                                <tr t-foreach="doc.product_line_ids" t-as="product">
+                                    <td><span t-field="product.product_id.name"/></td>
+                                    <td><span t-field="product.quantity"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <t t-set="aprrover" t-value="doc.approver_ids"/>
+                                <tr>
+                                    <td style="text-align: left;" colspan="4">
+                                        <strong><h3>Approver(s)</h3></strong>
+                                    </td>
+                                </tr>
+
+
+                        <table class="table table-bordered">
+                            <thead style="border: 2px solid black;">
+                                <tr> 
+                                    <th>Approver</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody style="border: 2px solid black;">
+                                <tr t-foreach="doc.approver_ids" t-as="aprrover">
+                                    <td><span t-field="aprrover.user_id.name"/></td>
+                                    <td><span t-field="aprrover.status"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <p>Manager Signature  ____________________________</p>
+                                <p>Date  ____________________________</p>
+                            </div>
+                            <div class="col-6">
+                                <p>Employee Signature  __________________________</p>
+                                <p>Date  ____________________________</p>
+                            </div>
+                        </div>
+                    </t>
+        </template>
+
+    <template id="report_custom_approval">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="approvals_print_new.custom_approval_requests_report_id"/>
+            </t>
+        </t>
+    </template>
+
+    </data>
+</odoo>

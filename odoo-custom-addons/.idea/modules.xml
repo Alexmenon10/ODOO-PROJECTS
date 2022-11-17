@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../../../../../sftp:host=64.227.185.10/home/workspace/custom_addons/fleet_addons_extra/.idea/fleet_addons_extra.iml" filepath="$PROJECT_DIR$/../../../../../sftp:host=64.227.185.10/home/workspace/custom_addons/fleet_addons_extra/.idea/fleet_addons_extra.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/odoo-custom-addons.iml" filepath="$PROJECT_DIR$/.idea/odoo-custom-addons.iml" />
+    </modules>
+  </component>
+</project>

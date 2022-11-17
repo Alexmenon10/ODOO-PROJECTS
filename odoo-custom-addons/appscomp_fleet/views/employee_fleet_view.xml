@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id='fleet.fleet_vehicle_action' model='ir.actions.act_window'>
+        <field name="name">Vehicles</field>
+        <field name="res_model">fleet.vehicle</field>
+        <field name="view_mode">graph,kanban,tree,form,activity</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Ready to manage your fleet more efficiently ?
+            </p>
+            <p>
+                Let's create your first vehicle.
+            </p>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_view_graph" model="ir.ui.view">
+        <field name="name">fleet.vehicle.graph</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="arch" type="xml">
+            <graph string="Fleet" type="line" sample="1">
+                <field name="model_id"/>
+                <field name="state_id"/>
+                <field name="vehicle_state"/>
+            </graph>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="fleet_vehicle_inherit_form_view">
+        <field name="name">fleet.vehicle.form.inherit.view</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button type="object" name="create_vehicle_details" string="AaAAA" class="btn" invisible="1"/>
+            </header>
+            <xpath expr="//field [@name='license_plate']" position="replace">
+                <field name="license_plate"/>
+            </xpath>
+            <xpath expr="//group [1]" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <field name="fuel_type" position="replace">
+                <field name="fuel_type"/>
+            </field>
+            <xpath expr="//group [1]" position="before">
+                <group string="Vehicle">
+                    <field name="acquisition_date"/>
+                    <field name="engine_number"/>
+                    <field name="vin_sn"/>
+                    <label for="odometer" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
+                    <div class="o_row" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}">
+                        <field name="odometer"/>
+                        <field name="odometer_unit"/>
+                    </div>
+                    <field name="manager_id" domain="[('share', '=', False)]"/>
+                    <field name="location"/>
+                </group>
+            </xpath>
+            <xpath expr="//page [2]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field [@name='horsepower_tax']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field [@name='first_contract_date']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field [@name='car_value']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field [@name='net_car_value']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field [@name='residual_value']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button [@name='open_assignation_logs']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button [@name='return_action_to_open']" position="before">
+                <button name="get_vehicle_history"
+                        class="oe_stat_info"
+                        icon="fa-bars"
+                        type="object">
+                    <field name="vehicle_history_count" widget="statinfo"
+                           options="{'reload_on_button': true}"/>
+                </button>
+            </xpath>
+            <field name="vin_sn" position="after">
+                <field name="vehicle_category" required="1" readonly="1" force_save="1"/>
+            </field>
+            <field name="car_value" position="after">
+                <field name="check_availability" invisible="0"/>
+                <field name="vehicle_state" widget="radio" options="{'horizontal': true}" invisible="0"/>
+                <field name="vehicle_position" widget="radio" options="{'horizontal': true}"/>
+                <field name="start_date" invisible="1"/>
+                <field name="end_date" invisible="1"/>
+                <field name="duration" invisible="1"/>
+                <field name="str_duration" invisible="1"/>
+                <field name="travel_from" invisible="1"/>
+                <field name="travel_to" invisible="1"/>
+                <field name="trip_scheduled" invisible="1"/>
+                <field name="vehicle_full_name" invisible="1"/>
+            </field>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_model_form_view' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.model.form.inherit.extended</field>
+        <field name="model">fleet.vehicle.model</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_model_view_form"/>
+        <field name="arch" type="xml">
+            <field name="vehicle_type" position="replace">
+                <field name="vehicle_type"/>
+            </field>
+            <field name="default_fuel_type" position="replace">
+                <field name="default_fuel_type"/>
+            </field>
+        </field>
+    </record>
+
+
+    <menuitem id="employee_fleet_menu"
+              name="Planning"
+              parent="fleet.menu_root"
+              sequence="4"
+              groups="hr.group_hr_manager"/>
+</odoo>

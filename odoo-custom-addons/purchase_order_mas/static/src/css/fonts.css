@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'calibri';
+    src: url('../fonts/Calibri-Light.woff') format('woff2'), /* Super Modern Browsers */
+         
+}
+.fnt
+{
+    font:calibri !important;
+}

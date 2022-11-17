@@ -1,0 +1,65 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <record id="driver_ot_report_wizard_form" model="ir.ui.view">
+            <field name="name">driver.ot.report.wizard.form</field>
+            <field name="model">driver.ot.report.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Fleet Vehicle Usage Report">
+                    <group attrs="{'invisible':[('report_printed','=',True)]}">
+                        <group>
+                            <field name="start_date" required="1"/>
+                            <field name="driver_name"  options="{'no_create_edit': True,'no_open':True}"/>
+                            <field name="emp_id" readonly="1" force_save="1"/>
+                            <field name="driver_department" readonly="1" force_save="1"/>
+                        </group>
+                        <group>
+                            <field name="end_date" required="1"/>
+                            <field name="ho_department" required="1"/>
+                            <field name="driver_job_id" readonly="1" force_save="1"/>
+                            <field name="driver_doj" readonly="1" force_save="1"/>
+                        </group>
+                        <group>
+<!--                            <field name="type_of_vehicle"/>-->
+                            <field name="user_id" readonly="1" invisible="1"/>
+<!--                            <field name="requested" readonly="1" invisible="1"/>-->
+                        </group>
+                        <group>
+<!--                            <field name="vehicle_category"/>-->
+                        </group>
+                    </group>
+                    <group>
+                        <field name="report_printed" invisible="1"/>
+                        <group attrs="{'invisible':[('report_printed','=',False)]}">
+                            <field name="file_name" invisible="1"/>
+                            <field name="summary_file" readonly="1" filename="file_name"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string='Download' name="action_get_driver_ot_report"
+                                type="object" class="oe_highlight" icon="fa-download"
+                                attrs="{'invisible':[('report_printed','=',True)]}"/>
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_driver_ot_report">
+            <field name="name">Driver OT Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">driver.ot.report.wizard</field>
+            <!--            <field name="view_type">form</field>-->
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="driver_ot_report_wizard_form"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem id="menu_vehicle_details" name="Vehicle Management" parent="fleet.menu_root"/>
+        <menuitem action="action_driver_ot_report" id="menu_action_driver_ot_report"
+                  name="Driver OT Report"
+                  parent="menu_vehicle_details" sequence="3"/>
+    </data>
+</odoo>

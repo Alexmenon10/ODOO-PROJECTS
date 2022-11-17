@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   <data>
+        <record id="view_purchase_requisition_inherit" model="ir.ui.view">
+            <field name="name">purchaserequisition.form.inherit</field>
+            <field name="model">purchase.requisition</field>
+            <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_form"/>
+            <field name="arch" type="xml">
+                <data>
+                
+                     
+
+                       <xpath expr="//field[@name='product_qty']" position="after">
+                            
+                   <field name='on_hand_qty_req' readonly="1" force_save="1" />
+                     
+                      </xpath>
+
+
+                     
+                </data>
+            </field>
+        </record>
+
+        
+    </data>
+</odoo>

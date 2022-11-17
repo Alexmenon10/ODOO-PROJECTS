@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record model="res.groups" id="group_gate_entry_access">
+            <field name="name">Gate Entry Module access</field>
+        </record>
+
+        <record model="res.groups" id="group_gate_entry_access_for_admin">
+            <field name="name">Gate Entry Module For Admin</field>
+        </record>
+
+    </data>
+</odoo>

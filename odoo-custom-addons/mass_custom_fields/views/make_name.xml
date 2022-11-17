@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="product_reference_make_item_view" model="ir.ui.view">
+            <field name="name">product.reference.view</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+            <!-- as_equipment -->
+                <field name="barcode" position="after"> 
+                    <field name="make_item" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}"/>
+                </field>
+            </field>
+        </record>
+        
+        <record id="item_group_tree_view" model="ir.ui.view">
+            <field name="name">make_name_group_tree_view</field>
+            <field name="model">make.name.group</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="code" required="1"/>
+                    <field name="name" string="Description" required="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="make_item_action" model="ir.actions.act_window">
+            <field name="name">Make Item</field>
+            <field name="res_model">make.name.group</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+    <!--<record id="order_type1_view_inherit" model="ir.ui.view">
+        <field name="name">order.type1.view.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+          <field name="origin" position="after">
+            <field name="order_sale_id" invisible='1'/>
+           &lt;!&ndash;  <field name="z_order_types" attrs="{'invisible':[('picking_type_code','in',['incoming','internal'])]}"/>
+            <field name="order_types" attrs="{'invisible':[('picking_type_code','in',['outgoing','internal'])]}"/> &ndash;&gt;
+          </field>
+        </field>
+      </record>-->
+
+       
+        <menuitem id="make_item_group_root"
+                    name="Make Items"
+                    parent="stock.menu_stock_config_settings"
+                    sequence="6"/>
+
+        <menuitem id="menu_make_item"
+                    name="Make Name"
+                    action="make_item_action"
+                    parent="make_item_group_root"
+                    sequence="6"/>
+    </data>
+</odoo>

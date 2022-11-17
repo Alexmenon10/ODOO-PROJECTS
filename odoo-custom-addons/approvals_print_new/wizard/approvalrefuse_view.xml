@@ -1,0 +1,26 @@
+<odoo>
+    <record id="approval_refuse_view_form" model="ir.ui.view">
+        <field name="name">approval.refuse.form</field>
+        <field name="model">approval.refuse</field>
+        <field name="arch" type="xml">
+            <form string="Approval Refuse Reason">
+                <group class="oe_title">
+                    <field name="refusetype"/>
+                    <field name="refusereason"/>
+                </group>
+                <footer>
+                    <button name="action_refuse" string="Submit" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="approval_refuse_action" model="ir.actions.act_window">
+        <field name="name">Approval Refuse Reason</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">approval.refuse</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="approval_refuse_view_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

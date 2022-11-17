@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!--        &lt;!&ndash; Sequences for BLock &ndash;&gt;-->
+<!--        <record id="seq_block_code" model="ir.sequence">-->
+<!--            <field name="name">Block Sequence</field>-->
+<!--            <field name="code">block.code</field>-->
+<!--            <field name="prefix">B</field>-->
+<!--            <field name="padding">2</field>-->
+<!--            <field name="company_id" eval="False"/>-->
+<!--        </record>-->
+<!--    </data>-->
+
+<!--    <data noupdate="1">-->
+<!--        &lt;!&ndash; Sequences for Floor &ndash;&gt;-->
+<!--        <record id="seq_floor_code" model="ir.sequence">-->
+<!--            <field name="name">Floor Sequence</field>-->
+<!--            <field name="code">floor.code</field>-->
+<!--            <field name="prefix">F</field>-->
+<!--            <field name="padding">2</field>-->
+<!--            <field name="company_id" eval="False"/>-->
+<!--        </record>-->
+<!--    </data>-->
+<!--    <data noupdate="1">-->
+<!--        &lt;!&ndash; Sequences for Devision &ndash;&gt;-->
+<!--        <record id="seq_devision" model="ir.sequence">-->
+<!--            <field name="name">Devision Sequence</field>-->
+<!--            <field name="code">devision.code</field>-->
+<!--            <field name="prefix">D</field>-->
+<!--            <field name="padding">2</field>-->
+<!--            <field name="company_id" eval="False"/>-->
+<!--        </record>-->
+<!--    </data>-->
+<!--    <data noupdate="1">-->
+<!--        &lt;!&ndash; Sequences for Section &ndash;&gt;-->
+<!--        <record id="seq_section" model="ir.sequence">-->
+<!--            <field name="name">Section Sequence</field>-->
+<!--            <field name="code">section.code</field>-->
+<!--            <field name="prefix">S</field>-->
+<!--            <field name="padding">2</field>-->
+<!--            <field name="company_id" eval="False"/>-->
+<!--        </record>-->
+<!--    </data>-->
+
+    <data noupdate="1">
+        <!-- Sequences for Equipment -->
+        <record id="seq_equipment" model="ir.sequence">
+            <field name="name">Equipment Sequence</field>
+            <field name="code">equipment.code</field>
+            <field name="prefix">M</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_c_id" model="ir.sequence">
+            <field name="name">Id</field>
+            <field name="code">maintenance_extended.scarp.details</field>
+            <field name="prefix">SC01</field>
+            <field name="padding">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+         <record id="seq_d_id" model="ir.sequence">
+            <field name="name">Id</field>
+            <field name="code">maintenance_extended.transfer.details</field>
+            <field name="prefix">TF01</field>
+            <field name="padding">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+            <record id="seq_e_id" model="ir.sequence">
+            <field name="name">Id</field>
+            <field name="code">maintenance_extended.equipment.details</field>
+            <field name="prefix">EQ</field>
+            <field name="padding">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+
+
+    </data>
+
+</odoo>

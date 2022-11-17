@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- RENTAL ORDER LINES : PICKUP / RETURN WIZARD -->
+
+  <record id="rental_order_wizard_view_form" model="ir.ui.view">
+    <field name="name">mrp.bom.wizard.form</field>
+    <field name="model">mrp.bom.wizard</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <field name="mrp_bom_id"/>
+          </field>
+          <footer>
+            <button name="caliculate_qty_sf" string="Validate" type="object" class="btn-primary"/>
+            <button string="Cancel" class="btn-secondary" special="cancel"/>
+          </footer>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <act_window id="launch_the_wizard"
+            name="Launch the Wizard"
+            binding_model="mro.bom.line"
+            res_model="mrp.bom.wizard"
+            view_mode="form"
+            target="new"/>
+
+</odoo>

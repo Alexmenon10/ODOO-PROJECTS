@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Purchase Approval Configuration -->
+
+        <record model="ir.ui.view" id="purchase_approval_config_form">
+            <field name="name">purchase_approval_config_form</field>
+            <field name="model">purchase.approval.config</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group string="Purchase Approval Type">
+                                <h1>
+                                    <field name="type_of_purchase" required="1"/>
+                                    <field name="approval_type" required="1" invisible="1"/>
+                                </h1>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Approvals">
+                                <field name="approval_levels" widget="selection" required="1"/>
+                                <field name="first_approval" required="1"/>
+                                <field name="second_approval"
+                                       attrs="{'invisible': [('approval_levels', '=', 'first_level')],
+                                       'required': [('approval_levels', '!=', 'first_level')]}"/>
+                                <field name="third_approval"
+                                       attrs="{'invisible': [('approval_levels', 'in', ('first_level','second_level'))],
+                                       'required': [('approval_levels', 'not in', ('first_level','second_level'))]}"/>
+                                <field name="fourth_approval"
+                                       attrs="{'invisible': [('approval_levels', 'in', ('first_level','second_level', 'third_level'))],
+                                       'required': [('approval_levels', 'not in', ('first_level','second_level','third_level'))]}"/>
+                                <field name="fifth_approval"
+                                       attrs="{'invisible': [('approval_levels', 'in', ('first_level','second_level', 'third_level','fourth_level'))],
+                                       'required': [('approval_levels', 'not in', ('first_level','second_level','third_level','fourth_level'))]}"/>
+                            </group>
+                            <group string="Defaults">
+                                <field name='company_id' readonly="1"/>
+                                <field name='default_type' invisible="1"/>
+                                <field name='seq_id' required="1" invisible="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- explicit list view definition -->
+
+        <record model="ir.ui.view" id="purchase_approval_config_list">
+            <field name="name">purchase_approval_config_list</field>
+            <field name="model">purchase.approval.config</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="type_of_purchase"/>
+                    <field name="approval_type"/>
+                    <field name="approval_levels"/>
+                    <field name="company_id"/>
+                </tree>
+            </field>
+        </record>
+        <!-- actions opening views on models -->
+        <record model="ir.actions.act_window" id="purchase_approval_config_action">
+            <field name="name">Purchase Approval Request</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.approval.config</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'default_approval_type': 'purchase_request'}</field>
+            <field name="domain">[('approval_type', '=', 'purchase_request')]</field>
+        </record>
+
+
+                <menuitem id="purchase_approval_rules_config"
+                          name="Purchase Approval Rules"
+                          parent="main_menu_purchase_approval_request"
+                          sequence="71"/>
+
+                <menuitem
+                        name="Purchase Approval Request"
+                        id="purchase_request_config_menu"
+                        parent="main_menu_purchase_approval_request"
+                        action="purchase_approval_config_action"
+                        sequence="19"/>
+
+
+    </data>
+</odoo>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="approval_request_view_extended">
+      <field name="name">approval_request_view_extended.tree</field>
+      <field name="model">approval.category.approver</field>
+      <field name="inherit_id" ref="approvals.approval_category_approver_view_tree"/>
+        <field name="arch" type="xml">
+            <!--<xpath expr="//field[@name='approver_ids']/tree/field[@name='user_id']" position="after">
+                <field name="approve_level" readonly="1"/>
+            </xpath>-->
+            <field name="user_id" position="after">
+                <field name="approve_level"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="approval_approver_request_view_extended">
+      <field name="name">approval_approver_request_view_extended.form</field>
+      <field name="model">approval.request</field>
+      <field name="inherit_id" ref="approvals.approval_request_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='approver_ids']/tree/field[@name='user_id']" position="after">
+                <field name="approve_level" attrs="{'readonly':[('status','!=','new')]}"/>
+            </xpath>
+            <!--<field name="user_id" position="after">
+                <field name="approve_level"/>
+            </field>-->
+        </field>
+    </record>
+
+</odoo>

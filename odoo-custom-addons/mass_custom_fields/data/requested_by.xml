@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="email_grn_requested_by_template" model="mail.template">
+            <field name="name">Requested by Template</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="subject">Delivery Order Reference</field>
+            <field name="email_from">${user.email|safe}</field>
+            <field name="email_to">${(object.z_requested_emp_id.work_email)|safe}</field>
+             <field name="auto_delete" eval="True"/>         
+             <!-- <field name="partner_to" >${object.partner_id.id}</field> -->
+            <field name="body_html" type="html">
+              <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                  <tbody>
+                      <tr>
+                        <td valign="top" style="font-size: 13px;">
+                            <div style="margin: 16px 0px 16px 0px;">
+                                  <a href="${object.url}"
+                                      target="_blank"
+                                      style="background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;">View Reference</a>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+            </field>
+        <!-- <field name="user_signature" eval="False"/> -->
+        </record>
+    </data>
+</odoo>

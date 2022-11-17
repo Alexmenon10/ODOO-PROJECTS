@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="grn_order_report"
+                model="stock.picking"
+                string="GRN / DC /DO Report"
+                report_type="qweb-pdf"
+                name="material_requisition.report_stock_grn_print_document"
+                file="material_requisition.report_stock_grn_print_document"
+                print_report_name='"GRN / DC / Report"'
+                menu="True"
+
+        />
+
+        <template id="report_stock_grn_print_document">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="rec">
+                    <t t-call="web.external_layout">
+                        <t t-foreach="docs" t-as="o">
+                            <div class="page" align="center">
+
+                                <table class="table table-condensed">
+                                    <div align="left">
+                                        <t t-if="o.picking_type_id.name == 'Goods Receipt Note'">
+                                            <strong>Receive From:</strong>
+                                            <br/>
+                                            <t>
+                                                <t t-if="o.partner_id.name">
+                                                    <span t-field="o.partner_id.name"/>,
+                                                </t>
+                                                <t t-else="">
+                                                    <span>-</span>
+                                                </t>
+                                            </t>
+                                            <br/>
+
+                                            <t>
+                                                <t t-if="o.partner_id.street">
+                                                    <span t-field="o.partner_id.street"/>,
+                                                </t>
+                                                <t t-else="">
+                                                    <span>-</span>
+                                                </t>
+                                            </t>
+                                            <br/>
+                                            <t>
+                                                <t t-if="o.partner_id.street2">
+                                                    <span t-field="o.partner_id.street2"/>,
+                                                </t>
+                                                <t t-else="">
+                                                    <span>-</span>
+                                                </t>
+                                            </t>
+                                            <br/>
+                                            <t>
+                                                <t t-if="o.partner_id.city">
+                                                    <span t-field="o.partner_id.city"/>,
+                                                </t>
+                                                <t t-else="">
+                                                    <span>-</span>
+                                                </t>
+                                            </t>
+                                            <br/>
+                                            <t>
+                                                <t t-if="o.partner_id.state_id.name">
+                                                    <span t-field="o.partner_id.state_id.name"/>,
+                                                </t>
+                                                <t t-else="">
+                                                    <span>-</span>
+                                                </t>
+                                            </t>
+                                            <br/>
+                                            <t>
+                                                <t t-if="o.partner_id.country_id.name">
+                                                    <span t-field="o.partner_id.country_id.name"/>,
+                                                </t>
+                                                <t t-else="">
+                                                    <span>-</span>
+                                                </t>
+                                            </t>
+                                            <br/>
+                                            <t>
+                                                <t t-if="o.partner_id.zip">
+                                                    <span t-field="o.partner_id.zip"/>.
+                                                </t>
+                                                <t t-else="">
+                                                    <span>-</span>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </div>
+
+                                    <t t-if="o.picking_type_id.name == 'Direct Delivery'">
+                                        <h3>Direct Delivery Challan</h3>
+                                    </t>
+                                    <t t-if="o.picking_type_id.name == 'Goods Receipt Note'">
+                                        <h3>Goods Receipt Note</h3>
+                                    </t>
+                                    <t t-if="o.picking_type_id.name == 'Delivery Orders'">
+                                        <h3>Delivery Orders</h3>
+                                    </t>
+
+                                </table>
+                                <br/>
+                                <br/>
+                                <table class="table table-sm table-bordered" style="font-size:14px;">
+                                    <tr>
+                                        <td colspan="2" class="padding_all tleft tbottom ttop text-center">
+                                            <h5>
+                                                <strong>
+                                                    <span t-field="o.name"/>
+                                                </strong>
+                                            </h5>
+                                        </td>
+                                        <td colspan="2" class="padding_all tleft tbottom ttop text-center">
+                                            <h5>
+                                                <strong>
+                                                    <span t-field="o.origin"/>
+                                                </strong>
+                                            </h5>
+                                        </td>
+
+                                    </tr>
+                                    <!--                                    <tr>-->
+                                    <!--                                        <td colspan="2" class="padding_all tleft tbottom ttop text-center">-->
+                                    <!--                                            <h5>-->
+                                    <!--                                                <strong>-->
+                                    <!--                                                    <span t-field="o.date_done"/>-->
+                                    <!--                                                </strong>-->
+                                    <!--                                            </h5>-->
+                                    <!--                                        </td>-->
+                                    <!--                                        <td colspan="2" class="padding_all tleft tbottom ttop text-center">-->
+                                    <!--                                            <h5>-->
+                                    <!--                                                <strong>-->
+                                    <!--                                                    <span t-field="o.remarks"/>-->
+                                    <!--                                                </strong>-->
+                                    <!--                                            </h5>-->
+                                    <!--                                        </td>-->
+
+                                    <!--                                    </tr>-->
+
+                                    <t t-if="o.picking_type_id.name == 'Delivery Orders'">
+                                        <tr>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Location</strong>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.location_dest_id"/>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Requested Department</strong>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.ho_department"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Request Raised by</strong>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.partner_id"/>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Requested Person</strong>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.delivery_receiver"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+
+                                    <t t-if="o.picking_type_id.name == 'Direct Delivery'">
+                                        <tr>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Delivery Raised By</strong>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.delivery_sender"/>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Request Raised For:</strong>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.delivery_receiver"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Department:</strong>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.delivery_sender.department_id"/>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Department:</strong>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.delivery_receiver.department_id"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Manager:</strong>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.delivery_sender.parent_id"/>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Manager:</strong>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.delivery_receiver.parent_id"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Job Position:</strong>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.delivery_sender.job_title"/>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Job Position:</strong>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.delivery_receiver.job_title"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </table>
+                                <br/>
+                                <br/>
+                                <table class="table table-sm table-bordered" style="font-size:14px;">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th width="3%" valign="middle" align="center"
+                                                class="padding_all tbottom ttop text-center">
+                                                <strong>Sl.No.</strong>
+                                            </th>
+                                            <th width="30%" valign="middle" align="center"
+                                                class="padding_all tbottom ttop text-center">
+                                                <strong>Product List</strong>
+                                            </th>
+                                            <th width="10%" valign="middle" align="center"
+                                                class="padding_all tleft tbottom ttop text-center">
+                                                <strong>Demand Qty</strong>
+                                            </th>
+                                            <th width="10%" valign="middle" align="center"
+                                                class="padding_all tleft tbottom ttop text-center">
+                                                <t t-if="o.picking_type_id.name == 'Direct Delivery'">
+                                                    <strong>Qty Delivered</strong>
+                                                </t>
+                                                <t t-if="o.picking_type_id.name == 'Goods Receipt Note'">
+                                                    <strong>Qty Received</strong>
+                                                </t>
+                                                <t t-if="o.picking_type_id.name == 'Delivery Orders'">
+                                                    <strong>Qty Delivered</strong>
+                                                </t>
+                                            </th>
+                                            <th width="10%" valign="middle" align="center"
+                                                class="padding_all tleft tbottom ttop text-center">
+                                                <strong>UOM</strong>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="o.move_ids_without_package" t-as="l">
+                                            <td width="3%" class="padding_all tbottom ttop text-center">
+                                                <span t-esc="l_index+1"/>
+                                            </td>
+                                            <td width="30%" class="padding_all tleft tbottom ttop text-left">
+                                                <span t-field="l.product_id"/>
+                                            </td>
+                                            <td width="10%" class="padding_all tleft tbottom ttop text-right">
+                                                <span t-field="l.product_uom_qty"/>
+                                            </td>
+                                            <td width="10%" class="padding_all tleft tbottom ttop text-right">
+                                                <span t-field="l.quantity_done"/>
+                                            </td>
+                                            <td width="10%" class="padding_all tleft tbottom ttop text-center">
+                                                <span t-field="l.product_uom"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <table class="table table-sm table-bordered" style="font-size:14px;width:100%;">
+                                    <tr>
+                                        <td style='text-align:left; vertical-align:middle; width:50%;'>
+                                            <strong>Receipt Date:</strong>
+                                        </td>
+                                        <td style='text-align:left; vertical-align:middle;width:50%;'>
+                                            <span t-field="o.date_done"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style='text-align:left; vertical-align:middle; width:50%;'>
+                                            <strong>Remark:</strong>
+                                        </td>
+                                        <td style='text-align:left; vertical-align:middle; width:50%;'>
+                                            <span t-field="o.remarks"/>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </div>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <div class="row" style="font-size:14px;">
+                                <div class="col-3" align="left">
+                                    <strong>Prepared by</strong>
+                                </div>
+                                <div class="col-3" align="center">
+                                    <strong>Approved by</strong>
+                                </div>
+                                <div class="col-3" align="right">
+                                    <strong>Authorized by</strong>
+                                </div>
+                                <div class="col-3" align="right">
+                                    <strong>Received by</strong>
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

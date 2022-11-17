@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="hr_expense_view_form_inherit" model="ir.ui.view">
+        <field name="name">expense.inherited</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tax_ids']" position="after">
+                <field name="approval_expense"/>
+                <field name="approval_list" options='{"no_open": False, "no_create": True}'
+                       attrs="{'invisible':[('approval_expense', '=', False)]}"
+                       domain="[('request_status','=','approved'),('request_owner_id','=',uid),
+                       ('approval_expense_state','=','pending')]"/>
+                <field name="amount_verified" readonly="1" invisible="1"/>
+                <field name="approval_amount" attrs="{'invisible':['|',('approval_expense', '=', False),('amount_verified', '=', True)]}"/>
+                <field name="approval_fixed" attrs="{'invisible':['|',('approval_expense', '=', False),('amount_verified', '=', False)]}"/>
+                <field name="approval_initiated" attrs="{'invisible':[('approval_list', '=', False)]}"/>
+                <field name="approval_balance_amount" attrs="{'invisible':[('approval_list', '=', False)]}"/>
+                <field name="is_closed" widget="radio" options="{'horizontal': true}"
+                       attrs="{'invisible':[('approval_list', '=', False)]}"/>
+                <!--                <field name="alert_message" attrs="{'invisible':[('is_closed', '!=', 'yes')]}" readonly="1"/>-->
+<!--                <button name="expense_close_request" type="object" string="Click to Close Approval"-->
+<!--                        class="btn-danger" attrs="{'invisible':[('is_closed', '!=', 'yes')]}"/>-->
+            </xpath>
+            <xpath expr="//field[@name='is_closed']" position="after">
+                <div>
+                    <h3 attrs="{'invisible':[('is_closed', '!=', 'yes')]}" style="color:red;">
+                        <lable>Alert Note!,<br/>Once You Click on the Below Button..It will be Automatically get Posted.
+                            <hr></hr>
+                        </lable>
+                    </h3>
+                    <button name="expense_close_request" type="object" string="Click to Close Approval"
+                        class="btn-danger" attrs="{'invisible':[('is_closed', '!=', 'yes')]}"/>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='reference']" position="attributes">
+                <attribute name="string">Bill Reference/Bill Date</attribute>
+            </xpath>
+            <xpath expr="//field[@name='product_id']" position="attributes">
+                <attribute name="string">Expense Category</attribute>
+            </xpath>
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="expensed_by"/>
+                <field name="department"/>
+                <field name="units" options='{"no_create": True}'/>
+                <field name="partner_id" widget="res_partner_many2one"
+                       context="{'res_partner_search_mode': 'supplier', 'show_vat': True}"
+                       placeholder="Name, TIN, Email, or Reference"/>
+            </xpath>
+            <xpath expr="//field[@name='description']" position="after">
+                <notebook>
+                    <page string="Close Remarks">
+                        <group>
+                            <field name="close_reason"/>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+
+        </field>
+    </record>
+    <!--  Action Start  -->
+    <record id="approval_expense_action" model="ir.actions.act_window">
+        <field name="name">Approval Expense</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.expense</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Invite Your Players,Who Make Your Club Famous....!!!</p>
+        </field>
+    </record>
+
+
+    <record id="approval_close_reason_view_form" model="ir.ui.view">
+        <field name="name">approval.close.reason.form</field>
+        <field name="model">close.reason</field>
+        <field name="arch" type="xml">
+            <form string="Approval Close Reason">
+                <group class="oe_title">
+                    <field name="closereason"/>
+                </group>
+                <footer>
+                    <button name="close_reason_tictok" type="object" string="Submit" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="approval_close_reason_action" model="ir.actions.act_window">
+        <field name="name">Approval Close Reason</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">close.reason</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="approval_close_reason_view_form"/>
+        <field name="target">new</field>
+    </record>
+
+
+    <!--  Inventry Units  -->
+
+    <record id="inventry_unit_view_form" model="ir.ui.view">
+        <field name="name">inventry.unit.form</field>
+        <field name="model">inventry.unit</field>
+        <field name="arch" type="xml">
+            <form string="Warehouse">
+                <sheet>
+                    <!--                        <div class="oe_button_box" name="button_box">-->
+                    <!--                            <button name="action_view_all_routes"-->
+                    <!--                                    string="Routes"-->
+                    <!--                                    icon="fa-refresh"-->
+                    <!--                                    class="oe_stat_button"-->
+                    <!--                                    type="object"/>-->
+                    <!--                        </div>-->
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                            attrs="{'invisible': [('active', '=', True)]}"/>
+                    <label for="name"/>
+                    <h1>
+                        <field name="name" placeholder="e.g. Central Units"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="code" placeholder="e.g. CU"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="partner_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="inventry_unit_action" model="ir.actions.act_window">
+        <field name="name">Inventry Unit</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">inventry.unit</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Invite Your Units....!!!</p>
+        </field>
+    </record>
+
+
+    <menuitem id="menu_units_config" name="Units" parent="stock.menu_warehouse_config" sequence="1"
+              action="inventry_unit_action"/>
+
+</odoo>

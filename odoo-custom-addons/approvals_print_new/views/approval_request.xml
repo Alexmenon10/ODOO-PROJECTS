@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record id="approver_inherit" model="ir.ui.view">
+        <field name="name">approver.inherited</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field [@name='request_status']" position="replace">
+                <field name="request_status" widget="statusbar"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="string">Vendor</attribute>
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="replace">
+                <field name="category_id"/>
+            </xpath>
+            <xpath expr="//sheet/field [@name='has_location']" position="after">
+                <field name="source_location" invisible="1"/>
+                <field name="has_vechicle" invisible="1"/>
+                <field name="has_vechicle_specification" invisible="1"/>
+                <field name="has_estimate_amount" invisible="1"/>
+                <field name="has_borrow_approval" invisible="1"/>
+                <field name="has_priority" invisible="1"/>
+                <field name="has_payment" invisible="1"/>
+                <field name="has_procurment" invisible="1"/>
+                <field name="has_trip" invisible="1"/>
+            </xpath>
+            <xpath expr="//field [@name='request_owner_id']" position="after">
+                <field name="request_person"
+                       attrs="{'invisible':[('has_payment','==','no')], 'required': [('has_payment','==','required')], 'readonly': [('request_status','not in',('new', 'pending'))]}"/>
+                <field name="request_purpose"
+                       attrs="{'invisible':[('has_payment','==','no')], 'required': [('has_payment','==','required')], 'readonly': [('request_status','not in',('new', 'pending'))]}"
+                       placeholder="Purpose"/>
+            </xpath>
+            <xpath expr="//field [@name='amount']" position="after">
+                <field name="estimte_amount"
+                       attrs="{'invisible':[('has_estimate_amount','==','no')], 'required': [('has_estimate_amount','==','required')], 'readonly': [('request_status','not in',('new', 'pending'))]}"/>
+            </xpath>
+            <xpath expr="//field [@name='reference']" position="after">
+                <label for="unit_from" string="Unit From" attrs="{'invisible':[('has_borrow_approval','==','no')]}"/>
+                <div class="o_row no-gutters d-flex" attrs="{'invisible':[('has_borrow_approval','==','no')]}">
+                    <field name="unit_from" class="oe_inline"
+                           attrs="{'required': [('has_borrow_approval','==','required')], 'readonly': [('request_status','not in',('new', 'pending'))]}"
+                           placeholder="From"/>
+                    <field name="unit_to" class="oe_inline"
+                           attrs="{'required': [('has_borrow_approval','==','required')], 'readonly': [('request_status','not in',('new', 'pending'))]}"
+                           placeholder="To"/>
+                </div>
+                <field name="responsbility"
+                       attrs="{'invisible':[('has_borrow_approval','==','no')], 'readonly': [('request_status','not in',('new', 'pending'))]}"/>
+                <field name="priority" widget="radio" options="{'horizontal': true}"
+                       attrs="{'invisible':[('has_priority','==','no')], 'required': [('has_priority','!=','required')], 'readonly': [('request_status','not in',('new', 'pending'))]}"/>
+                <field name="unit"
+                       attrs="{'invisible':[('has_procurment','==','no')], 'readonly': [('request_status','not in',('new', 'pending'))]}"/>
+                <field name="project"
+                       attrs="{'invisible':[('has_procurment','==','no')], 'readonly': [('request_status','not in',('new', 'pending'))]}"/>
+            </xpath>
+            <xpath expr="//field [@name='reference']" position="after">
+                <field name="vechicle_type"
+                       attrs="{'invisible':[('has_vechicle','==','no')], 'required': [('has_vechicle','==','required')], 'readonly': [('request_status','not in',('new', 'pending'))]}"
+                       placeholder="e.g. Car"/>
+                <field name="vechicle_specification"
+                       attrs="{'invisible':[('has_vechicle_specification','==','no')], 'required': [('has_vechicle_specification','==','required')], 'readonly': [('request_status','not in',('new', 'pending'))]}"/>
+                <field name="pre_appreval_list" invisible="1"
+                       attrs="{'invisible':[('source_location','==','no')], 'readonly': [('request_status','not in',('new', 'pending'))]}"/>
+                <field name="pre_approval"
+                       attrs="{'invisible':[('pre_appreval_list','==',False)], 'readonly': [('request_status','not in',('new', 'pending'))]}"/>
+                <field name="pre_approval_amount"
+                       attrs="{'invisible':[('pre_appreval_list','==',False)], 'readonly': [('request_status','not in',('new', 'pending'))]}"/>
+                <field name="pre_approval_date"
+                       attrs="{'invisible':[('pre_appreval_list','==',False)], 'readonly': [('request_status','not in',('new', 'pending'))]}"/>
+            </xpath>
+            <xpath expr="//field [@name='location']" position="after">
+<!--                <label for="source" string="Travel Details" attrs="{'invisible':[('source_location','==','no')]}"/>-->
+<!--                <div class="o_row no-gutters d-flex" attrs="{'invisible':[('source_location','==','no')]}">-->
+<!--                    <field name="travel_date" class="oe_inline"-->
+<!--                           attrs="{'required': [('source_location','==','required')], 'readonly': [('request_status','not in',('new'))]}"-->
+<!--                           placeholder="Date"/>-->
+<!--                    <field name="source" class="oe_inline"-->
+<!--                           attrs="{-->
+<!--                            'readonly': [('request_status','not in',('new'))]}"-->
+<!--                           placeholder="From"/>-->
+<!--                    <field name="distination" class="oe_inline"-->
+<!--                           attrs="{'readonly': [('request_status','not in',('new'))]}"-->
+<!--                           placeholder="To"/>-->
+
+<!--                    <button string="+" name="action_split_travel" type="object"-->
+<!--                            class="oe_highlight"  attrs="{'invisible':[('request_status','!=','new')]}"/>-->
+<!--                </div>-->
+
+<!--                <label for="source" string="Trip Details" attrs="{'invisible':[('has_trip','==','no')]}"/>-->
+<!--                <div class="o_row no-gutters d-flex" attrs="{'invisible':[('has_trip','==','no')]}">-->
+<!--                    <field name="travel_date" class="oe_inline"-->
+<!--                           attrs="{'required': [('has_trip','==','required')], 'readonly': [('request_status','not in',('new'))]}"-->
+<!--                           placeholder="Date"/>-->
+<!--                    <field name="source" class="oe_inline"-->
+<!--                           attrs="{-->
+<!--                            'readonly': [('request_status','not in',('new'))]}"-->
+<!--                           placeholder="From"/>-->
+<!--                    <field name="distination" class="oe_inline"-->
+<!--                           attrs="{'readonly': [('request_status','not in',('new'))]}"-->
+<!--                           placeholder="To"/>-->
+
+<!--                    <button string="+" name="action_split_travel" type="object"-->
+<!--                            class="oe_highlight"  attrs="{'invisible':[('request_status','!=','new')]}"/>-->
+<!--                </div>-->
+                <field name="trip_count"
+                       attrs="{'invisible':[('has_trip','==','no')], 'readonly': [('request_status','not in',('new', 'pending'))]}"/>
+                <field name="persons_list" widget="many2many_tags"
+                       attrs="{'invisible':[('source_location','==','no')], 'readonly': [('request_status','not in',('new', 'pending'))]}"/>
+                <field name="person_count"
+                       attrs="{'invisible':[('source_location','==','no')], 'required': [('source_location','==','required')], 'readonly': [('request_status','not in',('new', 'pending'))]}"/>
+            </xpath>
+            <button name="action_refuse" position="replace">
+                <button name="expense_refuse_request" class="oe_highlight"
+                        string="Refuse" type="object"
+                        attrs="{'invisible':[('user_status','!=','pending')]}"
+                        modifiers="{'invisible':[['user_status','!=','pending']]}" options="{}"/>
+            </button>
+            <div class="o_not_full oe_button_box" position="inside">
+                <button name="my_expense_report"
+                        class="oe_stat_button"
+                        icon="fa-book"
+                        type="object">
+                    <field name="my_expense_report_count" widget="statinfo"
+                           options="{'reload_on_button': true}"/>
+                </button>
+            </div>
+
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Refused Remarks">
+                    <group>
+                        <field name="permenant_refused_reason" readonly="1"/>
+                        <field name="partial_refused_reason" readonly="1"/>
+                    </group>
+                </page>
+            </xpath>
+
+<!--            <xpath expr="//notebook" position="inside">-->
+<!--                <page string="Approval Travel" attrs="{'invisible': [('has_trip', '=', 'no')]}">-->
+<!--                    <field name="approval_travel_ids">-->
+<!--                        <tree editable="bottom">-->
+<!--                            <field name="source"/>-->
+<!--                            <field name="distination"/>-->
+<!--                            <field name="travel_date"/>-->
+<!--                        </tree>-->
+<!--                    </field>-->
+<!--                </page>-->
+<!--            </xpath>-->
+<!--            <xpath expr="//notebook" position="inside">-->
+<!--                <page string="Approval Trip" attrs="{'invisible': [('source_location', '=', 'no')]}">-->
+<!--                    <field name="approval_travel_ids">-->
+<!--                        <tree editable="bottom">-->
+<!--                            <field name="source"/>-->
+<!--                            <field name="distination"/>-->
+<!--                            <field name="travel_date"/>-->
+<!--                        </tree>-->
+<!--                    </field>-->
+<!--                </page>-->
+<!--            </xpath>-->
+            <xpath expr="//notebook" position="inside">
+                <page string="Pre-Approval Travel" attrs="{'invisible': [('pre_appreval_list','==',False)]}">
+                    <field name="approval_pre_travel_ids">
+                        <tree editable="bottom">
+                            <field name="pre_approval_from"/>
+                            <field name="pre_approval_to"/>
+                            <field name="pre_approval_travel_date"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    <!--  Action Start  -->
+    <record id="approval_request_action" model="ir.actions.act_window">
+        <field name="name">Approvals</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">approval.request</field>
+        <field name="view_mode">graph,tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Invite Your Players,Who Make Your Club Famous....!!!</p>
+        </field>
+    </record>
+
+
+    <record id="expense_refused_remarks_wizard" model="ir.ui.view">
+        <field name="name">expense.refused.remarks.view</field>
+        <field name="model">expense.refused.remarks</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="refused_reason" widget="radio"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="parmenant_refuse_remarks"
+                                   attrs="{'invisible':[('refused_reason', '=', 'partial')]}"
+                                   placeholder="Please enter the Permanent Refuse Remarks..."/>
+                            <field name="partial_refuse_remarks"
+                                   attrs="{'invisible':[('refused_reason', '=', 'parmenant')]}"
+                                   placeholder="Please enter the Refuse Remarks..."/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+                <footer>
+                    <button name="tick_ok" type='object' string="Apply Reason" class="oe_highlight"
+                            icon="fa-check-circle"/>
+                    <button name="tick_cancel" type='object' string="Cancel" class="oe_highlight" special="cancel"
+                            icon="fa-times-circle"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="approval_request_action_to_refuse_partial" model="ir.actions.act_window">
+        <field name="name">Approvals to review partial</field>
+        <field name="res_model">approval.request</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="domain">[('request_owner_id', '=', uid), ('request_status', '=', 'partial_refused'),
+            ('category_id', '=', active_id)]
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No new approvals to review
+            </p>
+        </field>
+    </record>
+</odoo>

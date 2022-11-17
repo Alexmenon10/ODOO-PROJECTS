@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record id="approval_request_inherit" model="ir.ui.view">
+        <field name="name">approval.request.inherited</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/field [@name='has_location']" position="after">
+                <field name="source_location" invisible="1"/>
+                <field name="fleet_control" invisible="1"/>
+                <field name="vehicle_related_approval" invisible="1"/>
+            </xpath>
+            <xpath expr="//field [@name='location']" position="after">
+                <label for="start_date" string="Date"
+                       attrs="{'invisible':['|', ('request_status','!=','new'), ('source_location','==','no')],
+                       'readonly': [('request_status','!=', 'new')]}"/>
+                <div class="o_row no-gutters d-flex"
+                     attrs="{'invisible':['|', ('request_status','!=','new'), ('source_location','==','no')],
+                                'readonly': [('request_status','!=', 'new')]}">
+                    <field name="start_date" placeholder="Start Date"
+                           attrs="{'readonly': [('request_status','!=', 'new')]}"/>
+                    <field name="end_date" placeholder="End Date"
+                           attrs="{'readonly': [('request_status','!=', 'new')]}"/>
+                </div>
+                <label for="source" string="Travel Details"
+                       attrs="{'invisible':['|', ('request_status','!=','new'),('source_location','==','no')]}"/>
+                <div class="o_row no-gutters d-flex"
+                     attrs="{'invisible':['|', ('request_status','!=','new'),('source_location','==','no')]}">
+                    <field name="source" class="oe_inline"
+                           attrs="{
+                            'readonly': [('request_status','not in',('new'))]}"
+                           placeholder="From"/>
+                    <field name="distination" class="oe_inline"
+                           attrs="{'readonly': [('request_status','not in',('new'))]}"
+                           placeholder="To"/>
+
+                    <button string="+" name="action_split_travel" type="object"
+                            class="oe_highlight" attrs="{'invisible':[('request_status','!=','new')]}"/>
+                </div>
+                <field name="approval_duration" readonly="1"
+                       attrs="{'invisible':['|', ('approval_duration','==',0),('fleet_control','==','no')]}"/>
+                <field name="total_duration" readonly="1" attrs="{'invisible':[('fleet_control','==','no')]}"/>
+                <field name="persons_list" widget="many2many_tags"
+                       attrs="{'invisible':[('fleet_control','==','no')],
+                       'readonly': [('request_status','not in',('new', 'pending'))]}"/>
+                <field name="out_persons_list" force_save="1" attrs="{'invisible':[('fleet_control','==','no')],
+                       'readonly': [('request_status','not in',('new', 'pending'))]}"/>
+                <field name="person_count" readonly="1" force_save="1"
+                       attrs="{'invisible':[('fleet_control','==','no')],
+                       'required': [('fleet_control','==','required')],
+                       'readonly': [('request_status','not in',('new', 'pending'))]}"/>
+            </xpath>
+            <xpath expr="//field [@name='partner_id']" position="after">
+                <field name="approval_trip_type" widget="radio" options="{'horizontal': true}"
+                       attrs="{'invisible':[('fleet_control','==','no')]}"/>
+                <field name="approval_approved_reason" readonly="1"/>
+            </xpath>
+
+            <xpath expr="//field [@name='amount']" position="before">
+                <field name="vehi_divr_assigned_status" readonly="1" invisible="1"/>
+                <field name="type_of_vehicle" invisible="0"
+                       attrs="{'invisible':[('fleet_control','==','no')],
+                       'required': [('fleet_control','==','required')],
+                       'readonly': [('request_status','not in',('new', 'pending'))]}"
+                />
+                <field name="priority_level" widget="priority"
+                       attrs="{'invisible':[('fleet_control','==','no')],
+                       'required': [('fleet_control','==','required')],
+                       'readonly': [('request_status','not in',('new', 'pending'))]}"
+                />
+                <field name="vehicle_category" required="1"
+                       attrs="{'invisible':[('fleet_control','==','no')],
+                       'readonly': [('request_status','!=', 'new')]}"
+                />
+                <field name="required_vehicle_and_driver"
+                       attrs="{'invisible':['|', ('type_of_vehicle','!=','company'), ('fleet_control','==','no')],
+                       'required': [('type_of_vehicle','==','company')],
+                       'readonly': [('request_status','not in',('new', 'pending'))]}"
+                />
+                <field name="model_id" options="{ 'no_create':True, 'no_create_edit':True }"
+                       attrs="{'invisible':['|', '|', ('request_status','!=','approved'), ('type_of_vehicle','!=','company'), ('fleet_control','==','no')],
+                                       'required': [('request_status','==','approved'),('type_of_vehicle','==','company')],
+                                       'readonly': [('request_status','not in',('new', 'pending','approved'))]}"
+                />
+                <field name="available_vehicle_count" readonly="1" invisible="1"/>
+                <field name="vehicle_state" readonly="1"
+                       attrs="{'invisible':['|', '|','|', ('vechicle_list','==',False), ('request_status','!=','approved'), ('type_of_vehicle','==','employee'), ('fleet_control','==','no')],
+                                       'required': [('request_status','==','approved'), ('type_of_vehicle','==','company')],
+                                       'readonly': [('request_status','not in',('new', 'pending','approved'))]}"
+                />
+                <field name="is_driver_vehicle_operation_change"
+                       attrs="{'invisible':['|', '|', ('request_status','!=','approved'), ('type_of_vehicle','==','employee'), ('fleet_control','==','no')],
+                                       'readonly': [('request_status','not in',('new', 'pending','approved'))]}"/>
+                <label for="vechicle_list" string="Vehicle" attrs="{'invisible':['|', '|', ('request_status','!=','approved'), ('type_of_vehicle','!=','company'), ('fleet_control','==','no')],
+                                       'required': [('request_status','==','approved'), ('type_of_vehicle','==','company')],
+                                       'readonly': [('request_status','not in',('new', 'pending','approved'))]}"/>
+                <div class="o_row no-gutters d-flex" attrs="{'invisible':['|', '|', ('request_status','!=','approved'), ('type_of_vehicle','!=','company'), ('fleet_control','==','no')],
+                                       'required': [('request_status','==','approved'),('type_of_vehicle','==','company')],
+                                       'readonly': [('request_status','not in',('new', 'pending','approved'))]}">
+                    <field name="vechicle_list"
+                           attrs="{'invisible':['|', '|', ('request_status','!=','approved'), ('type_of_vehicle','!=','company'), ('fleet_control','==','no')],
+                                       'required': [('request_status','==','approved'), ('type_of_vehicle','==','company')],
+                                       'readonly': [('request_status','not in',('new', 'pending','approved'))]}"
+                    />
+                    <button icon='fa-truck' string=" Reserve Now" name="open_employee_trip_form" type="object"
+                            class="btn oe_inline btn-danger oe_highlight oe_right"
+                            attrs="{'invisible':['|', '|', '|','|', ('vehicle_state','!=','un_reserved'), ('vechicle_list','==',False), ('request_status','!=','approved'), ('type_of_vehicle','!=','company'), ('fleet_control','==','no')],
+                                       'required': [('request_status','==','approved')],
+                                       'readonly': [('request_status','not in',('new', 'pending','approved'))]}"/>
+                    <button icon='fa-truck' string=" Reserved" name="open_employee_trip_form" type="object"
+                            class="btn oe_inline btn-success oe_highlight oe_right"
+                            attrs="{'invisible':['|', '|', '|','|', ('vehicle_state','==','un_reserved'), ('vechicle_list','==',False), ('request_status','!=','approved'), ('type_of_vehicle','==','employee'), ('fleet_control','==','no')],
+                                       'required': [('request_status','==','approved')],
+                                       'readonly': [('request_status','not in',('new', 'pending','approved'))]}"/>
+                    <button icon="fa-refresh" string="Update" name="change_assigned_dri_veh" type="object"
+                            class="oe_inline btn btn-warning"
+                            attrs="{'invisible':['|', '|', '|','|', ('is_driver_vehicle_operation_change','==',False),('vechicle_list','==',False), ('request_status','!=','approved'), ('type_of_vehicle','!=','company'), ('fleet_control','==','no')],
+                                       'required': [('request_status','==','approved')],
+                                       'readonly': [('request_status','not in',('new', 'pending','approved'))]}"
+                    />
+                </div>
+                <field name="vehicle_image" widget="image" style='height:70px;width:70px;'
+                       attrs="{'invisible':['|', '|','|', ('vechicle_list','==',False), ('request_status','!=','approved'), ('type_of_vehicle','!=','company'), ('fleet_control','==','no')],
+                                       'readonly': [('request_status','not in',('new', 'pending','approved'))]}"
+                />
+                <field name="vehicle_odoometer" invisible="1"
+                       attrs="{'invisible':['|', ('vechicle_list','==',False), ('fleet_control','==','no')],
+                       'required': [('fleet_control','==','required')],
+                       'readonly': [('request_status','not in',('new', 'pending'))]}"
+                />
+                <field name="vehi_divr_assigned_status" readonly="1" invisible="1"/>
+                <field name="driver_state" readonly="1"
+                       attrs="{'invisible':['|', '|','|', ('vehicle_driver','==',False), ('request_status','!=','approved'), ('type_of_vehicle','==','employee'), ('fleet_control','==','no')],
+                                       'required': [('request_status','==','approved'), ('type_of_vehicle','==','company')],
+                                       'readonly': [('request_status','not in',('new', 'pending','approved'))]}"
+                />
+                <field name="veh_driv_assign" invisible="1"/>
+                <label for="emp_vechicle" string="Vehicle"
+                       attrs="{'invisible':['|', ('type_of_vehicle','!=','employee'), ('fleet_control','==','no')],
+                       'required': [('type_of_vehicle','==','employee')],
+                       'readonly': [('request_status','not in',('new', 'pending'))]}"/>
+                <div class="o_row no-gutters d-flex"
+                     attrs="{'invisible':['|', ('type_of_vehicle','!=','employee'), ('fleet_control','==','no')],
+                       'required': [('type_of_vehicle','==','employee')],
+                       'readonly': [('request_status','not in',('new', 'pending'))]}">
+                    <field name="emp_vechicle"
+                           attrs="{'invisible':['|', ('type_of_vehicle','!=','employee'), ('fleet_control','==','no')],
+                       'required': [('type_of_vehicle','==','employee'),],
+                       'readonly': [('request_status','not in',('new', 'pending'))]}"
+                    />
+                    <button icon='fa-user' string=" Reserve Now" name="employee_vehicle_details" type="object"
+                            class="btn oe_inline  btn-danger oe_highlight oe_right"
+                            attrs="{'invisible':['|', '|', ('emp_vechicle','==',False),('type_of_vehicle','!=','employee'),('request_status','!=','approved')],
+                       'required': [('type_of_vehicle','==','employee')],
+                       'readonly': [('request_status','not in',('new', 'pending'))]}"/>
+                </div>
+                <field name="rental_vechicle"
+                       attrs="{'invisible':['|','|', ('request_status','!=','approved'), ('type_of_vehicle','!=','rental'), ('fleet_control','==','no')],
+                       'required': [('request_status','==','approved'),('type_of_vehicle','==','rental')],
+                       'readonly': [('request_status','not in',('new', 'pending', 'approved'))]}"
+                />
+                <field name="emp_vehicle_driver" class="oe_inline"
+                       attrs="{'invisible':[('type_of_vehicle','!=','employee')],
+                                       'required': [('type_of_vehicle','==','employee')],
+                                       'readonly': [('request_status','not in',('new', 'pending','approved'))]}"
+                />
+                <label for="vehicle_driver" string="Driver" attrs="{'invisible':['|', '|', ('request_status','!=','approved'), ('type_of_vehicle','!=','company'), ('fleet_control','==','no')],
+                                       'required': [('request_status','==','approved'), ('type_of_vehicle','==','company')],
+                                       'readonly': [('request_status','not in',('new', 'pending','approved'))]}"/>
+                <div class="o_row no-gutters d-flex" attrs="{'invisible':['|', '|', ('request_status','!=','approved'), ('type_of_vehicle','!=','company'), ('fleet_control','==','no')],
+                                       'required': [('request_status','==','approved'),('type_of_vehicle','==','company')],
+                                       'readonly': [('request_status','not in',('new', 'pending','approved'))]}">
+                    <field name="vehicle_driver" class="oe_inline"
+                           attrs="{'invisible':['|', '|', ('request_status','!=','approved'), ('type_of_vehicle','!=','company'), ('fleet_control','==','no')],
+                                       'required': [('request_status','==','approved'),('type_of_vehicle','==','company')],
+                                       'readonly': [('request_status','not in',('new', 'pending','approved'))]}"
+                    />
+                    <button icon='fa-user' string=" Reserve Now" name="open_employee_trip_form" type="object"
+                            class="btn oe_inline  btn-danger oe_highlight oe_right"
+                            attrs="{'invisible':['|', '|', '|', ('driver_state','!=','un_reserved'), ('vehicle_driver','==',False), ('request_status','!=','approved'), ('fleet_control','==','no')],
+                                       'required': [('request_status','==','approved')],
+                                       'readonly': [('request_status','not in',('new', 'pending','approved'))]}"/>
+                    <button icon='fa-user' string=" Reserved" name="open_employee_trip_form" type="object"
+                            class="btn oe_inline btn-success oe_highlight oe_right"
+                            attrs="{'invisible':['|', '|', '|', ('driver_state','==','un_reserved'), ('vehicle_driver','==',False), ('request_status','!=','approved'), ('fleet_control','==','no')],
+                                       'required': [('request_status','==','approved')],
+                                       'readonly': [('request_status','not in',('new', 'pending','approved'))]}"/>
+                    <button icon="fa-refresh" string="Update" name="change_assigned_dri_veh" type="object"
+                            class="oe_inline btn btn-warning"
+                            attrs="{'invisible':['|', '|','|', ('is_driver_vehicle_operation_change','==',False), ('vehicle_driver','==',False), ('request_status','!=','approved'), ('fleet_control','==','no')],
+                                       'required': [('request_status','==','approved')],
+                                       'readonly': [('request_status','not in',('new', 'pending','approved'))]}"
+                    />
+                </div>
+                <field name="driver_image" widget="image" style='height:70px;width:70px;'
+                       attrs="{'invisible':['|', '|','|', ('vehicle_driver','==',False), ('request_status','!=','approved'), ('type_of_vehicle','!=','company'), ('fleet_control','==','no')],
+                                       'readonly': [('request_status','not in',('new', 'pending','approved'))]}"
+                />
+                <field name="approval_position" invisible="1"
+                       attrs="{'invisible':['|', ('type_of_vehicle','==','employee'), ('fleet_control','==','no')],
+                       'required': [('fleet_control','==','required')],
+                       'readonly': [('request_status','not in',('new', 'pending'))]}"
+                />
+            </xpath>
+
+            <div class="o_not_full oe_button_box" position="inside">
+                <button name="approval_driver_history_record"
+                        class="oe_stat_button"
+                        icon="fa-book"
+                        type="object" attrs=" {'invisible': [('approval_driver_history_count','==',0)]}">
+                    <field name="approval_driver_history_count" widget="statinfo"
+                           options="{'reload_on_button': true}"/>
+                </button>
+                <button name="approval_vehicle_history_record"
+                        class="oe_stat_button"
+                        icon="fa-book"
+                        type="object" attrs=" {'invisible': [('approval_vehicle_history_count','==',0)]}">
+                    <field name="approval_vehicle_history_count" widget="statinfo"
+                           options="{'reload_on_button': true}"/>
+                </button>
+            </div>
+            <xpath expr="//notebook/page[@name='products']" position="before">
+                <page string="Approval Trip" attrs="{'invisible': [('source_location', '=', 'no')]}">
+                    <field name="approval_travel_ids" attrs="{'readonly': [('request_status', '!=', 'new')]}">
+                        <tree editable="bottom" create="0" delete="0">
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="source"/>
+                            <field name="distination"/>
+                            <field name="duration"/>
+                            <field name="travel_date" invisible="1"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Other Information" attrs="{'invisible': [('fleet_control', '=', 'no')]}">
+                    <group>
+                        <group>
+                            <field name="approved_by"/>
+                            <field name="approved_date"/>
+                            <field name="assigned_by"/>
+                            <field name="assigned_date"/>
+                            <field name="vehicle_remark"/>
+                            <field name="driver_remark"/>
+                        </group>
+                        <group>
+                            <field name="one_way_trip_reamrk"/>
+                            <field name="one_way_attachment" filename="one_way_attachment_image"/>
+                            <field name="one_way_attachment_detail" invisible="1"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//field [@name='request_owner_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//field [@name='request_owner_id']" position="attributes">
+                <attribute name="string">Request Name</attribute>
+            </xpath>
+            <xpath expr="//field [@name='category_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="approval_request_tree_inherit" model="ir.ui.view">
+        <field name="name">approval.request.tree.inherited</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="vehicle_related_approval"/>
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="priority_level" widget="priority"/>
+            </xpath>
+            <xpath expr="//field[@name='request_status']" position="after">
+                <field name="vehi_divr_assigned_status"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="approval_request_search_inherit" model="ir.ui.view">
+        <field name="name">approval.request.search.inherited</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_search_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="vehicle_related_approval" string="Vehicle"/>
+                <separator/>
+                <filter name="approval_assigned_id" string="Un Assigned Approvals" icon="terp-partner"
+                        domain="[('vehi_divr_assigned_status','=','un_assigned')]"/>
+                <filter icon="terp-gtk-media-pause" string="Approved" name="approved"
+                        domain="[('request_status','=','approved')]" help="Approvals Approved Order"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!--  Action Start  -->
+    <record id="vehicle_approval_request_action" model="ir.actions.act_window">
+        <field name="name">Approved Approvals</field>
+        <field name="res_model">approval.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('request_status','=','approved'),('vehicle_related_approval','=',True),
+            ('type_of_vehicle','!=','employee'), ]
+        </field>
+        <field name="context">{'search_default_approval_assigned_id': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Approvals
+            </p>
+            <p>
+                Let's go to the <a type="action" class="text-primary"
+                                   name="%(approvals.approval_category_action_new_request)d">new request
+            </a> menu
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+            id="vehicle_approvals_approval_menu"
+            parent="appscomp_fleet.employee_fleet_menu"
+            name="Scheduling"
+            action="vehicle_approval_request_action"
+            sequence="1"/>
+
+    <record id="hr_employee_view_form_inherit_fleet" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.fleet</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <field name="user_id" position='after'>
+                <field name="driver_licence_registration_date"
+                       attrs="{'invisible':[('emp_diver','!=',True)],'required':[('emp_diver','!=',False)]}"/>
+                <field name="driver_licence_expire_date"
+                       attrs="{'invisible':[('emp_diver','!=',True)],'required':[('emp_diver','!=',False)]}"/>
+                <field name="driver_licence_no"
+                       attrs="{'invisible':[('emp_diver','!=',True)],'required':[('emp_diver','!=',False)]}"/>
+
+                <field name="emp_diver"/>
+                <field name="driver_state" widget="radio" options="{'horizontal': true}"
+                       attrs="{'invisible':[('emp_diver','==',False)]}"/>
+                <field name="driver_position" widget="radio" options="{'horizontal': true}"
+                       attrs="{'invisible':[('emp_diver','==',False)]}"/>
+            </field>
+        </field>
+    </record>
+    <record id="hr_employee_fleet_driver" model="ir.actions.act_window">
+        <field name="name">Driver</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="domain">[('emp_diver','=',True)]</field>
+        <field name="context">{'chat_icon': True, 'default_emp_diver': True, 'default_driver_state':
+            'un_reserved','default_job_title':'Driver'}
+        </field>
+        <field name="view_id" eval="False"/>
+        <field name="search_view_id" ref="hr.view_employee_filter"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new driver
+            </p>
+            <p>
+                With just a quick glance on the Odoo driver screen, you
+                can easily find all the information you need for each person;
+                contact data, job position, availability, etc.
+            </p>
+        </field>
+    </record>
+
+
+    <menuitem id="employee_fleet_driver_menu"
+              name="Driver"
+              parent="hr.menu_hr_employee_payroll"
+              action="hr_employee_fleet_driver"
+              sequence="4"/>
+
+    <menuitem name="Invoicing"
+        id="menu_finance"
+        groups="account.group_account_readonly,account.group_account_invoice"
+        web_icon="account,static/description/icon.png"
+        sequence="55" active="0"/>
+
+
+</odoo>

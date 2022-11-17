@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="purchase_order_report"
+                model="purchase.order"
+                string="Purchase Order Report"
+                report_type="qweb-pdf"
+                name="material_requisition.report_po_for_supplier_document"
+                file="material_requisition.report_po_for_supplier_document"
+                print_report_name='"Purchase details"'
+                menu="True"
+
+        />
+
+
+        <template id="report_po_for_supplier_document">
+            <t t-call="web.html_container">
+                <t t-call="web.basic_layout">
+                    <t t-foreach="docs" t-as="o">
+
+
+                        <div class="page" style="font-size:15px;">
+                            <div class="oe_structure"/>
+
+                            <tr>
+
+                                <div style="width: 45%;float: top;">
+                                    <img src='/web/binary/company_logo' style="width:30%"/>
+                                </div>
+
+
+                                <div class="page" align="center">
+                                    <h3 style="text-align:center;">PURCHASE ORDER</h3>
+                                </div>
+                            </tr>
+
+                            <br/>
+                            <br/>
+
+                            <table>
+                                <tr>
+                                    <td>
+                                        <h5>
+                                            <u>
+                                                <strong>Company Address:</strong>
+                                            </u>
+                                        </h5>
+
+
+                                        <div>
+                                            <strong>
+                                                <span t-field="o.company_id.name"/>
+                                            </strong>
+                                            <br/>
+                                            <span t-field="o.company_id.partner_id.street"/>
+                                            <br/>
+                                            <span t-field="o.company_id.partner_id.street2"/>
+                                            <br/>
+                                            <span t-field="o.company_id.partner_id.city"/>
+
+                                            <span t-field="o.company_id.partner_id.zip"/>
+                                            <br/>
+                                        </div>
+                                        <div>
+                                            Ph.no:
+                                            <span t-field="o.company_id.partner_id.phone"/>
+                                            <br/>
+                                            Email:
+                                            <span t-field="o.company_id.partner_id.email"/>
+                                            <br/>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+
+                        <br/>
+                        <br/>
+                        <br/>
+
+                        <div class="page">
+                            <style>
+                                .ttop{
+                                border-top:1px solid #888;
+                                }
+                                .tbottom{
+                                border-bottom:1px solid #888;
+                                }
+                                .tleft{
+                                border-left:1px solid #888;
+                                }
+                                .tright{
+                                border-right: 1px solid #888;
+                                }
+                                .grid{
+                                border:1px solid #888;
+                                }
+                                .padding_all{
+                                padding:7px;
+                                }
+                                .padding_location{
+                                padding:12px;
+                                }
+                            </style>
+
+                            <div style="page-break-after: always;">
+                                <div class="oe_structure"/>
+                                <div class="row col-xs-12">
+
+                                    <br/>
+                                    <br/>
+
+                                    <table class="grid" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th width="35%" valign="middle" align="center"
+                                                    class="padding_all tbottom ttop text-center">
+                                                    <strong>Product Number</strong>
+                                                </th>
+
+                                                <th width="35%" valign="middle" align="center"
+                                                    class="padding_all tleft tbottom ttop text-center">
+                                                    <strong>Supplier Name</strong>
+                                                </th>
+
+                                                <th width="30%" valign="middle" align="center"
+                                                    class="padding_all tleft tbottom ttop text-center">
+                                                    <strong>Date</strong>
+                                                </th>
+
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr>
+                                                <td width="35%" valign="middle" align="center"
+                                                    class="padding_all tbottom ttop">
+                                                    <span t-field="o.name"/>
+                                                </td>
+                                                <td width="35%" valign="middle" align="center"
+                                                    class="padding_all tleft tbottom ttop text-center">
+                                                    <span t-field="o.partner_id"/>
+                                                </td>
+                                                <td width="30%" valign="middle" align="center"
+                                                    class="padding_all tleft tbottom ttop text-center">
+                                                    <span t-field="o.date_order"
+                                                          t-field-options='{"format": "dd-MM-yyyy"}'/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <br/>
+                                <br/>
+
+                                <div class="row col-xs-12">
+                                    <table class="table table-sm table-bordered" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th width="50%" valign="middle" align="center"
+                                                    class="padding_all bottom ttop text-center">
+                                                    <strong>SUPPLIER</strong>
+                                                </th>
+                                                <th width="50%" valign="middle" align="center"
+                                                    class="padding_all left bottom ttop text-center">
+                                                    <strong>BUYER</strong>
+                                                </th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr>
+                                                <td width="50%" valign="middle" align="left"
+                                                    class="padding_all bottom ttop">
+                                                    <div>
+                                                        <t t-if="o.partner_id.ref">
+                                                            <span t-field="o.partner_id.ref"/>
+                                                        </t>
+                                                        <t t-if="not o.partner_id.ref">
+                                                            <span t-field="o.partner_id.name"/>
+                                                        </t>
+                                                    </div>
+                                                    <div>
+                                                        <span t-field="o.partner_id.street"/>
+                                                    </div>
+                                                    <div>
+                                                        <span t-field="o.partner_id.street2"/>
+                                                    </div>
+                                                    <div>
+                                                        <span t-field="o.partner_id.city"/>
+                                                    </div>
+                                                    <div>
+                                                        <span t-field="o.partner_id.state_id.name"/>
+                                                        <span t-field="o.partner_id.zip"/>
+                                                    </div>
+                                                    <div>
+                                                        <span t-field="o.partner_id.country_id.name"/>
+                                                    </div>
+                                                </td>
+
+
+                                                <td width="50%" valign="middle" align="left"
+                                                    class="padding_all bottom ttop">
+                                                    <div>
+                                                        <t t-if="o.partner_id.ref">
+                                                            <span t-field="o.partner_id.ref"/>
+                                                        </t>
+                                                        <t t-if="not o.partner_id.ref">
+                                                            <span t-field="o.partner_id.name"/>
+                                                        </t>
+                                                    </div>
+                                                    <div>
+                                                        <span t-field="o.partner_id.street"/>
+                                                    </div>
+                                                    <div>
+                                                        <span t-field="o.partner_id.street2"/>
+                                                    </div>
+                                                    <div>
+                                                        <span t-field="o.partner_id.city"/>
+                                                    </div>
+                                                    <div>
+                                                        <span t-field="o.partner_id.state_id.name"/>
+                                                        <span t-field="o.partner_id.zip"/>
+                                                    </div>
+                                                    <div>
+                                                        <span t-field="o.partner_id.country_id.name"/>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <br/>
+                                <br/>
+
+                                <h4 style="text-align:left;">Product :</h4>
+
+                                <div class="row col-xs-14">
+                                    <table class="grid" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th width="10%" valign="middle" align="center"
+                                                    class="padding_all tbottom ttop text-center">
+                                                    <strong>Sl.No.</strong>
+                                                </th>
+                                                <th width="10%" valign="middle" align="center"
+                                                    class="padding_all tbottom ttop text-center">
+                                                    <strong>Product</strong>
+                                                </th>
+
+                                                <th width="20%" valign="middle" align="center"
+                                                    class="padding_all tleft tbottom ttop text-center">
+                                                    <strong>Quantity</strong>
+                                                </th>
+
+                                                <th width="20%" valign="middle" align="center"
+                                                    class="padding_all tleft tbottom ttop text-center">
+                                                    <strong>Quantity Received</strong>
+                                                </th>
+
+                                                <th width="20%" valign="middle" align="center"
+                                                    class="padding_all tleft tbottom ttop text-center">
+                                                    <strong>Billed</strong>
+                                                </th>
+
+
+                                                <th width="20%" valign="middle" align="center"
+                                                    class="padding_all tleft tbottom ttop text-center">
+                                                    <strong>Unit Price</strong>
+                                                </th>
+
+
+                                                <th width="20%" valign="middle" align="center"
+                                                    class="padding_all tleft tbottom ttop text-center">
+                                                    <strong>Sub Total</strong>
+                                                </th>
+
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr t-foreach="o.order_line" t-as="l">
+                                                <td width="10%" class="padding_all tbottom ttop text-center">
+                                                    <span t-esc="l_index+1"/>
+                                                </td>
+                                                <td width="20%" class="padding_all tleft tbottom ttop text-center">
+                                                    <span t-field="l.product_id.name"/>
+                                                </td>
+
+                                                <td width="20%" class="padding_all tleft tbottom ttop text-center">
+                                                    <span t-field="l.product_qty"/>
+                                                </td>
+
+                                                <td width="20%" class="padding_all tleft tbottom ttop text-center">
+                                                    <span t-field="l.qty_received"/>
+                                                </td>
+                                                <td width="20%" class="padding_all tleft tbottom ttop text-center">
+                                                    <span t-field="l.qty_invoiced"/>
+                                                </td>
+
+                                                <td width="20%" class="padding_all tleft tbottom ttop text-center">
+                                                    <span t-field="l.price_unit"/>
+                                                </td>
+
+                                                <td width="20%" class="padding_all tleft tbottom ttop text-center">
+                                                    <span t-field="l.price_subtotal"/>
+                                                </td>
+                                            </tr>
+
+
+                                            <!--                                            <tr>-->
+                                            <!--                                                <td width="10%" class="padding_all tbottom ttop"></td>-->
+                                            <!--                                                <td width="20%" class="padding_all tbottom ttop"></td>-->
+                                            <!--                                                <td width="10%" class="padding_all tbottom ttop"></td>-->
+                                            <!--                                                <td width="20%" class="padding_all tbottom ttop"></td>-->
+
+                                            <!--                                                <td width="20%" class="padding_all tleft tbottom ttop">-->
+                                            <!--                                                    <strong>Sub-Total</strong>-->
+                                            <!--                                                </td>-->
+
+                                            <!--                                                <td width="20%" class="padding_all tleft tbottom ttop text-right"-->
+                                            <!--                                                    align="right">-->
+                                            <!--                                                    <span t-field="l.price_subtotal"/>-->
+                                            <!--                                                </td>-->
+                                            <!--                                            </tr>-->
+
+
+                                            <tr>
+                                                <td width="10%" class="padding_all tbottom ttop"></td>
+                                                <td width="20%" class="padding_all tbottom ttop"></td>
+                                                <td width="10%" class="padding_all tbottom ttop"></td>
+                                                <td width="20%" class="padding_all tbottom ttop"></td>
+                                                <td width="20%" class="padding_all tbottom ttop"></td>
+
+
+                                                <td width="20%" class="padding_all tleft tbottom ttop">
+                                                    <strong>Total</strong>
+                                                </td>
+
+                                                <td width="20%" class="padding_all tleft tbottom ttop text-right"
+                                                    align="right">
+                                                    <span t-field="o.amount_total"/>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <br/>
+                                <br/>
+
+                                <div class="row col-xs-12" style="page-break-before: auto;page-break-inside: avoid;">
+                                    <div class="col-xs-6" style="text-align: right;">
+                                        <div class="row">
+                                            <table width="100%" class="table">
+                                                <tr>
+                                                    <td>
+                                                        <div class="row col-xs-12" style="padding-left: 25px;">
+                                                            <strong style="padding-right">PREPARED BY</strong>
+                                                            <br/>
+                                                            <br/>
+                                                            <br/>
+                                                            <br/>
+                                                            <span>Signature</span>
+                                                        </div>
+                                                    </td>
+
+                                                    <td>
+                                                        <div class="row col-xs-12" style="padding-left: 450px;">
+                                                            <strong>
+                                                                <span t-field="o.company_id.name"/>
+                                                            </strong>
+                                                            <br/>
+                                                            <br/>
+                                                            <br/>
+                                                            <br/>
+                                                            <span>Authorized Signatory</span>
+                                                        </div>
+                                                    </td>
+
+                                                </tr>
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <data>
+        <record id="view_driver_trip_history_form" model="ir.ui.view">
+            <field name="name">driver.trip.history.form</field>
+            <field name="model">driver.trip.history</field>
+            <field name="arch" type="xml">
+                <form string="Driver History">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="driver_name" readonly="1"/>
+                                <field name="driver_department" readonly="1"/>
+                                <field name="driver_job_id" readonly="1"/>
+                                <field name="driver_manager" readonly="1"/>
+                                <field name="type_of_vehicle" readonly="1"/>
+                                <field name="vehicle_category" readonly="1"/>
+                                <field name="persons_list" widget="many2many_tags"/>
+                            </group>
+                            <group>
+                                <field name="driver_state" widget="radio" options="{'horizontal': true}" readonly="1" invisible="1"/>
+                                <field name="driver_position" widget="radio" options="{'horizontal': true}" readonly="1" invisible="1"/>
+                                <field name="driver_approval_request_id" invisible="1"/>
+                                <field name="source_document" readonly="1"/>
+                                <field name="vehicle_name" readonly="1" attrs="{'invisible': [('vehicle_name', '==', False)]}"/>
+                                <field name="emp_vehicle" readonly="1" attrs="{'invisible': [('emp_vehicle', '==', False)]}"/>
+                                <field name="multiple_approval_ids" widget="many2many_tags"/>
+<!--                                <label for="opening_km" string="Opening KM" readonly="1"/>-->
+<!--                                <div class="o_row no-gutters d-flex">-->
+<!--                                    <field name="opening_km" class="oe_inline" readonly="1"/>-->
+<!--                                    <strong class='oe_inline'>/KM</strong>-->
+<!--                                </div>-->
+<!--                                <label for="closing_km" string="Closing KM"/>-->
+<!--                                <div class="o_row no-gutters d-flex">-->
+<!--                                    <field name="closing_km" class="oe_inline" readonly="1"/>-->
+<!--                                    <strong class='oe_inline'>/KM</strong>-->
+<!--                                </div>-->
+<!--                                <label for="total_kilometer" string="Total KM"/>-->
+<!--                                <div class="o_row no-gutters d-flex">-->
+<!--                                    <field name="total_kilometer" class="oe_inline" readonly="1"/>-->
+<!--                                    <strong class='oe_inline'>/KM</strong>-->
+<!--                                </div>-->
+                                <!--                                <field name="closing_km"/>-->
+                                <!--                                <field name="total_kilometer"/>/-->
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Travel">
+                                <h2>
+                                    <lable>Driver Sheduled Trip Info</lable>
+                                </h2>
+                                <field name="driver_travel_detail_ids" readonly="0" nolabel="0" widget="section_and_note_one2many"
+                                       mode="tree,kanban">
+                                    <tree editable="bottom" create="0" delete="1">
+                                        <control>
+                                            <create name="add_line_control" string="Add a line"/>
+                                            <create name="add_section_control" string="Add a section"
+                                                    context="{'default_display_type': 'line_section'}"/>
+                                            <create name="add_note_control" string="Add a note"
+                                                    context="{'default_display_type': 'line_note'}"/>
+                                        </control>
+                                        <field name="display_type" invisible="1" readonly="1"/>
+                                        <field name="name" widget="section_and_note_text" readonly="1" force_save="1"/>
+                                        <field name="start_date"/>
+                                        <field name="end_date"/>
+                                        <field name="travel_from"/>
+                                        <field name="travel_to"/>
+                                        <field name="duration"/>
+                                    </tree>
+                                </field>
+                                <h2>
+                                    <lable>Driver Check In/Out Info</lable>
+                                </h2>
+                                <field name="driver_beta_sheet_ids" readonly="0">
+                                    <tree editable="bottom" string="Driver Check In/Out Info" create="1" delete="1">
+                                        <field name="ref_name" optional="hide"/>
+                                        <field name="reference"/>
+                                        <field name="unit_from" optional="hide"/>
+                                        <field name="out_time"/>
+                                        <field name="opening_km"/>
+                                        <field name="out_verified_by" optional="hide"/>
+                                        <field name="out_security"/>
+                                        <field name="unit_to" optional="hide"/>
+                                        <field name="in_time"/>
+                                        <field name="closing_km"/>
+                                        <field name="in_verified_by" optional="hide"/>
+                                        <field name="in_security"/>
+                                        <field name="duration"/>
+                                        <field name="total_kilometer"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_driver_trip_history_tree" model="ir.ui.view">
+            <field name="name">driver.trip.history.tree</field>
+            <field name="model">driver.trip.history</field>
+            <field name="arch" type="xml">
+                <tree default_order='source_document desc'>
+                    <field name="driver_name"/>
+                    <field name="driver_department"/>
+                    <field name="driver_job_id"/>
+                    <field name="driver_manager"/>
+                    <field name="driver_state"/>
+                    <field name="driver_position"/>
+                    <field name="source_document"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id='action_driver_history' model='ir.actions.act_window'>
+            <field name="name">Driver Travel History</field>
+            <field name="res_model">driver.trip.history</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('vehicle_category','=','car')]</field>
+        </record>
+
+        <menuitem name="Car Driver History" id="menu_driver_history" action="action_driver_history"
+                  parent="appscomp_fleet.employee_fleet_menu" sequence="5"/>
+
+        <record id='action_employee_owned_vehicle' model='ir.actions.act_window'>
+            <field name="name">Bike History</field>
+            <field name="res_model">driver.trip.history</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type_of_vehicle','=','employee'),('vehicle_category','=','bike')]</field>
+        </record>
+        <menuitem name="Bike History" id="menu_employee_owned_vehicle" action="action_employee_owned_vehicle"
+                  parent="fleet.fleet_configuration" sequence="7"/>
+
+        <record id='action_truck_driver_history' model='ir.actions.act_window'>
+            <field name="name">Driver Travel History</field>
+            <field name="res_model">driver.trip.history</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('vehicle_category','=','truck')]</field>
+        </record>
+
+        <menuitem name="Truck Driver History" id="menu_truck_driver_history" action="action_truck_driver_history"
+                  parent="appscomp_fleet.employee_fleet_menu" sequence="6"/>
+
+        <record id="view_vehicle_trip_history_form" model="ir.ui.view">
+            <field name="name">vehicle.trip.history.form</field>
+            <field name="model">vehicle.trip.history</field>
+            <field name="arch" type="xml">
+                <form string="Vehicle History">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="vehicle_name" readonly="1"/>
+                                <label for="opening_km" string="Opening KM"/>
+                                <div class="o_row no-gutters d-flex">
+                                    <field name="opening_km" class="oe_inline" readonly="1"/>
+                                    <strong class='oe_inline'>/KM</strong>
+                                </div>
+                                <label for="closing_km" string="Closing KM"/>
+                                <div class="o_row no-gutters d-flex">
+                                    <field name="closing_km" class="oe_inline" readonly="1"/>
+                                    <strong class='oe_inline'>/KM</strong>
+                                </div>
+                                <label for="total_kilometer" string="Total KM"/>
+                                <div class="o_row no-gutters d-flex">
+                                    <field name="total_kilometer" class="oe_inline" readonly="1"/>
+                                    <strong class='oe_inline'>/KM</strong>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="vehicle_state" widget="radio" options="{'horizontal': true}" readonly="1"/>
+                                <field name="vehicle_position" widget="radio" options="{'horizontal': true}" readonly="1"/>
+                                <field name="vehicle_travel_detail_ids" invisible="1" readonly="1"/>
+                                <field name="source_document" readonly="1"/>
+                                <field name="driver_name" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Travel">
+                                <field name="vehicle_travel_detail_ids" readonly="1" nolabel="0" widget="section_and_note_one2many"
+                                       mode="tree,kanban">
+                                    <tree editable="bottom" create="0" delete="0">
+                                        <control>
+                                            <create name="add_line_control" string="Add a line"/>
+                                            <create name="add_section_control" string="Add a section"
+                                                    context="{'default_display_type': 'line_section'}"/>
+                                            <create name="add_note_control" string="Add a note"
+                                                    context="{'default_display_type': 'line_note'}"/>
+                                        </control>
+                                        <field name="display_type" invisible="1" readonly="1"/>
+                                        <field name="name" widget="section_and_note_text" readonly="1" force_save="1"/>
+                                        <field name="start_date"/>
+                                        <field name="end_date"/>
+                                        <field name="travel_from"/>
+                                        <field name="travel_to"/>
+                                        <field name="duration"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_vehicle_trip_history_tree" model="ir.ui.view">
+            <field name="name">vehicle.trip.history.tree</field>
+            <field name="model">vehicle.trip.history</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="vehicle_name"/>
+                    <field name="driver_name"/>
+                    <field name="vehicle_state"/>
+                    <field name="vehicle_position"/>
+                    <field name="source_document"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id='action_vehicle_history' model='ir.actions.act_window'>
+            <field name="name">Vehicle Travel History</field>
+            <field name="res_model">vehicle.trip.history</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Vehicle History" id="menu_vehicle_history" action="action_vehicle_history"
+                  parent="appscomp_fleet.employee_fleet_menu" sequence="8"/>
+        <!--                  parent="hr.menu_hr_employee_payroll" sequence="6"/>-->
+
+    </data>
+</odoo>

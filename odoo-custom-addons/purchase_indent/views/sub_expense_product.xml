@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="hr_expense_view_form_inherit" model="ir.ui.view">
+        <field name="name">expense.inherited</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+<!--                <field name="subcategory_id"  options="{'no_open': True,'no_create':True}"/>-->
+            </xpath>
+        </field>
+    </record>
+
+    <!--  Inventry Units  -->
+
+<!--    <record id="subcate_expense_category_view_form" model="ir.ui.view">-->
+<!--        <field name="name">Subcate Expense Category Form</field>-->
+<!--        <field name="model">subcate.expense.category</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <form>-->
+<!--                <sheet>-->
+<!--                    <group>-->
+<!--                        <group>-->
+<!--                            <field name="category_id"/>-->
+<!--                        </group>-->
+<!--                        <group>-->
+<!--                            <field name="name"/>-->
+<!--                        </group>-->
+<!--                    </group>-->
+<!--                </sheet>-->
+<!--            </form>-->
+<!--        </field>-->
+<!--    </record>-->
+
+<!--    <record id="subcate_expense_category_action" model="ir.actions.act_window">-->
+<!--        <field name="name">Subcate Expense Category Action</field>-->
+<!--        <field name="type">ir.actions.act_window</field>-->
+<!--        <field name="res_model">subcate.expense.category</field>-->
+<!--        <field name="view_mode">tree,form</field>-->
+<!--        <field name="help" type="html">-->
+<!--            <p class="o_view_nocontent_smiling_face">Invite Your Sub Category....!!!</p>-->
+<!--        </field>-->
+<!--    </record>-->
+
+
+<!--    <menuitem id="menu_sub_category_expense" name="Sub Category Expense" parent="hr_expense.menu_hr_expense_configuration" sequence="1"-->
+<!--              action="subcate_expense_category_action"/>-->
+</odoo>

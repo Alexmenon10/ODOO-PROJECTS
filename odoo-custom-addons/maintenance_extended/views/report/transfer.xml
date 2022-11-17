@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record
+                id="transfer_report"
+                model="transfer.details"
+                string="Transfer Report"
+                report_type="qweb-html"
+                name="maintenance_extended.transfer_template"
+                file="maintenance_extended.transfer_template"
+                print_report_name='"Scarp"'
+                menu="True"
+        />
+
+        <template id="transfer_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="rec">
+                    <t t-call="web.external_layout">
+                        <div class="page" align="center">
+                            <div class="page">
+                                <div class="oe_structure"/>
+                                <h5 class="mt16">
+                                    <t>
+                                        <span>Equipment Transfer Report</span>
+                                    </t>
+                                </h5>
+                            </div>
+                            <table style="text-align: center; width: 720px;" border="0" cellpadding="0"
+                                   cellspacing="0" padding="0" margin="0">
+                                <tbody>
+                                    <tr>
+                                        <td style="vertical-align: left; width: 546px;">
+
+                                            <strong style="text-align:center;">
+                                                <b>From :</b>
+                                            </strong>
+                                            <br/>
+                                        </td>
+                                    </tr>
+                                    <br/>
+                                    <br/>
+                                    <td style="vertical-align: left; width: 546px;">
+                                        <strong style="text-align:center;">
+                                            <b>Source Location:</b>
+                                        </strong>
+                                        <t t-esc="rec.name_id"/>
+                                        <br/>
+                                    </td>
+                                    <td style="vertical-align: left; width: 546px;">
+                                        <strong style="text-align:center;">
+                                            <b>From :</b>
+                                        </strong>
+                                        <br/>
+                                    </td>
+                                    <td style="vertical-align: left; width: 546px;">
+                                        <strong style="text-align:center;">
+                                            <b>From :</b>
+                                        </strong>
+                                        <br/>
+                                    </td>
+                                    <td style="vertical-align: left; width: 546px;">
+                                        <strong style="text-align:center;">
+                                            <b>From :</b>
+                                        </strong>
+                                        <br/>
+                                    </td>
+                                    <!--                                                <td style="vertical-align: right; width: 546px;">-->
+                                    <!--                                                    <b>To :</b>-->
+                                    <!--                                          -->
+                                    <!--                                                </td>-->
+                                    <!--                                            </tr>-->
+                                </tbody>
+                            </table>
+                            <div class="page" align="left">
+                                <b>
+                                    <strong style="text-align:left;">From:</strong>
+                                </b>
+                                <t t-esc="rec.name_id.codefor   "/>
+                                <br/>
+                            </div>
+                            <div class="page" align="left">
+                                <b>
+                                    <strong style="text-align:left;">To:</strong>
+                                </b>
+                                <t t-esc="rec.des"/>
+                                <br/>
+                            </div>
+                        </div>
+                        <div class="page" align="left">
+                            <b>
+                                <strong style="text-align:left;">Scheduled Date :</strong>
+                            </b>
+                            <t t-esc="rec.date.strftime('%d-%B-%Y')"/>
+                            <br/>
+                        </div>
+                        <div class="page" align="left">
+                            <b>
+                                <strong style="text-align:left;">Responsible :</strong>
+                            </b>
+                            <t t-esc="rec.ref"/>
+                            <br/>
+                        </div>
+                        <div class="page" align="left">
+                            <b>
+                                <strong style="text-align:left;">Equipment Name:</strong>
+                            </b>
+                            <t t-esc="rec.eid"/>
+                            <br/>
+                        </div>
+                        <div class="page" align="left">
+                            <b>
+                                <strong style="text-align:left;">Equipment Category:</strong>
+                            </b>
+                            <t t-esc="rec.category_id"/>
+                            <br/>
+                        </div>
+                        <div class="page" align="left">
+                            <b>
+                                <strong style="text-align:left;">To:</strong>
+                            </b>
+                            <t t-esc="rec.des"/>
+                            <br/>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
+

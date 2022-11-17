@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record id="approver_inherit" model="ir.ui.view">
+        <field name="name">approver.inherited</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field [@name='request_owner_id']" position="before">
+                <field name="approval_fleet_status" invisible="1"/>
+            </xpath>
+            <xpath expr="//field [@name='amount']" position="after">
+                <field name="pre_define_purpose" options="{'no_create': True}"
+                       attrs="{'invisible':[('fleet_control','==','no')],
+                       'readonly': [('request_status','!=', 'new')]}"/>
+                <field name="manual_purpose" placeholder="Enter the Purpose Manually"
+                       attrs="{'invisible':[('fleet_control','==','no')],
+                       'readonly': [('request_status','!=', 'new')]}"/>
+            </xpath>
+            <!--            <xpath expr="//field [@name='partner_id']" position="after">-->
+            <!--                <field name="approval_trip_type" widget="radio" options="{'horizontal': true}"/>-->
+            <!--            </xpath>-->
+            <!--            <field name="gate" position='after'>-->
+            <!--                <field name="one_way_trip_reamrk"/>-->
+            <!--                <field name="one_way_attachment"/>-->
+            <!--                <field name="one_way_attachment_detail" invisible="1"/>-->
+            <!--            </field>-->
+        </field>
+    </record>
+
+    <record id="view_pre_define_purpose_form" model="ir.ui.view">
+        <field name="name">pre.define.purpose.form</field>
+        <field name="model">pre.define.purpose</field>
+        <field name="arch" type="xml">
+            <form string="Pre Define Purpose">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pre_define_purpose_tree" model="ir.ui.view">
+        <field name="name">pre.define.purpose.tree</field>
+        <field name="model">pre.define.purpose</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="name" required="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id='action_pre_define_purpose' model='ir.actions.act_window'>
+        <field name="name">Pre Define Purpose</field>
+        <field name="res_model">pre.define.purpose</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_pre_define_purpose" name="Pre Define Purpose"
+              parent="approvals.approvals_menu_config" sequence="12"
+              action="action_pre_define_purpose"/>
+</odoo>

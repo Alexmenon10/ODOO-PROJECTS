@@ -1,0 +1,109 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <record id="wizard_material_requisition_excel_report_wizard_form" model="ir.ui.view">
+            <field name="name">material.requisition.excel.report.wizard.form</field>
+            <field name="model">material.requisition.excel.report.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Material Requisition Report">
+                    <group attrs="{'invisible':[('report_printed','=',True)]}">
+                        <group>
+                            <field name="start_date" required="1"/>
+                            <field name="material_request_raised_by" readonly="0"
+                                   options="{'no_create_edit': True,'no_open':True}"/>
+                        </group>
+                        <group>
+                            <field name="end_date" required="1"/>
+                            <field name="material_request_raised_for" widget="many2many_tags"
+                                   options="{'no_create_edit': True,'no_open':True}"/>
+                        </group>
+                        <group>
+                            <field name="user_id" readonly="1"/>
+                            <field name="requested" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="report_printed" invisible="1"/>
+                        <group attrs="{'invisible':[('report_printed','=',False)]}">
+                            <field name="file_name" invisible="1"/>
+                            <field name="summary_file" readonly="1" filename="file_name"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string='Download' name="action_get_material_requisiton_report_excel"
+                                type="object" class="oe_highlight" icon="fa-download"
+                                attrs="{'invisible':[('report_printed','=',True)]}"/>
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="wizard_stock_direct_delivery_transfer_form" model="ir.ui.view">
+            <field name="name">stock.direct.delivery.transfer.wizard.form</field>
+            <field name="model">stock.direct.delivery.transfer.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Internal Department Stock Report">
+                    <group attrs="{'invisible':[('report_printed','=',True)]}">
+                        <group>
+                            <field name="picking_type_id"
+                                   options="{'no_open': True,'no_quick_create': True, 'no_create_edit' : True}" required="1"/>
+                            <field name="product_ids" widget="many2many_tags" invisible="1"/>
+                            <field name="ho_department_ids" widget="many2many_tags"/>
+                            <field name="delivery_receiver_from_sender"/>
+                        </group>
+                        <group>
+                            <field name="delivery_supplier_ids" widget="many2many_tags" invisible="0"/>
+                            <field name="delivery_status" invisible="1"
+                                   widget="radio" options="{'horizontal': true}"/>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="report_printed" invisible="1"/>
+                        <group attrs="{'invisible':[('report_printed','=',False)]}">
+                            <field name="file_name" invisible="1"/>
+                            <field name="summary_file" readonly="1" filename="file_name"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string='Download' name="action_get_direct_delivery_report_excel"
+                                type="object" class="oe_highlight" icon="fa-download"
+                                attrs="{'invisible':[('report_printed','=',True)]}"/>
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_wizard_material_requisition_excel_report">
+            <field name="name">Material Requisition Excel Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">material.requisition.excel.report.wizard</field>
+            <!--            <field name="view_type">form</field>-->
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="wizard_material_requisition_excel_report_wizard_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_wizard_stock_direct_delivery_transfer">
+            <field name="name">Direct Delivery Stock Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.direct.delivery.transfer.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="wizard_stock_direct_delivery_transfer_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <!--        <menuitem action="action_wizard_purchase_order_backorder_report" id="menu_action_weight_management_backorder_report"-->
+        <!--                  parent="stock.menu_warehouse_report" sequence="10"/>-->
+        <menuitem action="action_wizard_material_requisition_excel_report" id="menu_action_material_requisition_report"
+                  parent="menu_material_requisition" sequence="2"/>
+
+        <menuitem action="action_wizard_stock_direct_delivery_transfer" id="menu_action_direct_delivery_report"
+                  parent="stock.menu_warehouse_report" sequence="3"/>
+    </data>
+</odoo>

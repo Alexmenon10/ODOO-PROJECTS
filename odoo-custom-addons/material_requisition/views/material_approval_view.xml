@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Purchase Approval Configuration -->
+
+        <record model="ir.ui.view" id="material_approval_config_form">
+            <field name="name">material_approval_config_form</field>
+            <field name="model">material.approval.config</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group string="Material Type">
+                                <h1>
+                                    <field name="type_of_purchase" required="1"/>
+                                    <field name="approval_type" required="1" invisible="1"/>
+                                </h1>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Approvals">
+                                <field name="approval_levels" widget="selection" required="1"/>
+                                <field name="first_approval" required="1"/>
+                                <field name="second_approval"
+                                       attrs="{'invisible': [('approval_levels', '=', 'first_level')],
+                                       'required': [('approval_levels', '!=', 'first_level')]}"/>
+                                <field name="third_approval"
+                                       attrs="{'invisible': [('approval_levels', 'in', ('first_level','second_level'))],
+                                       'required': [('approval_levels', 'not in', ('first_level','second_level'))]}"/>
+                                <field name="fourth_approval"
+                                       attrs="{'invisible': [('approval_levels', 'in', ('first_level','second_level', 'third_level'))],
+                                       'required': [('approval_levels', 'not in', ('first_level','second_level','third_level'))]}"/>
+                                <field name="fifth_approval"
+                                       attrs="{'invisible': [('approval_levels', 'in', ('first_level','second_level', 'third_level','fourth_level'))],
+                                       'required': [('approval_levels', 'not in', ('first_level','second_level','third_level','fourth_level'))]}"/>
+                            </group>
+                            <group string="Defaults">
+                                <field name='company_id' readonly="1"/>
+                                <field name='default_type' invisible="1"/>
+                                <field name='seq_id' required="1" invisible="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- explicit list view definition -->
+
+        <record model="ir.ui.view" id="material_approval_config_list">
+            <field name="name">material_approval_config_list</field>
+            <field name="model">material.approval.config</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="type_of_purchase"/>
+                    <field name="approval_type"/>
+                    <field name="approval_levels"/>
+                    <field name="company_id"/>
+                </tree>
+            </field>
+        </record>
+        <!-- actions opening views on models -->
+        <record model="ir.actions.act_window" id="purchase_request_approval_config_action">
+            <field name="name">Material Request</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">material.approval.config</field>
+            <!-- <field name="view_type">form</field> -->
+            <field name="view_mode">tree,form</field>
+            <!--            <field name="search_view_id" ref="purchase_approval_config_filter"/>-->
+            <field name="context">{'default_approval_type': 'material_request'}</field>
+            <field name="domain">[('approval_type', '=', 'material_request')]</field>
+        </record>
+        <menuitem id="material_approval_rules_config"
+                  name="Approval Rules"
+                  parent="main_menu_service_bill"
+                  sequence="71"/>
+
+        <menuitem
+                name="Material Request"
+                id="material_request_config_menu"
+                parent="material_approval_rules_config"
+                action="purchase_request_approval_config_action"
+                sequence="19"/>
+
+
+        <record model="ir.ui.view" id="view_stock_material_indent_tree_inherit">
+            <field name="name">view_stock_indent_indent_tree_inherit</field>
+            <field name="model">material.requisition.indent</field>
+            <field name="inherit_id" ref="material_requisition.view_indent_indent_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="after">
+                    <button name="material_requisition_approve_remarks" icon="fa-thumbs-up"
+                            string="Approve" type="object" class="oe_highlight"
+                            states="to_be_approved"/>
+                    <button name="material_requisition_reject_remarks" icon="fa-times"
+                            string="Reject" type="object" class="oe_highlight"
+                            states="to_be_approved"/>
+                    <button name="material_requisition_cancel_remarks" icon="fa-times-circle-o"
+                            string="Cancel" type="object" class="oe_highlight"
+                            states="to_be_approved"/>
+                    <button name="material_requisition_approve_remarks" icon="fa-thumbs-up"
+                            string="Approve" type="object" class="oe_highlight"
+                            states="leader_approval"/>
+                    <button name="material_requisition_reject_remarks" icon="fa-times"
+                            string="Reject" type="object" class="oe_highlight"
+                            states="leader_approval"/>
+                    <button name="material_requisition_cancel_remarks" icon="fa-times-circle-o"
+                            string="Cancel" type="object" class="oe_highlight"
+                            states="leader_approval"/>
+                    <button name="material_requisition_approve_remarks" icon="fa-thumbs-up"
+                            string="Approve" type="object" class="oe_highlight"
+                            states="manager_approval"/>
+                    <button name="material_requisition_reject_remarks" icon="fa-times"
+                            string="Reject" type="object" class="oe_highlight"
+                            states="manager_approval"/>
+                    <button name="material_requisition_cancel_remarks" icon="fa-times-circle-o"
+                            string="Cancel" type="object" class="oe_highlight"
+                            states="manager_approval"/>
+                    <button name="material_requisition_approve_remarks" icon="fa-thumbs-up"
+                            string="Approve" type="object" class="oe_highlight"
+                            states="director_approval"/>
+                    <button name="material_requisition_reject_remarks" icon="fa-times"
+                            string="Reject" type="object" class="oe_highlight"
+                            states="director_approval"/>
+                    <button name="material_requisition_cancel_remarks" icon="fa-times-circle-o"
+                            string="Cancel" type="object" class="oe_highlight"
+                            states="director_approval"/>
+                    <button name="material_requisition_approve_remarks" icon="fa-thumbs-up"
+                            string="Approve" type="object" class="oe_highlight"
+                            states="ceo_approval"/>
+                    <button name="material_requisition_reject_remarks" icon="fa-times"
+                            string="Reject" type="object" class="oe_highlight"
+                            states="ceo_approval"/>
+                    <button name="material_requisition_cancel_remarks" icon="fa-times-circle-o"
+                            string="Cancel" type="object" class="oe_highlight"
+                            states="ceo_approval"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- ############Material Request - Approvals -->
+        <record model="ir.ui.view" id="view_stock_indent_indent_form_inherit">
+            <field name="name">view_stock_indent_indent_form_inherit</field>
+            <field name="model">material.requisition.indent</field>
+            <field name="inherit_id" ref="material_requisition.view_stock_indent_indent_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field [@name='state']" position="replace">
+                    <field name="state"
+                           widget="statusbar"
+                           statusbar_visible="draft,waiting_approval,to_be_approved"
+                           statusbar_colors='{"confirmed":"blue"}'/>
+                </xpath>
+                <xpath expr="//header/button[2]" position="after">
+                    <button name="button_approval" type="object" invisible="1"></button>
+                    <button name="indent_request_for_store_approval" string="Request Store Approval" type="object"
+                            class="oe_highlight"
+                            attrs="{'invisible': [('store_request', '=', True)]}"/>
+                    <button name="indent_request_approved_store" states="draft" string="Store Request Approved"
+                            type="object" groups="stock.group_stock_user,stock.group_stock_manager"
+                            class="oe_highlight"/>
+                    <button name="indent_confirm" states="request_approved_store" string="Submit for Approval"
+                            type="object"
+                            class="oe_highlight"/>
+                    <button name="request_create_rfq" string="Request for RFQ/Tender" type="object"
+                            class="oe_highlight" attrs="{'invisible': ['|',('stock_available', '=', True),
+                                ('state', 'not in',['request_approved','partially_received'])]}"/>
+                    <button name="set_draft" states="reject,cancel" string="Set to Draft" type="object"
+                            class="oe_highlight"/>
+                    <button name="material_requisition_approve_remarks" string="Approve" type="object"
+                            class="oe_highlight"
+                            attrs="{'invisible': [('state', 'not in', ['to_be_approved'])]}"/>
+                    />
+                    <button name="material_requisition_reject_remarks" string="Reject" type="object"
+                            class="oe_highlight"
+                            attrs="{'invisible': [('state', 'not in', ['to_be_approved'])]}"/>
+                    <button name="material_requisition_cancel_remarks" string="Cancel" type="object"
+                            class="oe_highlight"
+                            attrs="{'invisible': [('state', 'not in', ['to_be_approved'])]}"/>
+                    <button name="material_requisition_approve_remarks" string="Approve" type="object"
+                            class="oe_highlight"
+                            states="leader_approval"/>
+                    <button name="material_requisition_reject_remarks" string="Reject" type="object"
+                            class="oe_highlight"
+                            states="leader_approval"/>
+                    <button name="material_requisition_cancel_remarks" string="Cancel" type="object"
+                            class="oe_highlight"
+                            states="leader_approval"/>
+                    <button name="material_requisition_approve_remarks" string="Approve" type="object"
+                            class="oe_highlight"
+                            states="manager_approval"/>
+                    <button name="material_requisition_reject_remarks" string="Reject" type="object"
+                            class="oe_highlight"
+                            states="manager_approval"/>
+                    <button name="material_requisition_cancel_remarks" string="Cancel" type="object"
+                            class="oe_highlight"
+                            states="manager_approval"/>
+                    <button name="material_requisition_approve_remarks" string="Approve" type="object"
+                            class="oe_highlight"
+                            states="director_approval"/>
+                    <button name="material_requisition_reject_remarks" string="Reject" type="object"
+                            class="oe_highlight"
+                            states="director_approval"/>
+                    <button name="material_requisition_cancel_remarks" string="Cancel" type="object"
+                            class="oe_highlight"
+                            states="director_approval"/>
+                    <button name="material_requisition_approve_remarks" string="Approve" type="object"
+                            class="oe_highlight"
+                            states="ceo_approval"/>
+                    <button name="material_requisition_reject_remarks" string="Reject" type="object"
+                            class="oe_highlight"
+                            states="ceo_approval"/>
+                    <button name="material_requisition_cancel_remarks" string="Cancel" type="object"
+                            class="oe_highlight"
+                            states="ceo_approval"/>
+                </xpath>
+                <xpath expr="//page" position="after">
+                    <page string="Approver(s)">
+                        <group>
+                            <group>
+                                <field name="type_of_purchase" invisible="0"
+                                       domain="[('approval_type','=', 'material_request')]"
+                                       string="Approval Type"
+                                       options="{'no_open': True,'no_quick_create': True, 'no_create_edit' : True}"
+                                       attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                                <field name="approval_stages" force_save="1" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="approver1" required="1"/>
+                                <field name="approver2"
+                                       attrs="{'invisible': [('approval_stages', '=', 'first_level')],
+                                       'required': [('approval_stages', '!=', 'first_level')]}"/>
+                                <field name="approver3"
+                                       attrs="{'invisible': [('approval_stages', 'in', ('first_level','second_level'))],
+                                       'required': [('approval_stages', 'not in', ('first_level','second_level'))]}"/>
+                                <field name="approver4"
+                                       attrs="{'invisible': [('approval_stages', 'in', ('first_level','second_level', 'third_level'))],
+                                       'required': [('approval_stages', 'not in', ('first_level','second_level','third_level'))]}"/>
+                                <field name="approver5"
+                                       attrs="{'invisible': [('approval_stages', 'in', ('first_level','second_level', 'third_level','fourth_level'))],
+                                       'required': [('approval_stages', 'not in', ('first_level','second_level','third_level','fourth_level'))]}"/>
+                            </group>
+                        </group>
+                        <group>
+                            <!--                            <field name="app_remarks" readonly="1" attrs="{'invisible': [('app_remarks','=',False)]}"/>-->
+                            <!--                            <field name="rej_remarks" readonly="1" attrs="{'invisible': [('rej_remarks','=',False)]}"/>-->
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="material_requisition_view_kanban" model="ir.ui.view">
+            <field name="name">material.requisition.indent.views.kanban</field>
+            <field name="model">material.requisition.indent</field>
+            <field name="arch" type="xml">
+                <kanban create="false" class="o_modules_kanban">
+                    <field name="state"/>
+                    <field name="id"/>
+                    <!--                <field name="image"/>-->
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_module_vignette">
+                                <t t-if="record.id">
+                                    <!--                                <img t-att-src="kanban_image('approval.category', 'image', record.id.raw_value)" alt="Approvals Types Image"-->
+                                    <!--                                    class="oe_kanban_avatar float-left mr-3" width="64" height="64"/>-->
+                                </t>
+                                <div class="oe_module_desc">
+                                    <h4 class="o_kanban_record_title">
+                                        <field name="state"/>
+                                        <!--                                        <field name="name"/>-->
+                                    </h4>
+                                    <p class="oe_module_name">
+                                        <field name="description"/>
+                                    </p>
+                                    <div class="oe_module_action" t-if="!selection_mode">
+                                        <button type="object" class="btn btn-primary btn-sm"
+                                                name="create_material_request" context="{'category_id':'active_id'}">New
+                                            Request
+                                        </button>
+                                        <button type="action" class="btn btn-sm btn-secondary float-right"
+                                                name="%(material_requisition.action_material_requisition_indent)d">1st
+                                            Level To Review:
+                                            <field name="request_to_validate_count"/>
+                                        </button>
+                                        <button type="action" class="btn btn-sm btn-secondary float-right"
+                                                name="%(material_requisition.action_material_requisition_indent)d">2nd
+                                            Level To Review:
+                                        </button>
+                                        <button type="action" class="btn btn-sm btn-secondary float-right"
+                                                name="%(material_requisition.action_material_requisition_indent)d">3rd
+                                            Level To Review:
+                                        </button>
+                                        <button type="action" class="btn btn-sm btn-secondary float-right"
+                                                name="%(material_requisition.action_material_requisition_indent)d">4th
+                                            Level To Review:
+                                        </button>
+                                        <button type="action" class="btn btn-sm btn-secondary float-right"
+                                                name="%(material_requisition.action_material_requisition_indent)d">5th
+                                            Level To Review:
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!--        <record id="1stapproval_action_material_requisition_indent" model="ir.actions.act_window">-->
+        <!--            <field name="name">1st Level Approvals to review</field>-->
+        <!--            <field name="res_model">material.requisition.indent</field>-->
+        <!--            <field name="view_mode">tree,form,kanban</field>-->
+        <!--&lt;!&ndash;            <field name="domain">[('approver1', '=', uid), ('state', '=', 'to_be_approved')]&ndash;&gt;-->
+        <!--&lt;!&ndash;            </field>&ndash;&gt;-->
+        <!--            <field name="help" type="html">-->
+        <!--                <p class="o_view_nocontent_smiling_face">-->
+        <!--                    1st Level approvals to review-->
+        <!--                </p>-->
+        <!--            </field>-->
+        <!--        </record>-->
+
+
+        <!-- ############Purchase Orders - Approvals -->
+        <record id="purchase_order_close_potree" model="ir.ui.view">
+            <field name="name">Purchase Order Close PO</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field [@name='state']" position="after">
+                    <button name="button_leader_approval"
+                            icon="fa-thumbs-up"
+                            string="Approve"
+                            type="object"
+                            class="oe_highlight"
+                            states="to_be_approved"/>
+                    <button name="button_leader_approval"
+                            icon="fa-thumbs-up"
+                            string="Approve"
+                            type="object"
+                            class="oe_highlight"
+                            states="leader_approval"/>
+                    <button name="button_leader_approval"
+                            icon="fa-thumbs-up"
+                            string="Approve"
+                            type="object"
+                            class="oe_highlight"
+                            states="manager_approval"/>
+                    <button name="button_leader_approval"
+                            icon="fa-thumbs-up"
+                            string="Approve"
+                            type="object"
+                            class="oe_highlight"
+                            states="director_approval"/>
+                    <button name="button_leader_approval"
+                            icon="fa-thumbs-up"
+                            string="Approve"
+                            type="object"
+                            class="oe_highlight"
+                            states="ceo_approval"/>
+                    <button name="indent_reject"
+                            icon="fa-times"
+                            string="Reject"
+                            type="object"
+                            class="oe_highlight"
+                            states="to_be_approved"/>
+                    <button name="indent_cancel"
+                            icon="fa-times-circle-o"
+                            string="Cancel"
+                            type="object"
+                            class="oe_highlight"
+                            states="to_be_approved"/>
+                    <button name="indent_reject"
+                            icon="fa-times"
+                            string="Reject"
+                            type="object"
+                            class="oe_highlight"
+                            states="leader_approval"/>
+                    <button name="indent_cancel"
+                            icon="fa-times-circle-o"
+                            string="Cancel"
+                            type="object"
+                            class="oe_highlight"
+                            states="leader_approval"/>
+                    <button name="indent_reject"
+                            icon="fa-times"
+                            string="Reject"
+                            type="object"
+                            class="oe_highlight"
+                            states="manager_approval"/>
+                    <button name="indent_cancel"
+                            icon="fa-times-circle-o"
+                            string="Cancel"
+                            type="object"
+                            class="oe_highlight"
+                            states="manager_approval"/>
+                    <button name="indent_reject"
+                            icon="fa-times"
+                            string="Reject"
+                            type="object"
+                            class="oe_highlight"
+                            states="director_approval"/>
+                    <button name="indent_cancel"
+                            icon="fa-times-circle-o"
+                            string="Cancel"
+                            type="object"
+                            class="oe_highlight"
+                            states="director_approval"/>
+                    <button name="indent_reject"
+                            icon="fa-times"
+                            string="Reject"
+                            type="object"
+                            class="oe_highlight"
+                            states="ceo_approval"/>
+                    <button name="indent_cancel"
+                            icon="fa-times-circle-o"
+                            string="Cancel"
+                            type="object"
+                            class="oe_highlight"
+                            states="ceo_approval"/>
+                    <button name="final_approver_purchase_state"
+                            icon="fa-thumbs-up"
+                            string="Approve "
+                            type="object"
+                            class="oe_highlight"
+                            states="final_approval"/>
+                    <button name="indent_reject"
+                            icon="fa-times"
+                            string="Reject"
+                            class="oe_highlight"
+                            states="final_approval"/>
+                    <button name="indent_cancel"
+                            icon="fa-times-circle-o"
+                            string="Cancel"
+                            type="object"
+                            class="oe_highlight"
+                            states="final_approval"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_rfq_request_form_inherit">
+            <field name="name">view_rfq_request_form_inherit</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field [@name='state']" position="replace">
+                    <field name="state"
+                           widget="statusbar"
+                           statusbar_visible="draft,waiting_approval,to_be_approved"
+                           statusbar_colors='{"confirmed":"blue"}'/>
+                </xpath>
+                <!--                <field name="doc_type_id" position="after">-->
+                <!--                    <field name="purachse_rfq_request"/>-->
+                <!--                </field>-->
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="purachse_rfq_request" invisible="1"/>
+                    <field name="enable_rfq_to_po" invisible="1"/>
+                </xpath>
+                <!--                <xpath expr="//header/button[4]" position="attributes">-->
+                <!--                    <attribute name="attrs">{'invisible': ['|', ('purachse_rfq_request', '=', True), ('state','not in',('sent'))]}</attribute>-->
+                <!--                </xpath>-->
+                <!--                <xpath expr="//header/button[9]" position="attributes">-->
+                <!--                    <attribute name="attrs">{'invisible': ['|',('purachse_rfq_request', '=', True), ('state','not in',('draft'))]}</attribute>-->
+                <!--                </xpath>-->
+                <xpath expr="//header/button[4]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//header/button[9]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_draft']" position="attributes">
+                    <attribute name="states">cancel,reject</attribute>
+                </xpath>
+                <xpath expr="//header/button[9]" position="after">
+                    <!--                    <button name="button_product_confirm" string="Confirm Order" type="object"-->
+                    <!--                            class="oe_highlight"-->
+                    <!--                            attrs="{'invisible': [('state','not in',('sent','draft'))]}"/>-->
+
+                    <button name="confirm_purchase_order" states="request_approved" string="Confirm" type="object"
+                            class="oe_highlight"/>
+                    <button name="indent_confirm" string="Submit for Approval" type="object"
+                            class="oe_highlight"
+                            attrs="{'invisible': [('state','not in',('draft', 'request_to_approve'))]}"/>
+                    <button name="button_leader_approval" string="Approve" type="object" class="oe_highlight"
+                            states="to_be_approved"/>
+                    <button name="button_leader_approval" string="Approve" type="object" class="oe_highlight"
+                            states="leader_approval"/>
+                    <button name="button_leader_approval" string="Approve" type="object" class="oe_highlight"
+                            states="manager_approval"/>
+                    <button name="button_leader_approval" string="Approve" type="object" class="oe_highlight"
+                            states="director_approval"/>
+                    <button name="button_leader_approval" string="Approve" type="object" class="oe_highlight"
+                            states="ceo_approval"/>
+                    <button name="indent_reject" string="Reject" type="object" class="oe_highlight"
+                            states="to_be_approved"/>
+                    <button name="indent_cancel" string="Cancel" type="object" class="oe_highlight"
+                            states="to_be_approved"/>
+                    <button name="indent_reject" string="Reject" type="object" class="oe_highlight"
+                            states="leader_approval"/>
+                    <button name="indent_cancel" string="Cancel" type="object" class="oe_highlight"
+                            states="leader_approval"/>
+                    <button name="indent_reject" string="Reject" type="object" class="oe_highlight"
+                            states="manager_approval"/>
+                    <button name="indent_cancel" string="Cancel" type="object" class="oe_highlight"
+                            states="manager_approval"/>
+                    <button name="indent_reject" string="Reject" type="object" class="oe_highlight"
+                            states="director_approval"/>
+                    <button name="indent_cancel" string="Cancel" type="object" class="oe_highlight"
+                            states="director_approval"/>
+                    <button name="indent_reject" string="Reject" type="object" class="oe_highlight"
+                            states="ceo_approval"/>
+                    <button name="indent_cancel" string="Cancel" type="object" class="oe_highlight"
+                            states="ceo_approval"/>
+                    <button name="final_approver_purchase_state" string="Approve" type="object" class="oe_highlight"
+                            states="final_approval"/>
+                    <button name="indent_reject" string="Reject" type="object" class="oe_highlight"
+                            states="final_approval"/>
+                    <button name="indent_cancel" string="Cancel" type="object" class="oe_highlight"
+                            states="final_approval"/>
+                </xpath>
+                <!--                <button name="button_confirm" position="attributes">-->
+                <!--                    <attribute name="invisible">1</attribute>-->
+                <!--                </button>-->
+
+                <xpath expr="//page" position="after">
+                    <page string="Approver(s)">
+                        <group>
+                            <group>
+                                <field name="type_of_purchase" invisible="1"
+                                       domain="[('approval_type','=', 'material_request')]"
+                                       string="Approval Type"
+                                       options="{'no_open': True,'no_quick_create': True, 'no_create_edit' : True}"
+                                       attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                                <field name="approval_stages" force_save="1" readonly="1"/>
+                                <field name="final_approver"/>
+                            </group>
+                            <group>
+                                <field name="approver1"/>
+                                <field name="approver2"
+                                       attrs="{'invisible': [('approval_stages', '=', 'first_level')],
+                                       'required': [('approval_stages', '!=', 'first_level')]}"/>
+                                <field name="approver3"
+                                       attrs="{'invisible': [('approval_stages', 'in', ('first_level','second_level'))],
+                                       'required': [('approval_stages', 'not in', ('first_level','second_level'))]}"/>
+                                <field name="approver4"
+                                       attrs="{'invisible': [('approval_stages', 'in', ('first_level','second_level', 'third_level'))],
+                                       'required': [('approval_stages', 'not in', ('first_level','second_level','third_level'))]}"/>
+                                <field name="approver5"
+                                       attrs="{'invisible': [('approval_stages', 'in', ('first_level','second_level', 'third_level','fourth_level'))],
+                                       'required': [('approval_stages', 'not in', ('first_level','second_level','third_level','fourth_level'))]}"/>
+                            </group>
+                        </group>
+                        <group>
+                            <!--                            <field name="app_remarks" readonly="1" attrs="{'invisible': [('app_remarks','=',False)]}"/>-->
+                            <!--                            <field name="rej_remarks" readonly="1" attrs="{'invisible': [('rej_remarks','=',False)]}"/>-->
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!--        <record id="purchase.purchase_rfq" model="ir.actions.act_window">-->
+        <!--            <field name="name">Requests for Quotation</field>-->
+        <!--            <field name="type">ir.actions.act_window</field>-->
+        <!--            <field name="res_model">purchase.order</field>-->
+        <!--            <field name="view_mode">tree,kanban,form,pivot,graph,calendar,activity</field>-->
+        <!--            <field name="view_id" ref="purchase.purchase_order_kpis_tree"/>-->
+        <!--            <field name="domain">[]</field>-->
+        <!--            <field name="search_view_id" ref="purchase.view_purchase_order_filter"/>-->
+        <!--            <field name="context">{'quotation_only': True, 'default_enable_rfq_to_po': True}</field>-->
+        <!--            <field name="help" type="html">-->
+        <!--              <p class="o_view_nocontent_smiling_face">-->
+        <!--                No request for quotation found. Let's create one!-->
+        <!--              </p><p>-->
+        <!--                Requests for quotation are documents that will be sent to your suppliers to request prices for different products you consider buying.-->
+        <!--                Once an agreement has been found with the supplier, they will be confirmed and turned into purchase orders.-->
+        <!--              </p>-->
+        <!--            </field>-->
+        <!--        </record>-->
+
+    </data>
+</odoo>

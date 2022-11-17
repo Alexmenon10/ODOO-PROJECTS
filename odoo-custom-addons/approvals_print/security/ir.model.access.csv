@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_approval_refuse,access.approval.refuse,model_approval_refuse,,1,1,1,1
+access_close_reason,access.close.reason,model_close_reason,,1,1,1,1
+access_inventry_unit,access.inventry.unit,model_inventry_unit,,1,1,1,1
+access_expense_refused_remarks,access.expense.refused.remarks,model_expense_refused_remarks,,1,1,1,1

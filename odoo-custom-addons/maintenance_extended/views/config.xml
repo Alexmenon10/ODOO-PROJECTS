@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+
+        <!--                   Location-->
+
+
+        <record id="view_location_form" model="ir.ui.view">
+            <field name="name">location.details.form</field>
+            <field name="model">location.details</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group string="Location">
+                            <group>
+
+                                <field name="name" placeholder="virtual location"></field>
+
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_location_tree" model="ir.ui.view">
+            <field name="name">location.details.tree</field>
+            <field name="model">location.details</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+
+                </tree>
+            </field>
+        </record>
+
+        <record id="location_details_action" model="ir.actions.act_window">
+            <field name="name">Location</field>
+            <field name="res_model">location.details</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <!--        Build-->
+
+
+        <record id="view_build_form" model="ir.ui.view">
+            <field name="name">build.details.form</field>
+            <field name="model">build.details</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group string="Build Details">
+                            <group>
+
+                                <field name="name"></field>
+                                <field name="buildcode"></field>
+                                <!-- <field name="sign" widget="signature" options="{'verticle':True}"></field>-->
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_build_tree" model="ir.ui.view">
+            <field name="name">build.details.tree</field>
+            <field name="model">build.details</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="buildcode"></field>
+                </tree>
+            </field>
+        </record>
+
+        <record id="build_details_action" model="ir.actions.act_window">
+            <field name="name">Build Details</field>
+            <field name="res_model">build.details</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <!--          Block-->
+
+        <record id="view_block_form" model="ir.ui.view">
+            <field name="name">block.details.form</field>
+            <field name="model">block.details</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group string="Block Details">
+                            <group>
+
+                                <field name="name"></field>
+                                <field name="blockcode"></field>
+                                <!-- <field name="sign" widget="signature" options="{'verticle':True}"></field>-->
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_block_tree" model="ir.ui.view">
+            <field name="name">block.details.tree</field>
+            <field name="model">block.details</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="blockcode"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="block_details_action" model="ir.actions.act_window">
+            <field name="name">Block Details</field>
+            <field name="res_model">block.details</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!--          Floor-->
+
+        <record id="view_floor_form" model="ir.ui.view">
+            <field name="name">floor.details.form</field>
+            <field name="model">floor.details</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group string="floor Details">
+                            <group>
+
+                                <field name="name"></field>
+                                <field name="floorcode"></field>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_floor_tree" model="ir.ui.view">
+            <field name="name">floor.details.tree</field>
+            <field name="model">floor.details</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="floorcode"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="floor_details_action" model="ir.actions.act_window">
+            <field name="name">floor Details</field>
+            <field name="res_model">floor.details</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!--          Section-->
+
+        <record id="view_section_form" model="ir.ui.view">
+            <field name="name">section.details.form</field>
+            <field name="model">section.details</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group string="section Details">
+                            <group>
+
+                                <field name="name"></field>
+                                <field name="sectioncode"></field>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_section_tree" model="ir.ui.view">
+            <field name="name">section.details.tree</field>
+            <field name="model">section.details</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="sectioncode"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="section_details_action" model="ir.actions.act_window">
+            <field name="name">section Details</field>
+            <field name="res_model">section.details</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!--          Division-->
+
+        <record id="view_division_form" model="ir.ui.view">
+            <field name="name">division.details.form</field>
+            <field name="model">division.details</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group string="division Details">
+                            <group>
+                                <field name="name"></field>
+                                <field name="divisioncode"></field>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_division_tree" model="ir.ui.view">
+            <field name="name">division.details.tree</field>
+            <field name="model">division.details</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="divisioncode"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="division_details_action" model="ir.actions.act_window">
+            <field name="name">division Details</field>
+            <field name="res_model">division.details</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

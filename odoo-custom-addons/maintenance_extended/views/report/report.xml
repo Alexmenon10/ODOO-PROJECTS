@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record
+                id="equipment_management_report"
+                model="maintenance.equipment"
+                string="Equipment Report"
+                report_type="qweb-html"
+                name="maintenance_extended.maintenance_equipment_template"
+                file="maintenance_extended.maintenance_equipment_template"
+                print_report_name='"equipment details"'
+                menu="True"
+
+        />
+
+        <template id="maintenance_equipment_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="rec">
+                    <t t-call="web.external_layout">
+                        <div class="page" align="center">
+                            <table class="table table-condensed" style="border:2px  solid Black!important;">
+                                <thead>
+                                    <b>
+                                        <h3 style="text-align:center;">Equipment Information Report</h3>
+                                    </b>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+
+                                    <div class="page" align="left">
+                                        <b>
+                                            <strong style="text-align:left;">Equipment Name :</strong>
+                                        </b>
+                                        <t t-esc="rec.name"/>
+                                        <br/>
+                                    </div>
+                                    <div class="page" align="left">
+                                        <b>
+                                            <strong style="text-align:left;">Equipment ID :</strong>
+                                        </b>
+                                        <t t-esc="rec.codefor"/>
+                                        <br/>
+                                    </div>
+
+                                    <div class="page" align="left">
+                                        <b>
+                                            <strong style="text-align:left;">Category :</strong>
+                                        </b>
+                                        <t t-esc="rec.category_id.name"/>
+                                        <br/>
+                                    </div>
+
+                                    <div class="page" align="left">
+                                        <b>
+                                            <strong style="text-align:left;">Sub Category :</strong>
+                                        </b>
+                                        <t t-esc="rec.subcategory_id.name"/>
+                                        <br/>
+                                    </div>
+
+                                    <div class="page" align="left">
+                                        <b>
+                                            <strong style="text-align:left;">Assign Date :</strong>
+                                        </b>
+                                        <t t-esc="rec.assign_date.strftime('%d-%B-%Y')"/>
+                                    </div>
+
+
+                                </thead>
+
+                                <!--                                table-->
+
+                                <table class="table table-condensed"
+                                       style="border:4px  solid Black!important;">
+                                    <h4 style="text-align:left;">Equipment Located in</h4>
+                                    <thead>
+                                        <tr>
+                                            <th>Building Name</th>
+                                            <th>Block</th>
+                                            <th>Floor</th>
+                                            <th>Division</th>
+                                            <th>Section</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody class="sale_t body">
+                                        <tr>
+                                            <td>
+                                                <span t-esc="rec.build_id.name "/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="rec.block_id.name"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="rec.floor_id.name"/>
+                                            </td>
+
+                                            <td>
+                                                <span t-esc="rec.division_id.name"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="rec.section_id.name"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+
+                                <!--table1-->
+
+
+                                <table class="table table-condensed"
+                                       style="border:4px  solid Black!important;">
+                                    <h4 style="text-align:left;">Product Information</h4>
+                                    <thead>
+                                        <tr>
+                                            <th>Vendor Name</th>
+                                            <th>Vendor Reference</th>
+                                            <th>Model</th>
+                                            <th>Effective Date</th>
+                                            <th>Cost</th>
+                                            <th>Warranty Expiration Date</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody class="sale_t body">
+                                        <t t-foreach="rec.company_id" t-as="c">
+                                            <tr>
+                                                <td>
+                                                    <span t-esc="c.partner_id.name "/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="rec.partner_ref"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="rec.model"/>
+                                                </td>
+
+                                                <td>
+                                                    <span t-esc="rec.effective_date"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="rec.cost"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="rec.warranty_date"/>
+                                                </td>
+
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+
+                                <!--table2-->
+
+                                <!--                                <h4 style="text-align:left;">Maintenance</h4>-->
+                                <!--                                <table class="table table-condensed"-->
+                                <!--                                       style="border:4px  solid Black!important;">-->
+                                <!--                                    <thead>-->
+                                <!--                                        <tr>-->
+                                <!--                                            <th>Preventive Maintenance</th>-->
+                                <!--                                            <th>Frequency Maintenance Duration</th>-->
+                                <!--                                            <th>Expected Mean Time Between Failure</th>-->
+                                <!--                                            &lt;!&ndash; <th>Mean Time Between Failure</th>-->
+                                <!--                                             <th>Estimated Next Failure</th>&ndash;&gt;-->
+
+                                <!--                                        </tr>-->
+                                <!--                                    </thead>-->
+                                <!--                                    <tbody class="sale_t body">-->
+                                <!--                                        &lt;!&ndash; <t t-foreach="o.maintenance_id" t-as="m">&ndash;&gt;-->
+                                <!--                                        <tr>-->
+
+                                <!--                                            <td>-->
+                                <!--                                                <span t-esc="o.next_action_date"/>-->
+                                <!--                                            </td>-->
+                                <!--                                            <td>-->
+                                <!--                                                <span t-esc="o.period"/>-->
+                                <!--                                            </td>-->
+
+                                <!--                                            <td>-->
+                                <!--                                                <span t-esc="o.maintenance_duration"/>-->
+                                <!--                                            </td>-->
+
+                                <!--                                        </tr>-->
+
+                                <!--                                    </tbody>-->
+                                <!--                                </table>-->
+
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+
+    </data>
+</odoo>

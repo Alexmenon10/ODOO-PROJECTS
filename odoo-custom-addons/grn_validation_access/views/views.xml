@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="grn_validation_access.list">
+      <field name="name">grn_validation_access list</field>
+      <field name="model">grn_validation_access.grn_validation_access</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="grn_validation_access.action_window">
+      <field name="name">grn_validation_access window</field>
+      <field name="res_model">grn_validation_access.grn_validation_access</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="grn_validation_access.action_server">
+      <field name="name">grn_validation_access server</field>
+      <field name="model_id" ref="model_grn_validation_access_grn_validation_access"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="grn_validation_access" id="grn_validation_access.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="grn_validation_access.menu_1" parent="grn_validation_access.menu_root"/>
+    <menuitem name="Menu 2" id="grn_validation_access.menu_2" parent="grn_validation_access.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="grn_validation_access.menu_1_list" parent="grn_validation_access.menu_1"
+              action="grn_validation_access.action_window"/>
+    <menuitem name="Server to list" id="grn_validation_access" parent="grn_validation_access.menu_2"
+              action="grn_validation_access.action_server"/>
+-->
+  </data>
+</odoo>

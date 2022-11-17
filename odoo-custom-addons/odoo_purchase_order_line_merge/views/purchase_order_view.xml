@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.actions.server" id="merge_value_all_for_po">
+            <field name="name">Merge PO Lines</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="binding_model_id" ref="purchase.model_purchase_order" />
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    action = records.po_order_lines_merge()
+            </field>
+        </record>
+    </data>
+</odoo>
+
+
+

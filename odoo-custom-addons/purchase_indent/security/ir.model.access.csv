@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_purchase_indent_user,purchase.indent.user,model_purchase_indent,group_user_indent,1,0,0,0
+access_purchase_indent_zonal,purchase.indent.zonal,model_purchase_indent,group_indent_zonal_user,1,1,1,1
+access_purchase_indent_def,purchase.indent.def,model_purchase_indent,group_indent_def_user,1,1,1,1
+access_purchase_indent_product_lines,access_purchase_indent_product_lines,model_purchase_indent_product_lines,,1,0,0,0
+access_stock_current_locations,access_stock_current_locations,model_stock_current_locations,base.group_user,1,0,0,0
+access_subcate_expense_category,access.subcate.expense.category,model_subcate_expense_category,,1,1,1,1
+access_purchase_indent_product_lines,access_purchase_indent_product_lines,model_purchase_indent_product_lines,base.group_user,1,1,1,1

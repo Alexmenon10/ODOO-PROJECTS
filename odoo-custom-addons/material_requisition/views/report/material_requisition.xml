@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="material_order_report"
+                model="material.requisition.indent"
+                string="Material Requisition "
+                report_type="qweb-pdf"
+                name="material_requisition.report_material_print_document"
+                file="material_requisition.report_material_print_document"
+                print_report_name='"Material Requisition"'
+                menu="True"
+
+        />
+
+        <template id="report_material_print_document">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="rec">
+                    <t t-call="web.external_layout">
+                        <t t-foreach="docs" t-as="o">
+                            <div class="page" align="center">
+                                <table class="table table-condensed">
+                                    <tr>
+                                        <td colspan="2" style="border:1px solid white;border-bottom:1px solid #143980;text-align:center;
+                        padding:1px;color:#143980;">
+                                            <div class="row">
+                                                <div class="col-4" style="font-size:12px;">
+                                                </div>
+                                                <div class="text-center col-4">
+                                                    <strong style="font-size:20px;margin-right:50px;">Material
+                                                        Requisition
+                                                    </strong>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <br/>
+                                    <br/>
+
+
+                                    <table class="table table-sm table-bordered">
+
+                                        <tr>
+
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Request Raised By:</strong>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.responsible"/>
+                                            </td>
+
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Request Raised For:</strong>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.request_raised_for"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Department:</strong>
+                                            </td>
+
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.department_id"/>
+                                            </td>
+
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Department:</strong>
+                                            </td>
+
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.requester_department_id"/>
+                                            </td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Job Position:</strong>
+                                            </td>
+
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.current_job_id"/>
+                                            </td>
+
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Job Position:</strong>
+                                            </td>
+
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.requester_current_job_id"/>
+                                            </td>
+
+                                        </tr>
+
+
+                                        <tr>
+
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Reporting Manager:</strong>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.current_reporting_manager"/>
+                                            </td>
+
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Reporting Manager:</strong>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.requester_current_reporting_manager"/>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Purpose :</strong>
+                                            </td>
+
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.purpose"/>
+                                            </td>
+
+
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Indent Date:</strong>
+                                            </td>
+
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.indent_date"/>
+                                            </td>
+
+                                        </tr>
+
+                                        <tr>
+
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Destination Location:</strong>
+                                            </td>
+
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.location_id"/>
+                                            </td>
+
+
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Required Date:</strong>
+                                            </td>
+
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.required_date"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style='text-align:left; vertical-align:middle' colspan="2">
+                                                <strong>Requirement:</strong>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle' colspan="2">
+                                                <span t-field="o.requirement"/>
+                                            </td>
+
+                                        </tr>
+                                    </table>
+
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <div align="left">
+                                        <strong style="font-size:20px;margin-left:50px;">Approved Product's</strong>
+                                    </div>
+                                    <div class="row col-xs-14">
+                                        <table class="table table-sm table-bordered" style="font-size:15px;">
+                                            <thead>
+                                                <tr>
+                                                    <th width="10%" valign="middle" align="center"
+                                                        class="padding_all tbottom ttop text-center">
+                                                        <strong>Sl.No.</strong>
+                                                    </th>
+                                                    <th width="10%" valign="middle" align="center"
+                                                        class="padding_all tbottom ttop text-center">
+                                                        <strong>Product</strong>
+                                                    </th>
+                                                    <th width="20%" valign="middle" align="center"
+                                                        class="padding_all tleft tbottom ttop text-center">
+                                                        <strong>OnHand Quantity</strong>
+                                                    </th>
+                                                    <th width="20%" valign="middle" align="center"
+                                                        class="padding_all tleft tbottom ttop text-center">
+                                                        <strong>Quantity</strong>
+                                                    </th>
+                                                    <th width="20%" valign="middle" align="center"
+                                                        class="padding_all tleft tbottom ttop text-center">
+                                                        <strong>Quantity Shipped</strong>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr t-foreach="o.product_lines" t-as="l">
+                                                    <td width="10%" class="padding_all tbottom ttop text-center">
+                                                        <span t-esc="l_index+1"/>
+                                                    </td>
+                                                    <td width="20%" class="padding_all tleft tbottom ttop text-center">
+                                                        <span t-field="l.product_id.name"/>
+                                                    </td>
+                                                    <td width="20%" class="padding_all tleft tbottom ttop text-center">
+                                                        <span t-field="l.product_available"/>
+                                                    </td>
+                                                    <td width="20%" class="padding_all tleft tbottom ttop text-center">
+                                                        <span t-field="l.product_uom_qty"/>
+                                                    </td>
+                                                    <td width="20%" class="padding_all tleft tbottom ttop text-center">
+                                                        <span t-field="l.qty_shipped"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="10%" class="padding_all tbottom ttop"></td>
+                                                    <td width="20%" class="padding_all tbottom ttop"></td>
+                                                    <td width="20%" class="padding_all tleft tbottom ttop text-center">
+                                                        <strong>Total:</strong>
+                                                    </td>
+                                                    <td width="20%" class="padding_all tleft tbottom ttop text-center"
+                                                        align="right">
+                                                        <t t-esc="sum(l.product_uom_qty for l in o.product_lines) "/>
+                                                    </td>
+                                                    <td width="20%" class="padding_all tleft tbottom ttop text-center"
+                                                        align="right">
+                                                        <t t-esc="sum(l.qty_shipped for l in o.product_lines) "/>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <br/>
+                                    <br/>
+                                </table>
+                            </div>
+                            <div align="left">
+                                <strong style='text-align:left; vertical-align:left'>Approval Type:</strong>
+                                <span /><span t-field="o.type_of_purchase"/>
+                            </div>
+                            <br/>
+                            <div align="left">
+                                <strong>Approver's:</strong>
+                            </div>
+                            <br/>
+                            <div align="left">
+                                <t t-if="o.approval_stages == 'first_level'">
+                                    <tr>
+                                        <td>
+                                            <strong>Approver1</strong>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.approver1.name"/>
+                                        </td>
+                                    </tr>
+                                </t>
+
+                                <t t-if="o.approval_stages =='second_level'">
+                                    <tr>
+                                        <td>
+                                            <strong>Approver1</strong>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-field="o.approver1.name"/>
+                                        </td>
+                                    </tr>
+                                    <br/>
+                                    <br/>
+                                    <tr>
+                                        <td>
+                                            <strong>Approver2</strong>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.approver2.name"/>
+                                        </td>
+                                    </tr>
+                                </t>
+
+                                <t t-if="o.approval_stages =='third_level'">
+                                    <tr>
+                                        <td>
+                                            <strong>Approver1</strong>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.approver1.name"/>
+                                        </td>
+                                    </tr>
+                                    <br/>
+                                    <br/>
+                                    <tr>
+                                        <td>
+                                            <strong>Approver2</strong>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.approver2.name"/>
+                                        </td>
+                                    </tr>
+                                    <br/>
+                                    <br/>
+                                    <tr>
+                                        <td>
+                                            <strong>Approver3</strong>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.approver3.name"/>
+                                        </td>
+                                    </tr>
+                                </t>
+
+                                <t t-if="o.approval_stages =='fourth_level'">
+                                    <tr>
+                                        <td>
+                                            <strong>Approver1</strong>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.approver1.name"/>
+                                        </td>
+                                    </tr>
+                                    <br/>
+                                    <br/>
+                                    <tr>
+                                        <td>
+                                            <strong>Approver2</strong>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.approver2.name"/>
+                                        </td>
+                                    </tr>
+                                    <br/>
+                                    <br/>
+                                    <tr>
+                                        <td>
+                                            <strong>Approver3</strong>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.approver3.name"/>
+                                        </td>
+                                    </tr>
+                                    <br/>
+                                    <br/>
+                                    <tr>
+                                        <td>
+                                            <strong>Approver4</strong>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.approver4.name"/>
+                                        </td>
+                                    </tr>
+                                </t>
+
+                                <t t-if="o.approval_stages =='fifth_level'">
+                                    <tr>
+                                        <td>
+                                            <strong>Approver1</strong>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.approver1.name"/>
+                                        </td>
+                                    </tr>
+                                    <br/>
+                                    <br/>
+                                    <tr>
+                                        <td>
+                                            <strong>Approver2</strong>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.approver2.name"/>
+                                        </td>
+                                    </tr>
+                                    <br/>
+                                    <br/>
+                                    <tr>
+                                        <td>
+                                            <strong>Approver3</strong>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.approver3.name"/>
+                                        </td>
+                                    </tr>
+                                    <br/>
+                                    <br/>
+                                    <tr>
+                                        <td>
+                                            <strong>Approver4</strong>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.approver4.name"/>
+                                        </td>
+                                    </tr>
+                                    <br/>
+                                    <br/>
+                                    <tr>
+                                        <td>
+                                            <strong>Approver5</strong>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.approver5.name"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </div>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <tr>
+                                <td>
+                                    <div class="row col-xs-12" style="padding-left: 25px;">
+                                        <strong>Prepard By</strong>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="row col-xs-12" style="padding-left: 600px;">
+                                        <strong>Signature</strong>
+                                    </div>
+                                </td>
+
+                            </tr>
+
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
+

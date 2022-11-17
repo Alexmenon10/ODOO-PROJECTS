@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+            <!-- <act_window id="journal_item_update_wizard_action"
+                    name="Add Attendees"
+                    binding_model="mrp.bom.line"
+                    res_model="mrp.bom"
+                    view_mode="form"
+                    target="new"/> -->
+
+        <record id="journal_item_update_wizard_action" model="ir.actions.act_window">
+            <field name="name">Add Attendees</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.bom</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <!-- TODO: check if we need this -->
+            <field name="binding_model_id" ref="mrp.model_mrp_bom_line" />
+            <field name="binding_view_types">list</field>
+        </record>
+
+        <!-- wizard view -->
+        <record id="journal_item_update_wizard_view" model="ir.ui.view">
+            <field name="name">mrp.bom.line.wizard</field>
+            <field name="model">mrp.bom.line.wizard</field>
+            <field name="arch" type="xml">
+                <form name="Journal Item Update">
+                    <group name="product_qty_update">
+                        <!-- <field name="bom_id"/> -->
+                    </group>
+                    <footer>
+                        <button name="product_qty_update" type="object" string="Calculate Demand" default_focus="1" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_view_mrp_bom_vizard" model="ir.actions.act_window">
+            <field name="name">Calculate Demand</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.bom.line.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <!-- TODO: check if we need this -->
+            <field name="binding_model_id" ref="mrp.model_mrp_bom" />
+            <field name="binding_view_types">list</field>
+        </record>
+
+        
+
+
+        
+ </data>
+</odoo>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="model_category_material" model="ir.module.category">
+        <field name="name">Please Select Any One Checkbox in Material Requisition</field>
+        <field name="sequence">5</field>
+    </record>
+
+    <record id="user_one" model="res.groups">
+        <field name="name">Manager Full Access</field>
+        <field name="category_id" ref="model_category_material"/>
+    </record>
+
+    <record id="user_two" model="res.groups">
+        <field name="name">User Level [ R W]</field>
+        <field name="category_id" ref="model_category_material"/>
+    </record>
+
+    <!--        <record id="user_three" model="res.groups">-->
+    <!--            <field name="name"> User Three  Delete  </field>-->
+    <!--            <field name="category_id" ref="model_category_material"/>-->
+    <!--             <field name="implied_ids" eval="[(4,ref('user_three'))]"/>-->
+    <!--        </record>-->
+
+    <record id="user_four" model="res.groups">
+        <field name="name">User Level [ R C]</field>
+        <field name="category_id" ref="model_category_material"/>
+    </record>
+
+    <record id="user_five" model="res.groups">
+        <field name="name">User Level [C R W]</field>
+        <field name="category_id" ref="model_category_material"/>
+    </record>
+
+    <!--         <record id="user_nk" model="res.groups">-->
+    <!--            <field name="name"> User Four Create  Read </field>-->
+    <!--             <field name="implied_ids" eval="[(4,ref('user_nk'))]"/>-->
+    <!--            <field name="category_id" ref="model_category_material"/>-->
+    <!--        </record>-->
+
+    <!--         <record id="user_five" model="res.groups">-->
+    <!--            <field name="name"> User Five  Read Write  </field>-->
+    <!--             <field name="implied_ids" eval="[(4,ref('user_five'))]"/>-->
+    <!--            <field name="category_id" ref="model_category_material"/>-->
+    <!--        </record>-->
+
+
+    <!--        <record id="material_rule" model="ir.rule">-->
+    <!--            <field name="name">Material Requisition Details Two : Requisition Rule</field>-->
+    <!--            <field name="model_id" ref="material_requisition.model_material_requisition_indent"/>-->
+    <!--            <field name="domain_force">[('user_id', '=', user.id)]</field>-->
+    <!--            <field name="groups" eval="[(4, ref('material_requisition.user_two'))]"/>-->
+    <!--        </record>-->
+
+    <!--         <record id="material_user_rule" model="ir.rule">-->
+    <!--            <field name="name">Material Requisition Details Four : Requisition Rule</field>-->
+    <!--            <field name="model_id" ref="material_requisition.model_material_requisition_indent"/>-->
+    <!--            <field name="domain_force">[('user_id', '=', user.id)]</field>-->
+    <!--            <field name="groups" eval="[(4, ref('material_requisition.user_four'))]"/>-->
+    <!--        </record>-->
+
+
+</odoo>

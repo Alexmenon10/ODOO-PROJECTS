@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <menuitem id="all_reports_atlas_all" web_icon="reports,static/description/images.png"
+                  name="Report" sequence="70" active='1'/>
+        <!--        purchase-->
+        <menuitem id="purchase_report_all" name="Purchase Report" parent="all_reports_atlas_all"
+                  sequence="2"/>
+        <menuitem id="purchase_dashboard_all_report" name="Dashboard" parent="purchase_report_all" sequence="5"
+                  action="purchase_enterprise.purchase_report_action_dashboard"/>
+
+        <menuitem id="purchase_purchase_analysis_report" name="Purchase Analysis" parent="purchase_report_all"
+                  sequence="6"
+                  action="purchase.action_purchase_order_report_all"/>
+
+         <menuitem id="purchase_purchase_order_summary_report" name="Purchase Order Summary Report" parent="purchase_report_all"
+                  sequence="7"
+                  action="material_requisition.action_get_purchase_order_excel_report"/>
+
+        <!--        Maintenance-->
+<!--        <menuitem id="maintenance_report_all" name="Maintenance Report" parent="all_reports_atlas_all"-->
+<!--                  sequence="3"/>-->
+
+<!--        <menuitem id="maintenance_report_maintenance" name="Maintenance Requests"-->
+<!--                  parent="maintenance_report_all" sequence="1"-->
+<!--                  action="maintenance.maintenance_request_action_reports"/>-->
+
+        <!--        invoicing-->
+        <menuitem id="invoicing_report_all" name="Accounting" parent="all_reports_atlas_all"
+                  sequence="4"/>
+        <menuitem id="purchase_bill_summary_report" name="Purchase Bill Summary Report" parent="invoicing_report_all" sequence="1"  action="material_requisition.action_get_purchase_bill_excel_report"/>
+<!--        <menuitem id="gstr_sales_return_report" name="GSTR-1 Sales Return" parent="invoicing_report_all" sequence="2"-->
+<!--                  action="l10n_in_reports.action_l10n_in_report_account"/>-->
+<!--        <menuitem id="grtr3_sales_return_report" name="GSTR-3" parent="invoicing_report_all" sequence="3"-->
+<!--                  action="l10n_in_reports.account_financial_html_report_action_4"/>-->
+<!--        <menuitem id="profit_loss_report" name="Profit and Loss" parent="invoicing_report_all" sequence="4"-->
+<!--                  action="account_reports.account_financial_html_report_action_1"/>-->
+<!--        <menuitem id="balance_sheet_report" name="Balance Sheet" parent="invoicing_report_all" sequence="5"-->
+<!--                  action="account_reports.account_financial_html_report_action_2"/>-->
+<!--        <menuitem id="execute_summary_return_report" name="Executive Summary" parent="invoicing_report_all" sequence="6"-->
+<!--                  action="account_reports.account_financial_html_report_action_3"/>-->
+<!--        <menuitem id="cash_flow_report" name="Cash Flow Statement" parent="invoicing_report_all" sequence="7"-->
+<!--                  action="l10n_in_reports.action_l10n_in_report_account"/>-->
+<!--        <menuitem id="partner_ledger_report" name="Partner Ledger" parent="invoicing_report_all" sequence="8"-->
+<!--                  action="account_reports.action_account_report_partner_ledger"/>-->
+<!--        <menuitem id="aged_receivable_report" name="Aged Receivable" parent="invoicing_report_all" sequence="9"-->
+<!--                  action="account_reports.action_account_report_ar"/>-->
+<!--        <menuitem id="aged_payable_report" name="Aged Payable" parent="invoicing_report_all" sequence="10"-->
+<!--                  action="account_reports.action_account_report_ap"/>-->
+<!--        <menuitem id="general_ledger_report" name="General Ledger" parent="invoicing_report_all" sequence="11"-->
+<!--                  action="account_reports.action_account_report_general_ledger"/>-->
+<!--        <menuitem id="tribal_balance_report" name="Trial Balance" parent="invoicing_report_all" sequence="12"-->
+<!--                  action="account_reports.action_account_report_coa"/>-->
+<!--        <menuitem id="journals_report" name="Consolidated Journals" parent="invoicing_report_all" sequence="13"-->
+<!--                  action="account_reports.action_account_report_cj"/>-->
+<!--        <menuitem id="tax_balance_report" name="Tax Report" parent="invoicing_report_all" sequence="14"-->
+<!--                  action="account_reports.action_account_report_gt"/>-->
+<!--        <menuitem id="journals_audit_report" name="Journals Audit" parent="invoicing_report_all" sequence="15"-->
+<!--                  action="account_reports.action_account_print_journal_menu"/>-->
+<!--        <menuitem id="invoicing_analysis_report" name="Invoices Analysis" parent="invoicing_report_all" sequence="16"-->
+<!--                  action="account.action_account_invoice_report_all"/>-->
+<!--        <menuitem id="analytic_report" name="Analytic Report" parent="invoicing_report_all" sequence="17"-->
+<!--                  action="account_reports.action_account_report_analytic"/>-->
+<!--        <menuitem id="currency_gains_report" name="Unrealized Currency Gains/Losses" parent="invoicing_report_all"-->
+<!--                  sequence="18"-->
+<!--                  action="account_reports.action_account_report_multicurrency_revaluation"/>-->
+<!--        <menuitem id="schedule_depreciation_report" name="Depreciation Schedule" parent="invoicing_report_all"-->
+<!--                  sequence="19"-->
+<!--                  action="account_asset.action_account_report_assets"/>-->
+<!--        <menuitem id="budgets_analysis_report" name="Budgets Analysis" parent="invoicing_report_all" sequence="20"-->
+<!--                  action="account_budget.act_crossovered_budget_lines_view"/>-->
+
+        <!--        Material Requisiton-->
+        <menuitem id="material_req_report_all" name=" Material Requisiton" parent="all_reports_atlas_all"
+                  sequence="5"/>
+        <menuitem id="material_requisition_seperate_report" name="Material Requisition Excel Report" parent="material_req_report_all" sequence="1" action="material_requisition.action_wizard_material_requisition_excel_report"/>
+
+        <!--        inventory-->
+        <menuitem id="inventory_report_all" name="Stores" parent="all_reports_atlas_all"
+                  sequence="6"/>
+        <menuitem id="stores_current_stock_report_separate" name="Current Stock Report" parent="inventory_report_all"
+                  sequence="1"
+                  action="sr_price_history_for_product.action_current_stock_report"/>
+        <menuitem id="direct_delivery_report" name="Direct Delivery Stock Report" parent="inventory_report_all"
+                  sequence="2"
+                  action="material_requisition.action_wizard_stock_direct_delivery_transfer"/>
+        <menuitem id="warehouse_analysis_return_report" name="Warehouse Analysis" parent="inventory_report_all"
+                  sequence="3"
+                  action="stock_enterprise.stock_report_dashboard_action"/>
+        <menuitem id="inventory_summary_report" name="Inventory Summary" parent="inventory_report_all"
+                  sequence="4"
+                  action="inventory_balance_summary_14.inv_bal_sum_wiz_action"/>
+        <menuitem id="inventory_return_report" name="Inventory Report" parent="inventory_report_all"
+                  sequence="5"
+                  action="stock.dashboard_open_quants"/>
+        <menuitem id="forecasted_return_report" name="Forecasted Inventory" parent="inventory_report_all"
+                  sequence="6"
+                  action="stock.report_stock_quantity_action"/>
+        <menuitem id="inventory_valuation_report" name="Inventory Valuation" parent="inventory_report_all"
+                  sequence="7"
+                  action="stock_account.stock_valuation_layer_action"/>
+        <menuitem id="stock_moves_report" name="Stock Moves" parent="inventory_report_all"
+                  sequence="8"
+                  action="stock.stock_move_action"/>
+        <menuitem id="product_moves_report" name="Product Moves" parent="inventory_report_all"
+                  sequence="9"
+                  action="stock.stock_move_line_action"/>
+
+        <!--        employees-->
+        <menuitem id="employees_report_all" name="Employee Report" parent="all_reports_atlas_all"
+                  sequence="7"/>
+        <menuitem id="employees_analysis_report" name="Employees Analysis" parent="employees_report_all"
+                  sequence="1"
+                  action="hr_contract_reports.contract_employee_report_action"/>
+        <!--        Fleet-->
+        <menuitem id="fleet_report_all" name="Fleet Report" parent="all_reports_atlas_all"
+                  sequence="8"/>
+        <menuitem id="cost_analysis_report" name="Costs Analysis" parent="fleet_report_all"
+                  sequence="1" action="fleet.fleet_costs_reporting_action"/>
+
+        <menuitem id="separate_four_wheeler_usage_report_menu" name="Fleet Vehicle Usage Report" parent="fleet_report_all"
+                  sequence="2" action="appscomp_fleet.action_four_wheeler_usage_report"/>
+
+        <menuitem id="driver_ot_report" name="Driver OT Report" parent="fleet_report_all"
+                  sequence="3" action="appscomp_fleet.action_driver_ot_report"/>
+        <!--        Expenses-->
+        <menuitem id="expenses_report_all" name="Expenses Report" parent="all_reports_atlas_all"
+                  sequence="9"/>
+        <menuitem id="expenses_analysis_report" name="Expenses Analysis" parent="expenses_report_all"
+                  sequence="1"
+                  action="hr_expense.hr_expense_actions_all"/>
+        <menuitem id="expenses_summary_report" name="Expenses Summary Report" parent="expenses_report_all"
+                  sequence="2"
+                  action="hr_expense_petty_cash.action_expense_report_wizard"/>
+    </data>
+</odoo>

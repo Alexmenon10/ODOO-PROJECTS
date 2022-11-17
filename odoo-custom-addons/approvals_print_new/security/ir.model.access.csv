@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_approval_refuse,access.approval.refuse,model_approval_refuse,,1,1,1,1
+access_expense_unit,access.expense.unit,model_expense_unit,,1,1,1,1
+access_expense_payment,access.expense.payment,model_expense_payment,,1,1,1,1
+access_expense_refused_remarks,access.expense.refused.remarks,model_expense_refused_remarks,,1,1,1,1
+access_approval_travel,access.approval.travel,model_approval_travel,,1,1,1,1
+access_approval_travel_wizard,access.approval.travel.wizard,model_approval_travel_wizard,,1,1,1,1
+access_vehicle_type,access.vehicle.type,model_vehicle_type,,1,1,1,1
+

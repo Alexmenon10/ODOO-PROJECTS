@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Sale Template -->
+        
+        <record id="email_template_request_for_travel_planning_approvals" model="mail.template">
+            <field name="name">Travel Planning Approval Request - Send by Email</field>
+            <field name="model_id" ref="appscomp_fleet.model_driver_trip_details"/>
+            <field name="subject">Travel Planning Approval Request : "{{object.reference or 'n/a' }}</field>
+            <field name="email_from">{{object.name.approved_by.employee_id.work_email or 'n/a' }}</field>
+            <field name="email_to">{{object.name.request_owner_id.login or 'n/a' }}</field>
+            <field name="email_cc">{{object.name.vehicle_driver.work_email or 'n/a' }}</field>
+<!--            <field name="report_template" ref="fleet_vehicle_request_report"/>-->
+            <field name="auto_delete" eval="False"/>
+            <field name="body_html"><![CDATA[
+                <p>Dear Sir / Madam,<br/></p>
+                <p>Travel Planning Approval Request : The Reference of <strong><t t-out="object.reference or ''"></t></strong>
+                your Approval has been approved by <strong><t t-out="object.name.approver_ids.user_id.name or ''"></t></strong>
+                and The Driver & Vehicle has been assigned and Requested Trip has Sheduled.Please find the details as mentioned below.<br>
+                <p>
+                <strong>Reference</strong> : <t t-out="object.reference or 'n/a'"></t><br/>
+                <strong>Driver</strong> : <t t-out="object.name.vehicle_driver.name or 'n/a'"></t><br/>
+                <strong>Vehicle</strong> : <t t-out="object.name.vechicle_list.name or 'n/a'"></t><br/>
+                <strong>Assigned BY</strong> : <t t-out="object.name.assigned_by or 'n/a'"></t><br/>
+                <strong>Total Duration</strong> : <t t-out="object.name.total_duration or 'n/a'"></t><br/>
+<!--                <strong>URL</strong> : <t t-out="'current_url'"></t><br/>-->
+                 <table class="table table-sm table-bordered">
+                  <thead>
+                    <tr>
+                        <td colspan="6" align="center">
+                            <h4>Approved Trip</h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="10%" valign="middle" align="center"
+                            class="padding_all tbottom ttop text-center">
+                            <strong>Sl.No.</strong>
+                        </th>
+                        <th width="10%" valign="middle" align="center"
+                            class="padding_all tbottom ttop text-center">
+                            <strong>Start Date</strong>
+                        </th>
+
+                        <th width="20%" valign="middle" align="center"
+                            class="padding_all tleft tbottom ttop text-center">
+                            <strong>End Date</strong>
+                        </th>
+
+                        <th width="20%" valign="middle" align="center"
+                            class="padding_all tleft tbottom ttop text-center">
+                            <strong>From</strong>
+                        </th>
+
+                        <th width="20%" valign="middle" align="center"
+                            class="padding_all tleft tbottom ttop text-center">
+                            <strong>To</strong>
+                        </th>
+                        <th width="20%" valign="middle" align="center"
+                            class="padding_all tleft tbottom ttop text-center">
+                            <strong>Duration</strong>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr t-foreach="object.name.approval_travel_ids" t-as="l">
+                    <td width="10%" class="padding_all tbottom ttop text-center">
+                        <span t-esc="l_index+1"/>
+                    </td>
+                    <td width="20%"
+                        class="padding_all tleft tbottom ttop text-center">
+                        <span t-field="l.start_date"/>
+                    </td>
+
+                    <td width="20%"
+                        class="padding_all tleft tbottom ttop text-center">
+                        <span t-field="l.end_date"/>
+                    </td>
+
+                    <td width="20%"
+                        class="padding_all tleft tbottom ttop text-center">
+                        <span t-field="l.source"/>
+                    </td>
+                    <td width="20%"
+                        class="padding_all tleft tbottom ttop text-center">
+                        <span t-field="l.distination"/>
+                    </td>
+                    <td width="20%"
+                        class="padding_all tleft tbottom ttop text-center">
+                        <span t-field="l.duration"/>
+                    </td>
+                </tr>
+            </tbody>
+<!--                <t t-foreach="object.name.approval_travel_ids" t-as="line">-->
+<!--                    <t t-out="line.start_date or 'N/A'"></t>-->
+<!--                </t>-->
+                </table>
+
+                <p>Thank you,<br/></p><br/>
+
+                -------------------------------------------This is a system generated email----------------------------------------------
+                  ]]>
+            </field>
+        </record>
+    </data>
+</odoo>

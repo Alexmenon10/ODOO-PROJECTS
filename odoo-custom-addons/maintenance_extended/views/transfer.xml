@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+
+
+        <!--          Transfer-->
+
+        <record id="view_transfer_form" model="ir.ui.view">
+            <field name="name">transfer.details.form</field>
+            <field name="model">transfer.details</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <!--                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done"/>-->
+                    </header>
+                    <sheet>
+                        <h1>
+                            <strong>
+                                <field name="traid" placeholder="traid"/>
+                            </strong>
+                        </h1>
+                        <group string="Transfer Equipment">
+                            <group>
+                                <field name="contact"></field>
+                                <field name="name_id"></field>
+                                <field name="eid"></field>
+                                <field name="date"></field>
+
+                            </group>
+                            <group string="Transfer Location">
+
+                                <field name="source_location"></field>
+                                <field name="source_block"
+                                       attrs="{'invisible': [('source_location','=',False)]}"></field>
+                                <field name="source_floor" attrs="{'invisible': [('source_block','=',False)]}"></field>
+
+
+                                <field name="source_division"
+                                       attrs="{'invisible': [('source_floor','=',False)]}"></field>
+                                <field name="source_section"
+                                       attrs="{'invisible': [('source_division','=',False)]}"></field>
+
+                                <field name="des"></field>
+
+                            </group>
+                        </group>
+                        <notebook>
+
+                            <page string="Note" name="note">
+                                <field name="note" string="Note"
+                                       placeholder="Add an Comment"/>
+                            </page>
+
+                            <page string="Additional Info" name="extra">
+                                <group>
+                                    <group>
+
+                                        <field name="ref" string="Responsible "></field>
+                                        <field name="sdoc"></field>
+
+                                    </group>
+                                    <group>
+                                        <field name="machine_id"></field>
+                                        <field name="category_id"></field>
+                                        <field name="cate_id" invisible="True"></field>
+                                        <field name="selction"></field>
+
+                                    </group>
+                                </group>
+
+                            </page>
+
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_transfer_tree" model="ir.ui.view">
+            <field name="name">transfer.details.tree</field>
+            <field name="model">transfer.details</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="eid"/>
+                    <field name="name_id" string="From"/>
+                    <field name="des" string="To"></field>
+                    <field name="date"/>
+                    <field name="contact"></field>
+                    <field name="traid"/>
+                    <field name="ref"></field>
+                    <field name="sdoc"/>
+                    <field name="source_location" optional="hide"></field>
+                    <field name="category_id" optional="hide"></field>
+                    <field name="machine_id" optional="hide"></field>
+                    <field name="selction" optional="hide"></field>
+
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="view_transfer_kanban" model="ir.ui.view">
+            <field name="name">transfer.details.kanban</field>
+            <field name="model">transfer.details</field>
+            <field name="arch" type="xml">
+                <kanban class="o_hr_transfer_kanban">
+                    <field name="name_id"/>
+                    <field name="eid"/>
+                    <field name="des"></field>
+                    <field name="traid"/>
+                    <field name="date"></field>
+
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="o_kanban_record_top mb8">
+                                <strong>
+                                    <field name="traid"/>
+                                </strong>
+                                <div class="o_kanban_record_headings ml-1">
+                                </div>
+
+                                <ul style="text-align:Left;">
+
+                                    <strong>
+                                        <li>Equipment Name :
+                                            <field name="eid"/>
+                                        </li>
+                                    </strong>
+
+                                    <strong>
+                                        <li>:From :
+                                            <field name="name_id"/>
+                                        </li>
+                                    </strong>
+
+
+                                    <strong>
+                                        <li>To :
+                                            <field name="des"/>
+                                        </li>
+                                    </strong>
+
+                                    <strong>
+                                        <li>Scheduled Date :
+                                            <field name="date"/>
+                                        </li>
+                                    </strong>
+                                </ul>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+
+        <record id="view_transfer_map" model="ir.ui.view">
+            <field name="name">transfer.details.map</field>
+            <field name="model">transfer.details</field>
+            <field name="arch" type="xml">
+                <map res_partner="contact" hide_address="true">
+                    <field name="date" string="Scheduled Date"/>
+                </map>
+
+            </field>
+        </record>
+
+
+        <record id="view_transfer_calendar" model="ir.ui.view">
+            <field name="name">transfer.details.calendar</field>
+            <field name="model">transfer.details</field>
+            <field name="arch" type="xml">
+                <calendar string="Calendar View" date_start="date" color="contact" event_limit="5">
+                    <field name="contact" filters="1"/>
+                    <field name="name_id"></field>
+                    <field name="des"/>
+
+                </calendar>
+            </field>
+        </record>
+
+        <record id="transfer_details_action" model="ir.actions.act_window">
+            <field name="name">Transfer</field>
+            <field name="res_model">transfer.details</field>
+            <field name="view_mode">tree,kanban,form,calendar,map</field>
+
+
+        </record>
+
+
+
+                <!--        scarp-->
+
+        <record id="view_scarp_form" model="ir.ui.view">
+            <field name="name">scarp.details.form</field>
+            <field name="model">scarp.details</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <!--                        <button name="action_validate" states="draft" string="Validate" type="object"-->
+                        <!--                                class="oe_highlight" context="{'not_unlink_on_discard': True}" data-hotkey="v"/>-->
+                        <!--                        <field name="state" widget="statusbar" statusbar_visible="draft,done"/>-->
+
+                    </header>
+                    <sheet>
+
+                        <!--                        <button class="oe_stat_button" name="action_get_stock_move_lines"-->
+                        <!--                                string="Product Moves" type="object"-->
+                        <!--                                attrs="{'invisible':[('move_id','=',False)]}" icon="fa-exchange"/>-->
+                        <!--                        <field name="move_id" invisible="1"/>-->
+                        <h1>
+                            <strong>
+                                <field name="scarpid" placeholder="scarpid"/>
+                            </strong>
+                        </h1>
+
+                        <!--                        <button class="oe_stat_button" name="action_draft" string="draft" type="object"-->
+                        <!--                                attrs="{'invisible':[('move_id','=',False)]}" icon="fa-exchange"/>-->
+                        <!--                        <field name="move_id" invisible="1"/>-->
+                        <group string="Scrap Equipment">
+                            <group>
+
+                                <field name="move_id"></field>
+                                <field name="scrapitem"></field>
+
+
+                                <!--                                <field name="eid"-->
+                                <!--                                       attrs="{'invisible': [('name_id','=',False)]}"></field>-->
+                                <!--                                &lt;!&ndash;                                <field name="ref"&ndash;&gt;-->
+                                <!--                                &lt;!&ndash;                                       attrs="{'invisible': [('name_id','=',False)]}"></field>&ndash;&gt;-->
+                                <!--                                <field name="category_id"-->
+                                <!--                                       attrs="{'invisible': [('name_id','=',False)]}"></field>-->
+                            </group>
+                            <group>
+
+                                <field name="date"></field>
+                                <field name="sdoc"></field>
+
+
+                            </group>
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_scarp_tree" model="ir.ui.view">
+            <field name="name">scarp.details.tree</field>
+            <field name="model">scarp.details</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="scrapitem"></field>
+                    <field name="move_id"></field>
+
+
+                    <field name="date"></field>
+                    <field name="sdoc" string="From"></field>
+                    <field name="scarpid" string="To"></field>
+
+                    <!--                    <field name="ref"></field>-->
+                    <!--                    <field name="state" widget="badge" decoration-success="state == 'done'"-->
+                    <!--                           decoration-info="state == 'draft'"/>-->
+
+                </tree>
+            </field>
+        </record>
+
+        <record id="scarp_details_action" model="ir.actions.act_window">
+            <field name="name">Scrap Details</field>
+            <field name="res_model">maintenance.request</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="domain">[('stage_id','=','Scrap')]</field>
+        </record>
+
+
+
+
+    </data>
+</odoo>

@@ -1,0 +1,255 @@
+<odoo>
+  
+
+        <record id="view_stock_move_line_detailed_operation_tree_inherit_mass_custom_fields" model="ir.ui.view">
+        <field name="name">stock.move.line.operations.tree.inherit.mass.custom.fields</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='qty_done']" position="before">
+                <field name="z_demand"/>
+
+            </xpath>
+           
+        </field>
+    </record>
+
+  
+
+    <record id="terms_of_delivery_view" model="ir.ui.view">
+        <field name="name">Delivery.Schedule</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <field name="currency_id" position="after">
+                <field name="delivery_schedule" />
+                <field name="required_delivery" />
+                <field name="z_requested_emp_id" options="{'no_create':True}"/>
+                <field name="z_terms_of_delivery" />
+            </field>
+        </field>
+    </record>
+
+    <record id="transporter_view" model="ir.ui.view">
+        <field name="name">transporter.view</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+             <xpath expr="//page[@name='extra']" position="inside">
+                <group>
+                        <group string=" " name="other_group1"   >
+                           <field name="z_transporter"/>
+                <field name="zx_vehicle_no" string='Vehicle No.'/>
+                <field name='url' widget="url" invisible='1'/>
+                <field name='z_requested_emp_id' invisible='1'/>
+                        </group>
+                    </group>
+                    </xpath>
+           <!--  <field name="origin" position="after">
+                <field name="z_transporter"/>
+                <field name="zx_vehicle_no" string='Vehicle No.'/>
+                <field name='url' widget="url" invisible='1'/>
+                <field name='z_requested_emp_id' invisible='1'/>
+            </field> -->
+
+            <field name="picking_type_id" position="after">
+                <field name='invoice_ref' attrs="{'required': [('picking_type_code','=','incoming')],'invisible':[('picking_type_code', '!=', 'incoming')]}"/>
+
+                <field name='invoice_date' attrs="{'required': [('picking_type_code','=','incoming')],'invisible':[('picking_type_code', '!=', 'incoming')]}"/>
+            </field>
+           <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='product_id']" position="after">
+              <field name="price_unit" readonly="1"/>
+              <field name="tax_id" widget="many2many_tags" readonly="1"/>
+              <field name="price_tax" />
+              <field name="price_subtotal" invisible='1'/>
+              
+                <field name="z_qty_available"/>
+            </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='product_id']" position="before">
+                    <field name="serial_no"/>
+                </xpath>
+            <xpath expr="//notebook//page[3]" position="inside">
+                <group col="6">
+                    <group colspan="4">
+                    </group>
+                    <group class="oe_subtotal_footer oe_right" colspan="2">             
+                        <div class=" oe_inline o_td_label">
+                            <label for="amount_total"/>
+                        </div>
+                        <field name="amount_total" nolabel="1"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="purchase_order_form_sl_no">
+        <field name="name">sl.no.purchase.order.form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='order_line']/tree/field[@name='product_id']"
+                position="before"
+            >
+                <field name="serial_no" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_form_delivery_terms" model="ir.ui.view">
+        <field name="name">view.form.delivery.terms</field>
+        <field name="model">terms.delivery</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_reference_view" model="ir.ui.view">
+        <field name="name">product.reference.view</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <field name="default_code" position="after">
+                <field name="product_reference"/>
+            </field>
+        </field>
+    </record>
+
+     <record id="product_normal_form_view_view_ref" model="ir.ui.view">
+        <field name="name">product.product.view</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <field name="default_code" position="after">
+                <field name="product_reference"/>
+            </field>
+        </field>
+    </record>
+
+
+    <record id="inherit_product_search_form_view_1234" model="ir.ui.view">
+            <field name="name">inherit.product.product.search</field>
+            <field name="model">product.template</field>
+
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="product_reference"/>
+                    
+
+                    <field name="product_reference" options="{'no_create': True}" context="{'product_reference': self}"/>
+
+                </field>
+               <xpath expr="//group" position='inside'>
+                     <filter name="product_reference" string="Product Ref" context="{'group_by':'product_reference'}" />
+                 </xpath>
+
+               
+              
+            </field>
+        </record>
+
+        <record id="product_search_form_view_1234" model="ir.ui.view">
+            <field name="name">product.search.stock.form .1</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_search_form_view"/>
+            <field name="arch" type="xml">
+                <field name="location_id" position="before">
+                    <field name="product_reference" options="{'no_create': True}" context="{'product_reference': self}"/>
+
+                </field>
+            </field>
+        </record>
+
+        <!--<record id="maintenance_equipment_view" model="ir.ui.view">
+            <field name="name">maintenance_equipment_view</field>
+            <field name="model">maintenance.equipment</field>
+            <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
+            <field name="arch" type="xml">
+                <field name="employee_id" position="after">
+                    <field name="asset" />
+                </field>
+            </field>
+        </record>-->
+
+         <!--<record id="sale_order_type_view" model="ir.ui.view">
+            <field name="name">sale_order_type</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="payment_term_id" position="after">
+
+                    <field name="partner_state" invisible='1'/>
+                </field>
+                 <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="after" >
+                    <field name='qty_pending' invisible='1'/>
+                    <field name='open_order_value' invisible='1'/>
+                    <field name='disptach_value' invisible='1'/>
+                    <field name='total_order_value' invisible='1'/>
+                </xpath>
+
+            </field>
+        </record>-->
+        <record id="res_partner_type_view" model="ir.ui.view">
+            <field name="name">res_partner_type_view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="vat" position="after">
+                    <field name="partner1" />
+                    <field name="mobile1" />
+                    <field name="partner2" />
+                    <field name="mobile2" />
+                </field>
+            </field>
+        </record>
+
+       <!-- <record id="view_partner_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name='category_id' position="after">
+                <field name="mime_code"/>  
+            </field>
+          
+            </field>                   
+        </record>-->
+
+        <record id="view_move_form_inherit" model="ir.ui.view">
+            <field name="name">view.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch_base" type="xml">
+              
+                <xpath expr="//group[@id='other_tab_group']" position="inside">
+                        <group string="Others" name="other_group"  attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund'))]}" >
+                            <field name="vehicle" widget='many2many_tags'/>
+                            <field name="ext_vehicle_no"/>
+                            <field name="z_transporter"/>
+                            <field name="no_of_packages"/>
+                        </group>
+                    </xpath>
+            </field>
+        </record>
+       
+       <record id="ravago_account_move_form_inherit" model="ir.ui.view">
+            <field name="name">account.move.mass.form_inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='product_id']" position="before">
+                    <field name="serial_no" />
+                </xpath>
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='discount']" position="attributes">
+                   <attribute name="optional">show</attribute>
+                </xpath>
+            </field>
+        </record>
+
+</odoo>

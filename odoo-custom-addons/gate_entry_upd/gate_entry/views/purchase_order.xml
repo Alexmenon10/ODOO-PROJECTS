@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>  
+    <record model="ir.ui.view" id="view_purchase_order_form_gate_entry">
+        <field name="name">purchase.order.form.gate.entry</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <!-- <header position="inside">
+                <button type="object" name="close_pos" string="close PO" class="btn" attrs="{'invisible':[('purchase_entry_inward_done', '=', True)] }"/>
+            </header> -->
+           <!--  <xpath expr="//field[@name='order_line']/tree" position="inside">
+                <field name="purchase_order_line_done" invisible='1'/>                
+                <button icon="fa-flag-checkered text-success" title="Inward Done" attrs="{'invisible': [('purchase_order_line_done','=',False)]}" />
+                <button icon="fa-flag-checkered text-danger" title="Inward Not Done" attrs="{'invisible': [('purchase_order_line_done','=',True)]}" />
+            </xpath> -->
+
+            <page name="purchase_delivery_invoice" position="inside">
+                <group>
+                    <group string="Gate Entry">
+                        <field name="warehouse_id"/>
+                        <!-- <field name="is_return" invisible="1"/>
+                        <field name="purchase_entry_inward_done"/>
+                        <field name="is_return_outward" invisible='1'/-->
+                    </group>
+                </group>
+            </page>
+        </field>
+    </record>
+
+    <!-- <record model="ir.ui.view" id="view_sale_order_form_gate_entry">
+        <field name="name">sale.order.form.gate.entry</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml"> -->
+            <!-- <header position="inside">
+                <button type="object" name="close_sos" string="close SO" class="btn" attrs="{'invisible':[('sale_entry_outward_done', '=', True)] }"/>
+            </header> -->
+            <!-- <xpath expr="//field[@name='order_line']/tree" position="inside">
+                <field name="sale_order_line_done" invisible='1'/>                
+                <button icon="fa-flag-checkered text-success" title="Outward Done" attrs="{'invisible': [('sale_order_line_done','=',False)]}" />
+                <button icon="fa-flag-checkered text-danger" title="Outward Not Done" attrs="{'invisible': [('sale_order_line_done','=',True)]}" />
+            </xpath>
+            <page name="other_information" position="inside">
+                <group>
+                    <group string="Gate Entry">
+                        <field name="is_return"/>
+                        <field name="sale_entry_outward_done"/>
+                        <field name="sale_done" invisible='1'/>
+                        <field name="sale_gate_entry" invisible='1'/>
+                    </group>
+                </group>
+            </page>
+        </field>
+    </record> -->
+</odoo>

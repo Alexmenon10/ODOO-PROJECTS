@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="external_layout_standard_mass">
+            <div class="header">
+                <table class="table" style="border:1px solid #143980;width:100%;margin-bottom:0">
+                    <tr>
+                        <td colspan="2" style="border:1px solid white;border-bottom:1px solid #143980;text-align:center;
+                        padding:1px;color:#143980;">
+                            <div class="row">
+                                <div class="col-4" style="font-size:12px;">
+                                </div>
+                                <div class="text-center col-4">
+                                    <strong style="font-size:16px;margin-right:50px;">PURCHASE ORDER</strong>
+                                </div>
+                                <div class="text-center col-4" style="font-size:14px;">
+                                    <t t-if="doc.state in ('draft', 'sent','cancel')">
+                                        <span style="color:#f7412c;">
+                                            <strong style="font-size:16px;"><span t-esc="'NOT APPROVED'"/></strong>
+                                        </span>
+                                    </t>
+                                    <t t-if="doc.state in ('purchase','done')">
+                                        <span style="color:green;">
+                                            <strong style="font-size:16px;"><span t-esc="'APPROVED'"/></strong>
+                                        </span>
+                                    </t>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3"
+                            style="border:1px solid #143980;padding:5px;padding:5px;width:70.5% !important;">
+                            <div class="row">
+                                <div class="col-4" style="font-size:12px;">
+                                    <div style="margin-bottom:10px;">
+                                        <img class="text-right  " t-if="doc.company_id.logo"
+                                             t-att-src="image_data_uri(doc.company_id.logo)" style="width:160px;"/>
+                                    </div>
+                                </div>
+                                <div class="text-center col-8" style="line-height: initial;margin-left: 1px;">
+                                     <strong>
+                                        <span style="font-size:13px;color:#143980;font-style: normal;">ATLAS</span>
+                                        <span style="font-size:13px;color:#143980;font-style: normal;">EXPORT ENTERPRISES</span>
+                                    </strong>
+                                    <br/>
+                                    <!--<span style="font-size:14px;">(Unit of Mulla Abdul Hussain Sons)</span><br/>-->
+                                    <strong>
+                                        <span style="color:#143980;font-size:13px;padding:1px;"
+                                              t-field="doc.company_id.partner_id.street"/>
+                                        <span style="color:#143980;font-size:13px;padding:1px;"
+                                              t-field="doc.company_id.partner_id.street2"/>
+                                        <br/>
+                                        <span style="color:#143980;font-size:13px;padding:1px;"
+                                              t-field="doc.company_id.city"/>
+                                        <span style="color:#143980;">-</span>
+                                        <span style="color:#143980;font-size:13px;padding:1px;"
+                                              t-field="doc.company_id.partner_id.zip"/>
+                                        <span style="color:#143980;font-size:13px;padding:1px;"
+                                              t-field="doc.company_id.state_id"/>
+                                        <span style="color:#143980;">,</span>
+                                        <span style="color:#143980;font-size:13px;padding:1px;"
+                                              t-field="doc.company_id.country_id"/>
+                                        <br/>
+                                    </strong>
+                                    <strong style="font-size:13px;padding:1px;"><t t-esc="'Phone'"/>:
+                                        <span style="color:#143980;font-size:13px;" t-field="doc.company_id.phone"/>
+                                    </strong>
+                                    <br/>
+                                    <t t-if='doc.company_id.email'>
+                                        <strong style="font-size:13px;padding:1px;"><t t-esc="'E Mail'"/>:
+                                        </strong>
+                                        <t t-set="emailstr" t-value="doc.email_split(doc.company_id.email)"/>
+                                        <strong>
+                                            <span style="color:#143980;font-size:13px;" t-esc="emailstr"/>
+                                        </strong>
+                                        <br/>
+                                    </t>
+                                    <strong style="font-size:13px;padding:1px;"><t t-esc="'Website'"/>:
+                                    </strong>
+                                    <span style="color:#143980;font-size:13px;" t-field="doc.company_id.website"/>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="width:30%;border-bottom:1px solid #143980;">
+                            <div style="font-size:12px;">
+                                <strong style="color:#143980;font-size:12px;">Purchase Order No.:</strong>
+                                <strong>
+                                    <span t-field="doc.name"/>
+                                    <br/>
+                                </strong>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%;border-bottom:1px solid #143980;">
+                            <div style="font-size:12px;">
+                                <strong style="color:#143980;font-size:12px;">PO Date.:</strong>
+                                <strong style="font-size:12px;">
+                                    <span t-esc="doc.date_order.strftime('%d-%m-%Y')"/>
+                                </strong>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:30%;border-bottom:1px solid #143980;">
+                            <strong style="color:#143980;font-size:12px;padding:1px;">Purchase Order
+                                Type.&#160;&#160;:
+                            </strong>
+                            <strong style="font-size:11px;">
+                                <span t-esc="doc.doc_type_id.name"/>
+                            </strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding:1px;padding:3px;color:#143980;">
+                            <div class="row">
+                                <div class="col-3" style="font-size:10px;">
+                                    <strong><t t-esc="'GSTIN'"/>:
+                                    </strong>
+                                    <strong>
+                                        <span t-field="doc.company_id.vat"/>
+                                    </strong>
+                                </div>
+                                <div class="col-2" style="font-size:10px;">
+                                    <strong><t t-esc="'CIN No'"/>:
+                                    </strong>
+                                    <strong>
+                                        <span t-field="doc.company_id.company_registry"/>
+                                    </strong>
+                                </div>
+                                <!--                            <div class="col-3" style="font-size:10px;">-->
+                                <!--                                <strong><t t-esc="'IEC CODE'"/>:</strong>-->
+                                <!--                                <strong><span t-field="doc.company_id.partner_id.mime_code"/></strong>-->
+                                <!--                            </div>-->
+                                <div class="col-2" style="font-size:10px;">
+                                    <strong><t t-esc="'STATE'"/>:
+                                    </strong>
+                                    <strong>
+                                        <span style="text-transform:uppercase" t-field="doc.company_id.state_id"/>
+                                    </strong>
+                                </div>
+                                <div class="col-2" style="font-size:10px;">
+                                    <strong><t t-esc="'STATE CODE'"/>:
+                                    </strong>
+                                    <strong>
+                                        <span t-field="doc.company_id.zip"/>
+                                    </strong>
+                                </div>
+
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="article o_report_layout_standard" t-att-data-oe-model="doc and doc._name"
+                 t-att-data-oe-id="doc and doc.id" t-att-data-oe-lang="doc and doc.env.context.get('lang')">
+                <t t-call="web.address_layout"/>
+                <t t-raw="0"/>
+            </div>
+
+            <div class="footer o_standard_footer" style="margin-top:0">
+                <!--            <table class="table table-sm" style="margin-bottom:0;font-size:12px;" >-->
+                <!--                <tr style="height:3px !important;">-->
+                <!--                    <td style="padding:1px;border:1px solid #143980;width:61%" >-->
+                <!--                        <span style="color:#143980;font-size:12px;">Division: Visakhapatnam </span><br/>-->
+                <!--                        <span style="color:#143980;font-size:12px;">Range: Paravada Mandal,Andhra Pradesh</span> -->
+                <!--                    </td>-->
+                <!--                    &lt;!&ndash;<td colspan="4" style="padding:1px;border:1px solid #143980;">-->
+                <!--                        <span style="color:#143980;font-size:12px;">Ameer- +91 7411468469 </span><br/>-->
+                <!--                        <span style="color:#143980;font-size:12px;">Manjunath- Manager Purchase </span><br/>-->
+                <!--                        <span style="color:#143980;font-size:12px;">+91 9972002286&#160;&#160;&#160;e-mail: materials@masfurn.com</span>-->
+                <!--                    </td>&ndash;&gt;-->
+                <!--                </tr>-->
+                <!--            </table>-->
+                <div style="text-align:center;padding:1px;margin-top:none !important;">
+                    <p style="float:left;color:#143980;" class="text-muted">Page:
+                        <span class="page"/>
+                        of
+                        <span class="topage"/>
+                    </p>
+                    <span style="padding-top:-18px;font-size:12px;color:#143980;">This is a Computer Generated Copy
+                    </span>
+                </div>
+            </div>
+        </template>
+
+    </data>
+
+</odoo>

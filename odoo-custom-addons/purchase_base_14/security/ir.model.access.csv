@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_purchase_doc_type,purchase_doc_type,model_purchase_doc_type,base.group_user,1,1,1,1
+,,,,,,,
+access_purchaseline_prev,purchaseline_prev,model_purchaseline_prev,base.group_user,1,1,1,0
+access_purchaseline_wizard,purchaseline_wizard,model_purchaseline_wizard,base.group_user,1,1,1,0
+access_requisition_approval,requisition.approval,model_requisition_approval,base.group_user,1,1,1,1
+access_requisition_approval_line,requisition.approval.line,model_requisition_approval_line,base.group_user,1,1,1,1
+access_requisition_order_approval,requisition.order.approval,model_requisition_order_approval,base.group_user,1,1,1,1
+access_requisition_approval_remarks,requisition.approval.remarks,model_requisition_approval_remarks,base.group_user,1,1,1,1

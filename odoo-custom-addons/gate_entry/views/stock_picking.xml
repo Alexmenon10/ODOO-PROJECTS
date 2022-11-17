@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_picking_form_gate_entry">
+        <field name="name">stock.picking.form.gate.entry</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+<!--            <button name="button_validate" position="before">-->
+<!--                <button name="create_partial_qty_material" string="Partial Validate" type="object"/>-->
+<!--            </button>-->
+<!--            <xpath expr="//header/button[4]" position="attributes">-->
+<!--                <attribute name="attrs">{'invisible': ['|','|', ('state', 'in', ('waiting','confirmed')), ('show_validate', '=', False), ('verify_stock', '=', False)]}-->
+<!--                </attribute>-->
+<!--            </xpath>-->
+            <xpath expr="//notebook/page/field[@name='move_ids_without_package']/tree" position="attributes">
+                <attribute name="create">0</attribute>
+            </xpath>
+            <field name="origin" position="after">
+                <field name="ho_department" options='{"no_create": True}'
+                       attrs="{'required': [('picking_type_code','!=','incoming')],'invisible':[('picking_type_code', '==', 'incoming')]}"
+                />
+            </field>
+            <field name="group_id" position="after">
+                <field name="gate_entry_id" readonly='1'/>
+                <field name="vehicle_num" readonly='1'/>
+                <field name="invoice_num" readonly='1'/>
+                <field name="gate_entry_date" readonly='1'/>
+                <!-- <field name="gate_entry_purchase_outward_id" invisible='1'/> -->
+                <field name="purchase_return" invisible='1'/>
+                <field name="supplier_invoice_no" readonly="1"/>
+                <field name="verify_stock" invisible="1"/>
+                <field name="bill_date" readonly="1"/>
+            </field>
+        </field>
+    </record>
+    <!--    <record model="ir.ui.view" id="view_picking_treegate_entry">-->
+    <!--        <field name="name">stock.picking.tree.gate.entry</field>-->
+    <!--        <field name="model">stock.picking</field>-->
+    <!--        <field name="inherit_id" ref="	stock.vpicktree"/>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <field name="origin" position="after">-->
+    <!--                <field name="gate_entry_id" readonly='1'/>-->
+    <!--            </field>-->
+    <!--        </field>-->
+    <!--    </record>-->
+
+
+     <record model="ir.ui.view" id="ho_department_form_view">
+            <field name="name">ho.department.form</field>
+            <field name="model">ho.department</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+     </record>
+
+    <!-- Actions panel -->
+        <record model="ir.actions.act_window" id="gate_entry.action_ho_department">
+            <field name="name">Ho Department</field>
+            <field name="res_model">ho.department</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new Ho Department
+                </p>
+            </field>
+        </record>
+        <menuitem name="Ho Department" id="gate_entry.menu_ho_depatment" parent="inventory_base.menu_product_group_root"
+                  action="gate_entry.action_ho_department" sequence="10"/>
+
+</odoo>

@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>  
+  <data>
+    <!-- Form view -->
+    <record model="ir.ui.view" id="gate_entry_form_view">
+        <field name="name">gate_entry.form</field>
+        <field name="model">gate.entry</field>
+        <field name="arch" type="xml">  
+        <form>
+        <header>
+            <button name="process" type="object" string="Process"
+                    attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
+           <!--  <button name="done" type="object" string="Done"
+                    attrs="{'invisible': [('state', 'in', ['draft','done'])]}"/> -->
+            <button name="cancle" type="object" string="Cancel"
+                    attrs="{'invisible': [('state', 'in', ['draft','cancle'])]}"/>
+            <field name="state" widget="statusbar" statusbar_visible="draft,processed,done"/>          
+        </header>
+        <sheet>
+          <div class="oe_title">
+              <h1>
+                  <field name="name" readonly="1"/>
+              </h1>
+          </div>
+          <group>
+            <group>
+              <field name="entry_type" class="oe_avatar oe_left" readonly="1" invisible="1"/>
+              <field name="order_type_inward" invisible="1"/>
+              <field name="order_type_outward" invisible="1"/>
+              <!-- <field name="item_description" attrs="{'readonly':[('state', '=', 'processed')]}"/> -->
+              <field name="warehouse_id" required='1' attrs="{'readonly':[('state', '=', 'processed')]}" 
+                          options="{ 'no_create':True, 'no_create_edit':True }"/>
+              <field name='station_from' attrs="{'invisible':[('entry_type', '=', 'out')]}"/>
+              <field name="description" attrs="{'readonly':[('state', '=', 'processed')]}"/>
+              <field name='station_to'  attrs="{'invisible':[('entry_type', '=', 'in')]}"/>
+              <field name="username" readonly="1"/>
+                <field name="stock_picking_id"
+                       domain="[('picking_type_code','=','incoming'),('state','not in',('done','cancel'))]"/>
+                <field name="supplier_phone"/>
+                <field name="supplier_email"/>
+                <field name="origin"/>
+            </group>
+            <group>
+               <field name="supplier_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" options='{"always_reload": True}'/>
+              <field name="doc_datetime" required='1' attrs="{'readonly':[('state', '=', 'processed')]}"/>
+              <field name="post_datetime" readonly='1'/>
+              <field name="lr_rr_no" attrs="{'readonly':[('state', '=', 'processed')]}"/>
+              <field name="lr_rr_date" attrs="{'readonly':[('state', '=', 'processed')]}"/>
+              <field name="vehicle_no" placeholder="KA-12-AA-09" attrs="{'readonly':[('state', '=', 'processed')]}"/>
+              <field name="external_vehicle_no" placeholder="KA-12-AA-09" attrs="{'readonly':[('state', '=', 'processed')]}"/>
+            </group>
+          </group>
+          <notebook>
+            <page string="General Information" name="General Info" invisible="1">
+              <field name="gate_line"
+                widget="one2many"
+                mode="tree">
+                <tree string="Gate Entry details" editable="bottom">
+                  <control>
+                      <create name="add_entry" string="Add Entry"/>
+                  </control>
+                
+                  <field name="sequence" widget="handle"/>
+                  <field name="challan_no" attrs="{'readonly':[('parent.state', '=', 'processed')]}"/>
+                  <field name="challan_date" required='1' attrs="{'readonly':[('parent.state', '=', 'processed')]}"/>
+                  <field name="description" attrs="{'readonly':[('parent.state', '=', 'processed')]}"/>
+                  <field name="entry_type" class="oe_avatar oe_left" readonly="1" invisible="1"/>
+                  
+                  <!-- <field name="warehouse_ids" options="{'no_create': True, 'no_create_edit':True}" required='1'/> -->
+                  
+                  <field name="order_type_inward"  attrs="{'column_invisible':[('parent.entry_type', '=', 'out')],'readonly':[('parent.state', '=', 'processed')] }" required='1'/>
+                  <field name="order_type_outward" attrs="{'column_invisible':[('parent.entry_type', '=', 'in')],'readonly':[('parent.state', '=', 'processed')]}" required='1' />
+                  
+                  <!-- Adding two fields of Purchase order to show only whose recepits are not selected yet -->
+                  <!-- 1 -->
+                  <field name="purchase_order_inward_ids"
+                          options="{ 'no_create':True, 'no_create_edit':True }"
+                          domain="[('state','in',['purchase','done']),('open_close_po','=','open_po')]"
+                          attrs="{'column_invisible': [('parent.entry_type', '=', 'out')], 'invisible' : [('order_type_inward', '!=', 'p')], 'required' : [('order_type_inward', '=', 'p')],'readonly':[('parent.state', '=', 'processed')]}" />
+                  
+                  <!-- 2 -->
+                  <field name="purchase_order_outward_ids"
+                          widget="many2many_tags"
+                          options="{ 'no_create':True, 'no_create_edit':True }"
+                           attrs="{'column_invisible': [('parent.entry_type', 'in', ['in','out'])]}"/>
+                          <!-- attrs="{'column_invisible': [('parent.entry_type', '=', 'in')], 'invisible':[('order_type_outward', '!=', 'pr')], 'required' : [('order_type_outward', '=', 'pr')] ,'readonly':[('parent.state', '=', 'processed')]}" -->
+
+                  <!-- Adding two fields of Sale order to show only whose recepits are not selected yet -->
+                  <!-- 1 -->
+                  <field name="sale_order_inward_ids"
+                          widget="many2many_tags"
+                          options="{ 'no_create':True, 'no_create_edit':True }"
+                          domain="[('state','in',['sale','done'])]"
+                          attrs="{'column_invisible': [ ('parent.entry_type', 'in', ['in','out'])]}"/>
+                          <!-- attrs="{'column_invisible': [ ('parent.entry_type', '=', 'out')], 'invisible':[('order_type_inward', '!=', 'sr')], 'required' : [('order_type_inward', '=', 'sr')] ,'readonly':[('parent.state', '=', 'processed')]}" -->
+                  
+                  <!-- 2 -->
+                  <field name="sale_order_outward_ids"
+                          widget="many2many_tags"
+                          options="{ 'no_create':True, 'no_create_edit':True }"
+                          domain="[('state','in',['sale','done'])]"
+                          attrs="{'column_invisible': [ ('parent.entry_type', 'in', ['in','out'])]}"/>
+
+                          <!-- attrs="{'column_invisible': [ ('parent.entry_type', '=', 'in')], 'invisible': [('order_type_outward', '!=', 's')], 'required' : [('order_type_outward', '=', 's')],'readonly':[('parent.state', '=', 'processed')]}" -->
+                          
+
+                  <!-- Commenting this part as receipts should not be shown and also the filtering of PO should not be based on the receipts -->
+
+                  <!-- Receipts for Purchase orders -->
+                  <!-- <field name="purchase_receipt_ids"
+                          widget="many2many_tags"
+                          options="{ 'no_create':True, 'no_create_edit':True }"
+                          domain="[('purchase_id', 'in', purchase_order_inward_ids), ('picking_type_code' ,'!=','outgoing'), ('gate_entry_done', '=', False)]"
+                          attrs="{'column_invisible':[('parent.entry_type', '=', 'out')], 'invisible': [('order_type_inward', '!=', 'p')] }"/> -->
+
+                  <!-- Return -->
+                  <field name="purchase_return_receipt_ids"
+                          options="{ 'no_create':True, 'no_create_edit':True }"
+                          attrs="{ 'column_invisible': [('parent.entry_type', '=', 'in')], 'invisible': [('order_type_outward', '=', 'others')], 'required':[('order_type_inward', '=', 'pr')],'readonly':[('parent.state', '=', 'processed')]}"/>
+                  
+                  <!-- Receipts for Sale orders -->
+                  <!-- <field name="sale_receipt_ids"
+                          widget="many2many_tags"
+                          options="{ 'no_create':True, 'no_create_edit':True }"
+                          domain="[('sale_id', 'in', sale_order_outward_ids), ('picking_type_code' ,'!=','incoming'), ('gate_entry_done', '=', False)]"
+                          attrs="{ 'column_invisible': [('parent.entry_type', '=', 'in')], 'invisible': [('order_type_outward', '!=', 's')] }"/> -->
+
+                  <!-- Return -->
+                  <field name="sale_return_receipt_ids"
+                          options="{ 'no_create':True, 'no_create_edit':True }"
+                          attrs="{ 'column_invisible': [('parent.entry_type', '=', 'out')], 'invisible': [('order_type_inward', '!=', 'sr')],'readonly':[('parent.state', '=', 'processed')]}"/>
+
+                  <field name="other_inward" options="{ 'no_create':True, 'no_create_edit':True }" attrs="{ 'column_invisible': [('parent.entry_type', '=', 'out')], 'invisible': [('order_type_inward', '!=', 'others')],'readonly':[('parent.state', '=', 'processed')]}" domain="[('purchase_boolean', '=',False),('picking_type_code','=','incoming')]"/>
+                  <field name="other_outward" options="{ 'no_create':True, 'no_create_edit':True }" attrs="{ 'column_invisible': [('parent.entry_type', '=', 'in')], 'invisible': [('order_type_outward', '!=', 'others')],'readonly':[('parent.state', '=', 'processed')]}" domain="[('sale_id', '=',False),('state','=','done'),('picking_type_code','=','outgoing')]"/>
+                </tree>
+              </field>
+
+
+            </page>
+              <page string="Item Description">
+                         <field name="stock_picking_line_ids" >
+                            <tree editable="bottom">
+                              <field name="product_id" attrs="{'readonly':[('parent.state', '=', 'processed')]}"/>
+                              <field name="product_uom" attrs="{'readonly':[('parent.state', '=', 'processed')]}"/>
+                              <field name="product_qty" attrs="{'readonly':[('parent.state', '=', 'processed')]}"/>
+                              <field name="product_done_qty" attrs="{'readonly':[('parent.state', '=', 'processed')]}"/>
+                            </tree>
+                         </field>
+              </page>
+          </notebook>
+        </sheet>
+        <div class="oe_chatter">
+            <field name="message_follower_ids"/>
+            <field name="activity_ids"/>
+            <field name="message_ids"/>
+        </div>
+        </form>
+      </field>
+    </record>
+
+    <!-- Creating a search panel on which view can be catogorized -->
+    <record id="gate_entry_search" model="ir.ui.view"> 
+      <field name="name">gate_entry.search</field> 
+      <field name="model">gate.entry.line</field> 
+      <field name="arch" type = "xml"> 
+        <search string="All"> 
+          <searchpanel> 
+            <field name="entry_type" icon="fa-truck" enable_counters="1"/>
+          </searchpanel> 
+        </search> 
+      </field> 
+    </record>
+
+    <!-- Different type of views correspodingly -->
+    <record model="ir.ui.view" id="gate_entry_tree_view">
+      <field name="name">gate_entry.tree</field>
+      <field name="model">gate.entry</field>
+      <field name="arch" type="xml">
+        <tree string="View">
+          <field name="name"/>
+          <field name="entry_type"/>
+         </tree>
+      </field>
+    </record>
+
+    <!-- Kanban -->
+    <record model="ir.ui.view" id="gate_entry_kanban_view">
+      <field name="name">gate_entry.kanban</field>
+      <field name="model">gate.entry.line</field>
+      <field name="arch" type="xml">
+        <kanban create="false" edit="false" class="o_kanban_mobile">
+          <templates>
+            <t t-name="kanban-box" >
+              <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                <div class="row mb4">
+                  <!-- <div class="col-6">
+                    <h4>Name</h4>
+                    <field name="name" icon="fa-male"/>
+                  </div> -->
+                  <div class="col-6 text-right">
+                    <h4>Type</h4>
+                    <field name="entry_type"/>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6">  
+                    <h4>Source</h4>
+                    <!-- <field name="order_type_inward"  attrs="{'invisible':[('entry_type', '=', 'out')]}"/> -->
+                    <!-- <field name="order_type_outward"  attrs="{'invisible':[('entry_type', '=', 'in')]}"/> -->
+                  </div>
+                  <!-- <div class="col-6 text-right">
+                    <h4>Products</h4>
+                    <field name="purchase_order_inward_ids" widget="many2many_tags" domain="[('state','=','purchase')]" attrs="{'invisible': [('order_type_inward', '!=', 'p'), ('order_type_outward', '!=', 'pr')] }"/>
+                  </div> -->
+                </div>  
+              </div>
+            </t>
+          </templates>
+        </kanban>
+      </field>
+    </record>
+    
+    <!-- Configuration - Warehouse - view -form -->
+    <record model="ir.ui.view" id="gate_entry_warehouse_view">
+      <field name="name">gate_entry_warehouse.tree</field>
+      <field name="model">stock.warehouse</field>
+      <field name="inherit_id" ref="stock.view_warehouse"/>
+      <field name="arch" type="xml">
+        <field name="code" position="after">
+          <field name="activate_gate_entry"/>
+        </field>
+        <xpath expr="//page[@name='technical_info']" position='after'>
+          <page name="gate_entry_congiguration" string="Gate Entry Configuration">
+            <group>
+                <group>
+                  <field name="inward_sequence" attrs="{'invisible':[('activate_gate_entry', '=', False)]}"/>
+                <field name="outward_sequence" attrs="{'invisible':[('activate_gate_entry', '=', False)]}"/>
+              </group>
+            </group>
+          </page>
+          </xpath>
+      </field>
+    </record>
+
+    <!-- Actions panel -->
+    <record model="ir.actions.act_window" id="gate_entry.action_window_overview">
+      <field name="name">Overview</field>
+      <field name="res_model">gate.entry</field>
+      <field name="view_mode">dashboard</field>
+      <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+              Create a new gate entry
+          </p>
+      </field>
+    </record>
+
+   <record model="ir.actions.act_window" id="gate_entry.action_window_inwards">
+      <field name="name">Inward</field>
+      <field name="res_model">gate.entry</field>
+      <field name="view_mode">tree,form</field>
+      <field name="domain">[('entry_type','=','in')]</field>
+      <field name="context">{'default_entry_type': 'in'}</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="gate_entry.action_window_outwards">
+      <field name="name">Outward</field>
+      <field name="res_model">gate.entry</field>
+      <field name="view_mode">tree,form</field>
+      <field name="domain">[('entry_type','=','out')]</field>
+      <field name="context">{'default_entry_type': 'out'}</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="gate_entry.action_window_warehouse">
+      <field name="name">Warehouse</field>
+      <field name="res_model">stock.warehouse</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem name="Gate Entry" id="gate_entry.menu_root" action="gate_entry.action_window_overview" sequence="0" groups='gate_entry.group_gate_entry_access_for_admin' web_icon="gate_entry,static/description/gate.png"/>
+    <menuitem name="Inward" id="gate_entry.menu_1" parent="gate_entry.menu_root" action="gate_entry.action_window_inwards" sequence="1" />
+    <menuitem name="Outward" id="gate_entry.menu_2" parent="gate_entry.menu_root" action="gate_entry.action_window_outwards" sequence="2"/>
+    <menuitem name="Configuration" id="gate_entry.menu_3" parent="gate_entry.menu_root" sequence="3"/>
+
+  </data>
+</odoo>

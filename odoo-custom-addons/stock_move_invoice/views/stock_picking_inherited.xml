@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="stock_picking_form_view_inherited" model="ir.ui.view">
+            <field name="name">stock.picking.form.view.inherited</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <button name="action_picking_move_tree" position="before">
+                    <button type="object"
+                            name="direct_delivery_indent_view"
+                            class="oe_stat_button"
+                            attrs="{'invisible': [('direct_delivery_indent_count', '=', 0)]}"
+                            icon="fa-list-alt">
+                        <field name="direct_delivery_indent_count" string="Delivery Indent" widget="statinfo"/>
+                    </button>
+                </button>
+                <button name="action_cancel" position="after">
+                    <button name="create_direct_delivery_indent" string="Direct Delivery" type="object"
+                            attrs="{'invisible': ['|','|','|',('picking_type_id','==','outgoing'),('direct_delivery','=',True),('state','!=','done'), ('direct_delivery_indent_count', '!=', 0)]}"/>
+                </button>
+                <xpath expr="//field[@name='location_dest_id']" position="after">
+                    <field name="purpose"
+                           attrs="{'invisible':[('direct_delivery','!=',True)], 'required': [('direct_delivery','!=',False)]}"/>
+                    <field name="collected_by"
+                        attrs="{'invisible':[('direct_delivery','!=',True)], 'required': [('direct_delivery','!=',False)]}"/>
+                    <field name="received_date" invisible="1"/>
+                    <field name="direct_delivery" invisible="1"/>
+                    <field name="direct_picking_type_id" domain="[('name', '=', 'Direct Delivery')]"
+                           options='{"no_open": False, "no_create": True}'
+                           attrs="{'readonly':[('state','!=','done')], 'invisible': ['|',('direct_delivery','=',True),('state','!=','done')]}"/>
+                    <field name="return_type" widget="radio" options="{'horizontal': true}"
+                           attrs="{'invisible': [('direct_delivery','!=',False)]}"/>
+                    <field name="returnable" invisible="1"/>
+                    <field name="non_returnable" invisible="1"/>
+                    <!--                    <field name="is_return" invisible="1"/>-->
+                    <!--                    <field name="material_shipment" invisible="1"/>-->
+                </xpath>
+                <xpath expr="//field[@name='location_id']" position="after">
+                    <field name="location_dest_id"
+                           attrs="{'invisible': ['|',('picking_type_code','=','incoming'),('direct_delivery','!=',False)]}"/>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="attrs">{'invisible':[('direct_delivery','!=',False)]}</attribute>
+                </xpath>
+                <xpath expr="//div[@class='o_td_label']" position="attributes">
+                    <attribute name="attrs">{'invisible':[('direct_delivery','!=',False)]}</attribute>
+                </xpath>
+                <xpath expr="//div[@class='o_td_label']" position="before">
+                    <field name="direct_delivery_type" attrs="{'invisible': [('direct_delivery','!=',True)], 'required': [('direct_delivery','!=',False)]}"/>
+                    <field name="delivery_sender" attrs="{'invisible': [('direct_delivery','!=',True)]}"/>
+                </xpath>
+                <xpath expr="//div[@class='o_td_label']" position="attributes">
+                    <attribute name="attrs">{'invisible':[('direct_delivery','!=',False)]}</attribute>
+                </xpath>
+<!--                <xpath expr="//page[@name='operations']" position="attributes">-->
+<!--                    <attribute name="attrs">{'invisible':[('direct_delivery','!=',False)]}</attribute>-->
+<!--                </xpath>-->
+                <xpath expr="//page[@name='detailed_operations']" position="attributes">
+                    <attribute name="attrs">{'invisible':[('state','!=','done')]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='quantity_done']" position="attributes">
+                    <attribute name="attrs">{'readonly':[('name', '!=', 'Direct Delivery'),('state', '!=', 'assigned')]}</attribute>
+                </xpath>
+<!--                <xpath expr="//page[@name='extra']" position="attributes">-->
+<!--                    <attribute name="attrs">{'invisible':[('direct_delivery_type','!=','external')]}</attribute>-->
+<!--                </xpath>-->
+                <xpath expr="//field[@name='origin']" position="before">
+                    <field name="delivery_receiver"
+                           attrs="{'invisible':[('operation_code','=','incoming')], 'required': [('operation_code','!=','incoming')]}"/>
+                </xpath>
+                <xpath expr="//notebook" position="after">
+                    <label for="remarks"/>
+                    <field name="remarks" invisible="0"/>
+                    <!--                    <field name="is_return" invisible="1"/>-->
+                    <!--                    <field name="material_shipment" invisible="1"/>-->
+                </xpath>
+                <xpath expr="//field[@name='picking_type_id']" position="after">
+                    <field name="operation_code" invisible="1"/>
+                    <field name="is_return" invisible="1"/>
+                    <field name="material_shipment" invisible="1"/>
+                </xpath>
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="action_open_picking_invoice" type="object"
+                            class="oe_stat_button" icon="fa-file-text"
+                            attrs="{'invisible': [('invoice_count','=', 0)]}">
+                        <field name="invoice_count" widget="statinfo"/>
+                    </button>
+                </xpath>
+                <!--                <xpath expr="//header/button[9]" position="attributes">-->
+                <!--                    <attribute name="string">Return Receipt from Supplier</attribute>-->
+                <!--                </xpath>-->
+                <xpath expr="//header/button[9]" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|',('return_type', '!=', 'returnable'), ('state', '!=',
+                        'done')]}
+                    </attribute>
+                    <attribute name="string">Return Receipt to Supplier</attribute>
+                </xpath>
+                <xpath expr="//header/button[9]" position="after">
+                    <button name="%(stock.act_stock_return_picking)d" string="Return Receipt from Supplier"
+                            attrs="{'invisible': ['|',('return_type', '!=', 're_returnable'),('state', '!=', 'done')]}"
+                            type="action" groups="base.group_user" data-hotkey="k"/>
+                </xpath>
+                <!--                <xpath expr="//header/button[9]" position="attributes">-->
+                <!--                    <attribute name="attrs">{'invisible': ['|',('non_returnable', '!=', True), ('state', '!=', 'done')]}</attribute>-->
+                <!--                    <attribute name="string">Return Receipt from Supplier </attribute>-->
+                <!--                </xpath>-->
+                <xpath expr="//button[@name='action_toggle_is_locked']" position="after">
+                    <button name="create_invoice" class="oe_highlight"
+                            string="Create Invoice" type="object"
+                            attrs="{'invisible': ['|','|','|','|','|',('invoice_count','!=', 0),('state','!=','done'),('operation_code','=','incoming'),('is_return','=',True),('material_shipment','=',True),('direct_delivery','!=',False)]}"/>
+                    <button name="create_bill" class="oe_highlight"
+                            string="Create Bill" type="object"
+                            attrs="{'invisible': ['|','|','|','|',('invoice_count','!=', 0),('state','!=','done'),('operation_code','=','outgoing'),('is_return','=',True),('direct_delivery','!=',False)]}"/>
+                    <button name="create_customer_credit" class="oe_highlight"
+                            string="Create Credit Note" type="object"
+                            attrs="{'invisible': ['|','|','|','|',('invoice_count','!=', 0),('state','!=','done'),('operation_code','=','outgoing'),('is_return','=',False),('direct_delivery','!=',False)]}"/>
+                    <button name="create_vendor_credit" class="oe_highlight"
+                            string="Create Vendor Credit" type="object"
+                            attrs="{'invisible': ['|','|','|','|',('invoice_count','!=', 0),('state','!=','done'),('operation_code','=','incoming'),('is_return','=',False),('direct_delivery','!=',False)]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="stock.stock_picking_type_action" model="ir.actions.act_window">
+            <field name="name">Stores Overview</field>
+            <field name="res_model">stock.picking.type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new operation type
+              </p><p>
+                The operation type system allows you to assign each stock
+                operation a specific type which will alter its views accordingly.
+                On the operation type you could e.g. specify if packing is needed by default,
+                if it should show the customer.
+              </p>
+            </field>
+        </record>
+
+
+        <!--    Below is the code to rename the Main/separate menu Of a particular menu-->
+        <record model="ir.ui.menu" id="stock.menu_stock_root">
+            <field name="name">Stores</field>
+        </record>
+
+    </data>
+</odoo>

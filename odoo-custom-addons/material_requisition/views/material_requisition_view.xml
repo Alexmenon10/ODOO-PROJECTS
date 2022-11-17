@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+
+        <record id="company_company_transfer_sequence" model="ir.sequence">
+            <field name="name">Material Requisition</field>
+            <field name="code">material.requisition.indent</field>
+            <field name="prefix">ATLAS/MR/22-23/</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="implementation">standard</field>
+        </record>
+
+        <!-- Indent Tree View -->
+        <record id='view_indent_indent_tree' model='ir.ui.view'>
+            <field name="name">material.requisition.indent.tree</field>
+            <field name="model">material.requisition.indent</field>
+            <field name="arch" type="xml">
+                <!--				<tree string="Material/Purchase Requisition"-->
+                <!--					colors="gray:state=='received';green:state=='waiting_approval';">-->
+                <tree decoration-success="(user_id in (approver1,approver2,approver3,approver4,approver5))"
+                      decoration-warning="(user_id not in (approver1,approver2,approver3,approver4,approver5))"
+                      default_order='name desc'>
+                    <field name="name"/>
+                    <field name="responsible"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="request_raised_for"/>
+                    <!--                    <field name="department_id"/>-->
+                    <field name="indent_date" optional="hide"/>
+                    <field name="required_date"/>
+                    <field name="verified_date"/>
+                    <field name="type" optional="hide"/>
+                    <field name="ribbon_state" widget="badge"
+                           decoration-info="ribbon_state in ('mr_stock_available',
+                           'not_available', 'store_to_verify',
+                           'store_verified', 'partial_stock',
+                           'rejected', 'cancelled',
+                           'partial_stock_delivered','delivery_done','partial_delivery_done',
+                            'stock_delivered','rfq_raise','tender_raise','grn_completed')"/>
+                    <field name="state"/>
+                    <field name="approver1" invisible="1"/>
+                    <field name="approver2" invisible="1"/>
+                    <field name="approver3" invisible="1"/>
+                    <field name="approver4" invisible="1"/>
+                    <field name="approver5" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Indent Form View -->
+        <record id='view_stock_indent_indent_form' model='ir.ui.view'>
+            <field name="name">material.requisition.indent.form</field>
+            <field name="model">material.requisition.indent</field>
+            <field name="arch" type="xml">
+                <form string="Material/Purchase Requisition">
+                    <header>
+                        <button name="create_shipped" string="Check Availability" type="object" class="oe_highlight"
+                                attrs="{'invisible':['|',('stock_available', '=',True),('state', 'not in', ['request_approved', 'rfq_create', 'tender_create'])]}"/>
+                        <!--                        <button name="create_partial_shipped" string="Partial Availability" type="object" class="oe_highlight"-->
+                        <!--                                states="to_be_approved"/>-->
+                        <button name="set_approval" string="Approval" type="object" class="oe_highlight"
+                                states="waiting_approval"/>
+                        <!--                        <button name="set_complete" string="Complete" type="object" class="oe_highlight"-->
+                        <!--                                states="received" invisible="0"/>-->
+                        <button name="open_rfq_form" string="Create RFQ/Tender" type="object" class="oe_highlight"
+                                states="request_rfq"
+                                groups="purchase.group_purchase_manager,purchase.group_purchase_user"/>
+                        <button name="action_stock_move" string="Delivery" type="object" class="oe_highlight"
+                                groups="stock.group_stock_user,stock.group_stock_manager"
+                                attrs="{'invisible':['|','|','|',('partial_delivery', '!=', False),('stock_available', '!=', True),('state', 'not in', ['request_approved', 'rfq_create', 'tender_create']),('picking_count', '=', 1)]}"/>
+                        <button name="action_partial_stock_move" string="Partial Delivery" type="object"
+                                class="oe_highlight"
+                                groups="stock.group_stock_user,stock.group_stock_manager"
+                                attrs="{'invisible':['|','|',('partial_stock_available', '!=', True),('state', 'not in', ['request_approved', 'rfq_create', 'tender_create']),('picking_count', '=', 1)]}"/>
+                        <!--                        <button name = "%(open_create_rfq_wizard_action)d" states="request_rfq" type = "action"-->
+                        <!--                                string = "Create RFQ" class="btn-primary"/>-->
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,waiting_approval,"
+                               statusbar_colors='{"reject":"red"}'/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="material_requisition_back_order"
+                                    class="oe_stat_button"
+                                    icon="fa-book"
+                                    attrs="{'invisible': [('material_requisition_backorder_count', '=', 0)]}"
+                                    type="object">
+                                <field name="material_requisition_backorder_count" widget="statinfo"
+                                       options="{'reload_on_button': true}"/>
+                            </button>
+                            <button class="oe_stat_button"
+                                    type="object"
+                                    icon="fa-shopping-cart"
+                                    attrs="{'invisible': [('my_tender_report_count', '=', 0)]}"
+                                    name="my_tender_report">
+                                <field name="my_tender_report_count" widget="statinfo"/>
+                            </button>
+                            <button class="oe_stat_button"
+                                    type="object"
+                                    icon="fa-shopping-cart"
+                                    attrs="{'invisible': [('rfq_total', '=', 0)]}"
+                                    name="create_RFQ_lines">
+                                <field name="rfq_total" widget="statinfo"/>
+                            </button>
+                            <button name="button_purchase_order"
+                                    class="oe_stat_button"
+                                    icon="fa-shopping-cart"
+                                    attrs="{'invisible': [('purchase_order_count', '=', 0)]}"
+                                    type="object">
+                                <field name="purchase_order_count" widget="statinfo"
+                                       options="{'reload_on_button': true}"/>
+                            </button>
+                            <button type="object"
+                                    name="action_view_picking" states="open,paid"
+                                    class="oe_stat_button"
+                                    attrs="{'invisible':['|',('state','=','draft'),('picking_count', '&lt;', 1)]}"
+                                    icon="fa-truck">
+                                <field name="picking_count" string="Shipment" widget="statinfo"/>
+                            </button>
+                            <button name="indent_dummy"
+                                    class="oe_stat_button"
+                                    attrs="{'invisible': [('material_requisition_notice_period', '=', 0)]}"
+                                    icon="fa-clock-o"
+                                    type="object">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value">
+                                        <field name="material_requisition_notice_period"
+                                               widget="statinfo"
+                                               options="{'reload_on_button': true}"/>
+                                    </span>
+                                    <span class="o_stat_text">
+                                        Period Validity
+                                    </span>
+                                </div>
+                            </button>
+                        </div>
+                        <widget name="web_ribbon" title="Store to verify" bg_color="bg-success"
+                                attrs="{'invisible': [('store_request', '!=', True),('enable_ribbon', '=', False)]}"/>
+                        <widget name="web_ribbon" title="Store Verified" bg_color="bg-success"
+                                attrs="{'invisible': [('store_approval', '!=', True),('enable_ribbon', '=', False)]}"/>
+                        <widget name="web_ribbon" title="Stock Not Available" bg_color="bg-danger"
+                                attrs="{'invisible': ['|',('stock_available', '=', True),('enable_ribbon', '=', False)]}"/>
+                        <widget name="web_ribbon" title="Stock Available" bg_color="bg-success"
+                                attrs="{'invisible': ['|','|',('stock_available', '=', False),('enable_ribbon', '=', False),
+                                ('stock_transferred', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Partial Stock Available" bg_color="bg-success"
+                                attrs="{'invisible': ['|','|',('partial_stock_available', '=', False),('enable_ribbon', '=', False),
+                                ('stock_transferred', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Delivery Created" bg_color="bg-success"
+                                attrs="{'invisible': ['|',('state', '!=', 'received'),('enable_ribbon', '=', False)]}"/>
+                        <widget name="web_ribbon" title="Partial Delivery Completed" bg_color="bg-success"
+                                attrs="{'invisible': ['|',('partial_delivery', '=', False),('enable_ribbon', '=', False)]}"/>
+                        <widget name="web_ribbon" title="Delivery Completed" bg_color="bg-success"
+                                attrs="{'invisible': ['|',('stock_transferred', '=', False),('enable_ribbon', '=', False)]}"/>
+                        <widget name="web_ribbon" title="Partially Delivery Created" bg_color="bg-success"
+                                attrs="{'invisible': ['|','|',('partial_delivery', '=', True),('state', '!=', 'partially_received'),('enable_ribbon', '=', False)]}"/>
+                        <widget name="web_ribbon" title="RFQ/PO Raised" bg_color="bg-success"
+                                attrs="{'invisible': ['|','|',('stock_available', '=', True),('rfq_raised', '=', False),('enable_ribbon', '=', False)]}"/>
+                        <widget name="web_ribbon" title="Tender Raised" bg_color="bg-success"
+                                attrs="{'invisible': ['|',('tender_raised', '=', False),('enable_ribbon', '=', False)]}"/>
+                        <widget name="web_ribbon" title="Rejected" bg_color="bg-danger"
+                                attrs="{'invisible': ['|',('state', '!=', 'reject'),('enable_ribbon', '=', False)]}"/>
+                        <widget name="web_ribbon" title="GRN Complete" bg_color="bg-success"
+                                attrs="{'invisible': ['|','|', ('state', '!=', 'rfq_create'),('grn_status', '==', False),('enable_ribbon', '=', False)]}"/>
+                        <widget name="web_ribbon" title="GRN Not Complete" bg_color="bg-success"
+                                attrs="{'invisible': ['|','|', '|', ('rfq_raised', '=', True), ('state', '!=', 'rfq_create'),('grn_status', '==', True),('enable_ribbon', '=', False)]}"/>
+                        <widget name="web_ribbon" title="Cancelled" bg_color="bg-danger"
+                                attrs="{'invisible': ['|',('state', '!=', 'cancel'),('enable_ribbon', '=', False)]}"/>
+                        <div class="oe_title">
+                            <h1>
+                                <!--	                            <label for="name" string="Reference"/>-->
+                                <field name="name" class="oe_inline" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <!--								<field name="partner_id" readonly="0" />-->
+                                <field name="responsible"/>
+                                <field name="user_id" invisible="1"/>
+                                <field name="department_id"/>
+                                <field name="current_job_id"/>
+                                <field name="current_reporting_manager"/>
+                                <field name="purpose"/>
+                                <field name="location_id"
+                                       domain="[('location_id', '!=',False), ('usage', '!=', 'view')]"/>
+                            </group>
+                            <group>
+                                <field name="request_raised_for"/>
+                                <field name="requester_department_id"
+                                       readonly="1"
+                                       force_save="1"
+                                       attrs="{'invisible': [('request_raised_for', '=', False)]}"/>
+                                <field name="requester_current_job_id"
+                                       readonly="1"
+                                       force_save="1"
+                                       attrs="{'invisible': [('request_raised_for', '=', False)]}"/>
+                                <field name="requester_current_reporting_manager"
+                                       readonly="1"
+                                       force_save="1"
+                                       attrs="{'invisible': [('request_raised_for', '=', False)]}"/>
+                                <field name="indent_date" readonly="1"/>
+                                <field name="required_date"/>
+                                <field name="requirement"
+                                       on_change="onchange_requirement(indent_date, requirement)"/>
+                                <field name="current_date" readonly="1" force_save="1" invisible="1"/>
+                                <field name="add_hour_date" readonly="1" force_save="1" invisible="1"/>
+                                <field name="cron_Boolean" readonly="1" force_save="1" invisible="1"/>
+                                <field name="type" required="1" invisible="1"/>
+                                <field name="stock_available" invisible="1"/>
+                                <field name="partial_stock_available" invisible="1"/>
+                                <field name="stock_transferred" invisible="1"/>
+                                <field name="partial_stock_transferred" invisible="1"/>
+                                <field name="partial_delivery" invisible="1"/>
+                                <field name="store_approval" invisible="1"/>
+                                <field name="store_request" invisible="1"/>
+                                <field name="rfq_raised" invisible="1"/>
+                                <field name="tender_raised" invisible="1"/>
+                                <field name="grn_status" invisible="0"/>
+                                <field name="enable_ribbon" invisible="1"/>
+                                <!--                                <field name="material_requisition_state" widget="badge"-->
+                                <!--                                       decoration-danger="material_requisition_state == 'not_available'"-->
+                                <!--                                       decoration-success="material_requisition_state == 'available'"-->
+                                <!--                                       />-->
+                                <!--                                       attrs="{'invisible': [('payment_state', 'in', ('invoicing_legacy'))]}"/>-->
+
+                            </group>
+                            <group>
+                                <field name="item_for" invisible="1"/>
+                                <field name="analytic_account_id"
+                                       attrs="{'required': [('item_for', '=', 'capital')]}" invisible="1"/>
+                                <field name="in_picking_id" invisible="1"/>
+                                <!--                                <field name="company_id" groups="base.group_multi_company"-->
+                                <!--                                       readonly="1"/>-->
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Request Products">
+                                <field name="request_product_lines">
+                                    <tree string="Products" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="product_id" force_save="1"
+                                               attrs="{'readonly':[('short_close','=',True)],
+                                               'required':[('short_close','=',False)]}"/>
+                                        <field name="product_uom_qty" sum="Total Qty" force_save="1"
+                                               attrs="{'readonly':[('short_close','=',True)],
+                                               'required':[('short_close','=',False)]}"/>
+                                        <field name="product_uom"/>
+                                        <field name="product_available" readonly="1" force_save="1"/>
+                                        <field name="product_category" optional="hide" readonly="1" force_save="1"/>
+                                        <field name="product_type" optional="hide" readonly="1" force_save="1"/>
+                                        <field name="name" optional="hide" invisible="1"/>
+                                        <field name="original_product_id"
+                                               attrs="{'readonly':[('short_close','=',False)],
+                                               'required':[('short_close','=',True)]}" force_save="1"/>
+                                        <field name="approved_product_uom_qty" sum="Total Qty"
+                                               attrs="{'readonly':[('short_close','=',False)],
+                                               'required':[('short_close','=',True)]}" force_save="1"/>
+                                        <field name="approved_product_uom"/>
+                                        <field name="approved_product_available" readonly="1" force_save="1"/>
+                                        <field name="approved_product_category" optional="hide" readonly="1"
+                                               force_save="1"/>
+                                        <field name="approved_product_type" optional="hide" readonly="1"
+                                               force_save="1"/>
+                                        <field name="short_close"
+                                               groups="stock.group_stock_user,stock.group_stock_manager"/>
+                                    </tree>
+
+                                </field>
+                                <group class="oe_subtotal_footer oe_right">
+                                </group>
+                                <div class="oe_clear">
+                                    <label for="description"/>
+                                </div>
+                                <field name="description" class="oe_inline" placeholder="Additional note..."/>
+                            </page>
+                            <page string="Approved Products">
+                                <field name="product_lines">
+                                    <form string="Approved Products">
+                                        <group>
+                                            <group>
+                                                <field name="product_id"/>
+                                                <field name="indent_type" invisible="1"/>
+                                                <field name="original_product_id"
+                                                       attrs="{'invisible':[('indent_type','=','new')], 'required':[('indent_type','=','existing')]}"
+                                                       invisible="1"/>
+                                                <label for="product_uom_qty"/>
+                                                <div>
+                                                    <field name="product_uom_qty" class="oe_inline"/>
+                                                    <field name="qty_shipped" class="oe_inline"/>
+                                                    <field name="product_uom"/>
+                                                </div>
+
+                                                <!--												<field name="price_unit"/>-->
+                                                <!--            									<field name="return_type"/>-->
+                                                <!--            									<field name="return_date" attrs="{'invisible': [('return_type', '=', 'non_return')], 'required': [('return_type', '=', 'return')]}"/>-->
+                                            </group>
+                                            <group>
+                                                <field name="indent_type" invisible="1"/>
+                                                <field name="qty_available" invisible="1"/>
+                                                <field name="product_available"/>
+                                                <field name="product_category"/>
+                                                <field name="product_type"/>
+                                                <field name="delay" invisible="1"/>
+                                            </group>
+                                        </group>
+                                        <label for="name"/>
+                                        <field name="name"/>
+                                        <label for="specification"/>
+                                        <field name="specification"/>
+                                    </form>
+                                    <tree string="Products">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="product_id" force_save="1"/>
+                                        <field name="product_uom_qty" force_save="1" sum="Total Qty"/>
+                                        <field name="qty_shipped" sum="Total Qty"/>
+                                        <field name="product_uom" string="Unit"/>
+                                        <field name="product_available" invisible="0" force_save="1"/>
+                                        <field name="product_category" optional="hide" force_save="1"/>
+                                        <field name="product_type" optional="hide" force_save="1"/>
+                                        <field name="name" optional="hide" invisible="1" force_save="1"/>
+                                        <!--                                        <field name="name"/>-->
+                                        <!--                                        <field name="product_category"/>-->
+                                        <!--                                        <field name="product_type"/>-->
+                                        <!--                                        <field name="price_unit" sum="Total Price" invisible="0"/>-->
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right">
+                                </group>
+                                <div class="oe_clear">
+                                    <label for="description"/>
+                                </div>
+                                <field name="description" class="oe_inline" placeholder="Additional note..."/>
+                            </page>
+                            <page string="Approval Remarks">
+                                <group>
+                                    <field name="approver1_approve_reason"
+                                           attrs="{'invisible': [('approver1_approve_reason', '=', False)]}"/>
+                                    <field name="approver2_approve_reason"
+                                           attrs="{'invisible': [('approver2_approve_reason', '=', False)]}"/>
+                                    <field name="approver3_approve_reason"
+                                           attrs="{'invisible': [('approver3_approve_reason', '=', False)]}"/>
+                                    <field name="approver4_approve_reason"
+                                           attrs="{'invisible': [('approver4_approve_reason', '=', False)]}"/>
+                                    <field name="approver5_approve_reason"
+                                           attrs="{'invisible': [('approver5_approve_reason', '=', False)]}"/>
+                                    <field name="store_verified_remark"
+                                           attrs="{'invisible': [('store_verified_remark', '=', False)]}"/>
+                                </group>
+                                <group>
+                                </group>
+                            </page>
+                            <page string="Reject Remarks">
+                                <group>
+                                    <field name="approver1_reject_reason"
+                                           attrs="{'invisible': [('approver1_reject_reason', '=', False)]}"/>
+                                    <field name="approver2_reject_reason"
+                                           attrs="{'invisible': [('approver2_reject_reason', '=', False)]}"/>
+                                    <field name="approver3_reject_reason"
+                                           attrs="{'invisible': [('approver3_reject_reason', '=', False)]}"/>
+                                    <field name="approver4_reject_reason"
+                                           attrs="{'invisible': [('approver4_reject_reason', '=', False)]}"/>
+                                    <field name="approver5_reject_reason"
+                                           attrs="{'invisible': [('approver5_reject_reason', '=', False)]}"/>
+                                </group>
+                                <group>
+                                </group>
+                            </page>
+                            <page string="Cancel Remarks">
+                                <group>
+                                    <field name="approver1_cancel_reason"
+                                           attrs="{'invisible': [('approver1_cancel_reason', '=', False)]}"/>
+                                    <field name="approver2_cancel_reason"
+                                           attrs="{'invisible': [('approver2_cancel_reason', '=', False)]}"/>
+                                    <field name="approver3_cancel_reason"
+                                           attrs="{'invisible': [('approver3_cancel_reason', '=', False)]}"/>
+                                    <field name="approver4_cancel_reason"
+                                           attrs="{'invisible': [('approver4_cancel_reason', '=', False)]}"/>
+                                    <field name="approver5_cancel_reason"
+                                           attrs="{'invisible': [('approver5_cancel_reason', '=', False)]}"/>
+                                </group>
+                                <group>
+                                </group>
+                            </page>
+                            <page string="Others">
+                                <group>
+                                    <group>
+
+                                    </group>
+                                    <group>
+                                        <field name="move_type" invisible="1"/>
+                                        <field name="warehouse_id" invisible="1"/>
+                                        <field name="picking_type_id" readonly="1"/>
+                                        <field name="approved_by"/>
+                                        <field name="verified_date"/>
+                                        <field name="last_poll" invisible="1"/>
+                                        <field name="po_approved_by"/>
+                                        <field name="issued_date"/>
+                                        <field name="inward_date"/>
+                                        <field name="store_incharge"/>
+                                        <field name="ribbon_state"/>
+                                    </group>
+                                    <group>
+
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+
+        <!-- Indent Window Action -->
+        <record id='action_material_requisition_indent' model='ir.actions.act_window'>
+            <field name="name">Material Requisition</field>
+            <field name="res_model">material.requisition.indent</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_waiting':1,'search_default_active':1}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a new indent.
+                </p>
+            </field>
+        </record>
+
+
+        <menuitem id="main_menu_service_bill" web_icon="material_requisition,static/description/images5.jpeg"
+                  name="Material Requisition" sequence="70"/>
+        <menuitem id="menu_material_requisition" name="Material Requisition" parent="main_menu_service_bill"/>
+        <menuitem action="action_material_requisition_indent" name="Material Requisition"
+                  parent="menu_material_requisition" id="menu_indent_indent" sequence="1"/>
+
+        <!-- Indent product line Tree View -->
+        <record id='view_indent_lines_tree' model='ir.ui.view'>
+            <field name="name">material.requisition.product.lines.tree</field>
+            <field name="model">material.requisition.product.lines</field>
+            <field name="arch" type="xml">
+                <tree string="Indent Product Lines">
+                    <field name="indent_id" string="Indent No"/>
+                    <field name="product_id"/>
+                    <field name="product_uom_qty"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_indent_tree" model="ir.actions.act_window">
+            <field name="name">Due Products</field>
+            <field name="res_model">material.requisition.product.lines</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <record id="material_requisition_approve_remarks_wizard" model="ir.ui.view">
+            <field name="name">material.requisition.approve.remarks.view</field>
+            <field name="model">material.requisition.approve.remarks</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="is_default_remark"/>
+                        </group>
+                        <field name="remarks" required="1" placeholder="Please enter the Approvals remarks..."/>
+                        <field name="default_remark" invisible="1"/>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                    <footer>
+                        <button name="tick_ok" type='object' string="Submit" class="oe_highlight"
+                                icon="fa-check-circle"/>
+                        <button name="tick_cancel" type='object' string="Cancel" class="oe_highlight" special="cancel"
+                                icon="fa-times-circle"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="material_requisition_reject_remarks_wizard" model="ir.ui.view">
+            <field name="name">material.requisition.reject.remarks.view</field>
+            <field name="model">material.requisition.reject.remarks</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="remarks" required="1" placeholder="Please enter the Rejection remarks..."/>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                    <footer>
+                        <button name="tick_ok" type='object' string="Submit" class="oe_highlight"
+                                icon="fa-check-circle"/>
+                        <button name="tick_cancel" type='object' string="Cancel" class="oe_highlight" special="cancel"
+                                icon="fa-times-circle"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="material_requisition_cancel_remarks_wizard" model="ir.ui.view">
+            <field name="name">material.requisition.cancel.remarks.view</field>
+            <field name="model">material.requisition.cancel.remarks</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="remarks" required="1" placeholder="Please enter the Cancellation remarks..."/>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                    <footer>
+                        <button name="tick_ok" type='object' string="Submit" class="oe_highlight"
+                                icon="fa-check-circle"/>
+                        <button name="tick_cancel" type='object' string="Cancel" class="oe_highlight" special="cancel"
+                                icon="fa-times-circle"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <!--        <record model="ir.ui.view" id="stock_form_view_inherit">-->
+        <!--            <field name="name">stock.form.view.inherit</field>-->
+        <!--            <field name="model">stock.picking</field>-->
+        <!--            <field name="inherit_id" ref="stock.view_picking_form"/>-->
+        <!--            <field name="arch" type="xml">-->
+        <!--                <xpath expr="//div[@name='button_box']" position="inside">-->
+        <!--                    <button name="%(gate_entry.action_window_inwards)d"-->
+        <!--                            class="oe_stat_button"-->
+        <!--                            icon="fa-truck"-->
+        <!--                            string="Gate Entry"-->
+        <!--                            attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}"-->
+        <!--                            context="{'active_test': False}"-->
+        <!--                            type="action">-->
+        <!--                        &lt;!&ndash;                            <field name="gate_entry_count" widget="statinfo" string="Gate Entry(s)"/>&ndash;&gt;-->
+        <!--                    </button>-->
+        <!--                    <button name="%(gate_entry.action_window_outwards)d"-->
+        <!--                            class="oe_stat_button"-->
+        <!--                            icon="fa-truck"-->
+        <!--                            string="Gate Entry"-->
+        <!--                            attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"-->
+        <!--                            context="{'active_test': False}"-->
+        <!--                            type="action">-->
+        <!--                        &lt;!&ndash;                            <field name="gate_entry_count" widget="statinfo" string="Gate Entry(s)"/>&ndash;&gt;-->
+        <!--                    </button>-->
+        <!--                </xpath>-->
+        <!--                <field name="partner_id" position="before">-->
+        <!--                    <field name="responsible" attrs="{'invisible': ['|',('shipment', '!=', True),-->
+        <!--                            ('picking_type_code', '!=', 'outgoing')]}"/>-->
+        <!--                    <field name="requested" attrs="{'invisible': ['|',('shipment', '!=', True),-->
+        <!--                            ('picking_type_code', '!=', 'outgoing')]}"/>-->
+        <!--                    <field name="shipment" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"-->
+        <!--                           invisible="1"/>-->
+        <!--                </field>-->
+        <!--            </field>-->
+        <!--        </record>-->
+
+    </data>
+</odoo>

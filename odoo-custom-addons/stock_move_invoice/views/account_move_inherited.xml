@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="account_move_tree_view_inherited" model="ir.ui.view">
+            <field name="name">account.move.tree.view.inherited</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_invoice_tree"/>
+            <field name="arch" type="xml">
+                <field name="payment_state" position="replace">
+                    <field name="payment_state"
+                           widget="badge"
+                           decoration-danger="payment_state == 'not_paid'"
+                           decoration-warning="payment_state in ('partial')"
+                           decoration-success="payment_state in ('paid', 'reversed', 'in_payment')"
+                           attrs="{'invisible': [('payment_state', 'in', ('invoicing_legacy'))]}"
+                           optional="show"/>
+                </field>
+            </field>
+        </record>
+
+
+        <record id="account_view_tax_form_inherited" model="ir.ui.view">
+            <field name="name">account.tax.form.inherited</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="replace">
+                    <field name="name"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="account_move_form_view_inherited" model="ir.ui.view">
+            <field name="name">account.move.form.view.inherited</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='discount']" position="attributes">
+                   <attribute name="optional">show</attribute>
+                </xpath>
+                <xpath expr="//field[@name='ref']" position="after">
+                    <field name="picking_id" attrs="{'invisible':[('move_type', 'in', ('entry'))]}"/>
+                </xpath>
+                <xpath expr="//button[@name='action_post']" position="before">
+                    <button name="action_invoice_validate" states="draft" string="Validate" type="object"/>
+                </xpath>
+                <field name='state' position='replace'>
+                    <field name='state' widget='statusbar'/>
+                </field>
+                <field name='invoice_date' position='attributes'>
+                    <attribute name="attrs">{'readonly': [('state', 'not in', ('validate', 'draft'))]}</attribute>
+                </field>
+                <field name='payment_state' position='replace'>
+                    <field name='payment_state'/>
+                </field>
+                <xpath expr="//header/button[3]" position="attributes">-->
+                    <attribute name="attrs">{'invisible': [('state', '!=', 'validate')]}</attribute>
+                </xpath>
+                <xpath expr="//widget[2]" position="attributes">-->
+                    <attribute name="title">Paid</attribute>
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page/field/tree/field[@name='discount']" position="attributes">
+                    <field name="discount"/>
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page/field/tree/field[@name='discount']" position="before">
+                    <field name="disc" />
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page/field/tree/field[@name='discount']" position="after">
+                    <field name="disc_percentage" invisible='1'/>
+                </xpath>
+                <page id="aml_tab" position="after">
+                    <page string="Invoice Validation Remarks" invisible="1">
+                        <group>
+                            <field name="account_invoice_validate_reason"
+                                   attrs="{'invisible': [('account_invoice_validate_reason', '=', False)]}"/>
+                            <field name="inovice_validate_date"
+                                   attrs="{'invisible': [('account_invoice_validate_reason', '=', False)]}"/>
+                        </group>
+                        <group>
+                        </group>
+                    </page>
+                </page>
+            </field>
+        </record>
+    </data>
+</odoo>

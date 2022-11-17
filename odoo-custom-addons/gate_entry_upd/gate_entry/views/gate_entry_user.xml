@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+    <!-- Login -->
+    <!-- Login Form view -->
+    <record model="ir.ui.view" id="gate_entry_login_form_view">
+        <field name="name">gate_entry.login.form</field>
+        <field name="model">gate.user.login</field>
+        <field name="arch" type="xml">
+        <form>
+            <sheet class="oe_form_sheet_width">
+                <group>
+                    <group >
+                        <br/>
+                        <field name="username" required="1"/>
+                        <br/>
+                        <field name="password" password="True" required="1"/>
+                    </group> 
+                </group>
+                <button name="login" string="Login" type="object" class="oe_highlight"/>
+            </sheet>    
+        </form>
+        </field>
+    </record>
+
+
+    <!-- Registration-->
+    <!-- Registration form view-->
+    <record id="gate_entry_registration_form_view" model="ir.ui.view">
+        <field name="name">gate_entry_registration_form</field>
+        <field name="model">gate.user.registration</field>
+        <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <group>
+                        <field name="username" required="1"/>
+                        <br/>
+                        <field name="password" password="True" required="1"/>
+                    </group>
+                </group>
+            </sheet>    
+        </form>
+        </field>
+    </record>
+
+    <!-- Registration Tree view -->
+    <record id="gate_entry_registration_view" model="ir.ui.view">
+        <field name="name">gate_entry_registration_form</field>
+        <field name="model">gate.user.registration</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom"
+                  create="1" edit="1">
+                <field name="username" />
+                <field name="password" password="True" />
+                <field name="warehouse_id" options="{ 'no_create':True, 'no_create_edit':True }"/>
+            </tree>
+        </field>
+    </record>   
+
+
+    <!-- Inward / Outward -->
+    <!-- Login Form view after validation -->
+    <record model="ir.ui.view" id="gate_entry_login_form_view_valid">
+        <field name="name">gate_entry.login.form.valid</field>
+        <field name="model">gate.user.login_display</field>
+        <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <group>
+                        <button name="Inward" string="Inward" type="object" class="oe_highlight"/>
+                        <button name="Outward" string="Outward" type="object" class="oe_highlight"/>
+                    </group> 
+                </group>
+            </sheet>    
+        </form>
+        </field>
+    </record>
+
+    <!-- Action panel -->
+    <!-- Login -->
+    <record model="ir.actions.act_window" id="gate_entry.action_window_login">
+        <field name="name">Login</field>
+        <field name="res_model">gate.user.login</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+    </record>
+
+    <!-- Registration -->
+    <record model="ir.actions.act_window" id="gate_entry.action_window_registration">
+        <field name="name">Registration</field>
+        <field name="res_model">gate.user.registration</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+
+    <!-- Menuitem panel -->
+    <menuitem name="Gate Entry Login" id="gate_entry.login" action="gate_entry.action_window_login" groups='gate_entry.group_gate_entry_access' web_icon="gate_entry,static/description/gate.png"/>
+    <menuitem name="Registration" id="gate_entry.registration" parent="gate_entry.menu_3" action="gate_entry.action_window_registration"/>
+    </data>
+</odoo>

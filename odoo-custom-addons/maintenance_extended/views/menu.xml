@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+
+    <data>
+
+        <menuitem id="menu_build_details_root"
+                  name="Building "
+                  sequence="45"
+                  parent="maintenance.menu_maintenance_configuration"
+                  action="build_details_action"
+        />
+
+        <menuitem id="menu_block_details_root"
+                  name="Block"
+                  sequence="45"
+                  parent="maintenance.menu_maintenance_configuration"
+                  action="block_details_action"
+        />
+
+        <menuitem id="menu_floor_details_root"
+                  name="Floor"
+                  sequence="46"
+                  parent="maintenance.menu_maintenance_configuration"
+                  action="floor_details_action"
+        />
+
+        <menuitem id="menu_division_details_root"
+                  name="Division"
+                  sequence="47"
+                  parent="maintenance.menu_maintenance_configuration"
+                  action="division_details_action"
+        />
+
+        <menuitem id="menu_section_details_root"
+                  name="Section"
+                  sequence="48"
+                  parent="maintenance.menu_maintenance_configuration"
+                  action="section_details_action"
+        />
+
+        <menuitem id="menu_equipment_report"
+                  name="Equipment Report "
+                  parent="maintenance.maintenance_reporting"
+                  action="equipment_management_report"
+                  sequence="22"/>
+
+
+        <menuitem id="menu_date_wizard"
+                  name="Date Report "
+                  parent="maintenance.maintenance_reporting"
+                  action="equipment_date_wizard_form_action"
+                  sequence="25"/>
+
+
+        <menuitem id="menu_scarp_details_root"
+                  name="Scrap "
+                  parent="maintenance.menu_m_request"
+                  action="scarp_details_action"
+                  sequence="25"/>
+
+
+        <!--        <menuitem id="menu_scarp_item_details_root"-->
+        <!--                  name="Scarp item  "-->
+        <!--                  parent="maintenance.menu_m_request"-->
+        <!--                  action="scarp_details_action"-->
+        <!--                  sequence="25"/>-->
+
+
+        <menuitem id="menu_stock_details_root"
+                  name="Transfer"
+                  parent="maintenance.menu_m_request"
+                  sequence="27"
+                  action="transfer_details_action"></menuitem>
+
+        <!--        <menuitem-->
+        <!--                id="menu_equipment_details"-->
+        <!--                name="  Equipment"-->
+        <!--                parent="maintenance.menu_maintenance_configuration"-->
+        <!--                action="maintenance.hr_equipment_action"-->
+        <!--                sequence="55"/>-->
+
+
+        <menuitem id="menu_equipmentsss_details" name="Equipment" sequence="1"
+                  parent="maintenance.menu_maintenance_configuration"
+                  action="hr_equipments_action"/>
+
+
+        <menuitem
+                id="menu_equipment_root_details"
+                name=" Equipment List"
+                parent="maintenance.menu_equipment_form"
+                action="hr_equipment_category_action"
+                sequence="25"/>
+
+
+     <!--    <menuitem
+                id="menu_equipmentss_root_details"
+                name=" Dashboard"
+                parent="maintenance.menu_maintenance_title"
+                action="board.open_board_my_dash_action"
+                sequence="-1"/>
+ -->
+
+        <!-- <menuitem id="maintenance.menu_m_dashboard" active="False"/> -->
+
+
+        <!--        <menuitem-->
+        <!--                id="menu_equipment_root"-->
+        <!--                name=" New Equipment"-->
+        <!--                parent="maintenance.menu_equipment_form"-->
+        <!--                action="equipment_details_action"-->
+        <!--                sequence="27"/>-->
+
+
+        <menuitem id="menu_subcate_details_root"
+                  name="Sub Category"
+                  sequence="2"
+                  parent="maintenance.menu_maintenance_configuration"
+                  action="subcate_details_action"
+        />
+
+
+        <menuitem id="menu_location_details_root"
+                  name="location "
+                  sequence="43"
+                  parent="maintenance.menu_maintenance_configuration"
+                  action="location_details_action"
+        />
+
+
+    </data>
+
+</odoo>
